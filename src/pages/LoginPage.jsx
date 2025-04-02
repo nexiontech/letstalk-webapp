@@ -1,10 +1,10 @@
 import React from 'react';
+import LoginForm from '../components/AuthForms/LoginForm';
 
 function LoginPage() {
     return (
         <div>
-            <h1>Login Page</h1>
-            {/* Login form will go here later */}
+            <LoginForm />
         </div>
     );
 }
