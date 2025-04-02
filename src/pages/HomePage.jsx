@@ -1,23 +1,20 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { increment, decrement } from '../store/features/counter/counterSlice';
+import { Link } from 'react-router-dom';
+import './HomePage.css';
 
 function HomePage() {
-    const count = useSelector((state) => state.counter.value);
-    const dispatch = useDispatch();
-
     return (
-        <div>
-            <h1>Home Page</h1>
-            <p>Welcome to the Let's Talk WebApp!</p>
-
-            <div>
-                <h2>Counter Example</h2>
-                <p>Current Count: {count}</p>
-                <button onClick={() => dispatch(increment())}>Increment</button>
-                <button onClick={() => dispatch(decrement())}>Decrement</button>
-            </div>
-        </div>
+        <main className="home-container">
+            <section className="hero-section">
+                <h2 className="hero-title">Welcome to Let's Talk</h2>
+                <p className="hero-subtitle">Connecting you with the services you need.</p>
+                
+                <div className="cta-buttons">
+                    <Link to="/login" className="cta-button login">Log In</Link>
+                    <Link to="/register" className="cta-button register">Register</Link>
+                </div>
+            </section>
+        </main>
     );
 }
 

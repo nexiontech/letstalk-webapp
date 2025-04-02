@@ -1,10 +1,10 @@
 import React from 'react';
+import RegisterForm from '../components/AuthForms/RegisterForm';
 
 function RegisterPage() {
     return (
         <div>
-            <h1>Register Page</h1>
-            {/* Registration form will go here later */}
+            <RegisterForm />
         </div>
     );
 }
