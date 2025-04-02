@@ -113,4 +113,4 @@ Contributions are welcome! Please follow these general guidelines:
 
 ---
 
-Feel free to modify this template further with specific details about configuration, deployment, testing strategies, or contribution guidelines relevant to your team's workflow.
+Feel free to modify this template further with specific details about configuration, deployment, testing strategies, or contribution guidelines relevant to your team's workflow and agile approach
