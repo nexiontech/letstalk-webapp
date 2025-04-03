@@ -1,31 +1,10 @@
 /* NavigationBar.css */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,500;1,400&display=swap');
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    font-size: 62.5%;
-    font-family: 'Roboto', sans-serif;
-}
-
-li {
-    list-style: none;
-}
-
-a {
-    text-decoration: none;
-}
-
-
+@import '../styles/global.css';
 
 .header {
     border-bottom: 1px solid #E2E8F0;
-    background-color: #00933C; /* Changed to green */
-    color: #fff; /* Changed to white */
+    background-color: #00933C;
+    color: #fff;
 }
 
 .navbar {
@@ -46,7 +25,7 @@ a {
     margin: 5px auto;
     -webkit-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
-    background-color: #fff; 
+    background-color: #fff;
 }
 
 .nav-menu {
@@ -62,17 +41,17 @@ a {
 .nav-link {
     font-size: 2rem;
     font-weight: 400;
-    color: #fff; 
+    color: #fff;
 }
 
 .nav-link:hover {
-    color: #c69f00; 
+    color: #c69f00;
 }
 
 .nav-logo {
     font-size: 3rem;
     font-weight: 500;
-    color: #fff; /* Changed to white */
+    color: #fff;
 }
 
 @media only screen and (max-width: 768px) {
@@ -81,7 +60,7 @@ a {
         left: -100%;
         top: 5rem;
         flex-direction: column;
-        background-color: #00933C; /* Changed to green */
+        background-color: #00933C;
         width: 100%;
         border-radius: 10px;
         text-align: center;
@@ -120,7 +99,7 @@ a {
 }
 
 .login-btn {
-    background-color: #E3B800; 
+    background-color: #E3B800;
     color: white;
     padding: 0.75rem 1.5rem;
     border-radius: 25px;
@@ -129,7 +108,7 @@ a {
 }
 
 .signup-btn {
-    background-color: #E3B800; 
+    background-color: #E3B800;
     color: white;
     padding: 0.75rem 1.5rem;
     border-radius: 25px;
@@ -138,9 +117,9 @@ a {
 }
 
 .login-btn:hover {
-    background-color: #c69f00; 
+    background-color: #c69f00;
 }
 
 .signup-btn:hover {
-    background-color: #c69f00; 
+    background-color: #c69f00;
 }

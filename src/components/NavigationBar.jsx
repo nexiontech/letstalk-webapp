@@ -60,5 +60,4 @@ function NavigationBar() {
         </header>
     );
 }
-
 export default NavigationBar;
