@@ -1,11 +1,12 @@
 import React from 'react';
 import LoginForm from '../components/LoginForm';
+import Container from '@mui/material/Container'; // Import Container
 
 function LoginPage() {
     return (
-        <div>
+        <Container component="main" maxWidth="xs"> {/* Use Container */}
             <LoginForm />
-        </div>
+        </Container>
     );
 }
 
