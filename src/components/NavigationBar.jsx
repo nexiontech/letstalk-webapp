@@ -3,61 +3,61 @@ import { Link } from 'react-router-dom';
 import './NavigationBar.css';
 
 function NavigationBar() {
-    useEffect(() => {
-        const hamburger = document.querySelector(".hamburger");
-        const navMenu = document.querySelector(".nav-menu");
+  useEffect(() => {
+    const hamburger = document.querySelector(".hamburger");
+    const navMenu = document.querySelector(".nav-menu");
 
-        function mobileMenu() {
-            hamburger.classList.toggle("active");
-            navMenu.classList.toggle("active");
-        }
+    function mobileMenu() {
+      hamburger.classList.toggle("active");
+      navMenu.classList.toggle("active");
+    }
 
-        hamburger.addEventListener("click", mobileMenu);
+    hamburger.addEventListener("click", mobileMenu);
 
-        const navLink = document.querySelectorAll(".nav-link");
+    const navLink = document.querySelectorAll(".nav-link");
 
-        function closeMenu() {
-            hamburger.classList.remove("active");
-            navMenu.classList.remove("active");
-        }
+    function closeMenu() {
+      hamburger.classList.remove("active");
+      navMenu.classList.remove("active");
+    }
 
-        navLink.forEach(n => n.addEventListener("click", closeMenu));
+    navLink.forEach(n => n.addEventListener("click", closeMenu));
 
-      
-        return () => {
-            hamburger.removeEventListener("click", mobileMenu);
-            navLink.forEach(n => n.removeEventListener("click", closeMenu));
-        };
-    }, []); 
+    return () => {
+      hamburger.removeEventListener("click", mobileMenu);
+      navLink.forEach(n => n.removeEventListener("click", closeMenu));
+    };
+  }, []);
 
-    return (
-        <header className="header">
-            <nav className="navbar">
-                <Link to="/" className="nav-logo">Let's Talk</Link>
-                <ul className="nav-menu">
-                    <li className="nav-item">
-                        <Link to="/issues" className="nav-link">Service Issues</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link to="/press" className="nav-link">Press Releases</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link to="/services" className="nav-link">Government Services</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link to="/login" className="nav-link login-btn">Log In</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link to="/register" className="nav-link signup-btn">Sign Up</Link>
-                    </li>
-                </ul>
-                <div className="hamburger">
-                    <span className="bar"></span>
-                    <span className="bar"></span>
-                    <span className="bar"></span>
-                </div>
-            </nav>
-        </header>
-    );
+  return (
+    <header className="header">
+      <nav className="navbar">
+        <Link to="/" className="nav-logo">Let's Talk</Link>
+        <ul className="nav-menu">
+          <li className="nav-item">
+            <Link to="/issues" className="nav-link">Service Issues</Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/press" className="nav-link">Press Releases</Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/services" className="nav-link">Government Services</Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/login" className="nav-link login-btn">Log In</Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/register" className="nav-link signup-btn">Sign Up</Link>
+          </li>
+        </ul>
+        <div className="hamburger">
+          <span className="bar"></span>
+          <span className="bar"></span>
+          <span className="bar"></span>
+        </div>
+      </nav>
+    </header>
+  );
 }
+
 export default NavigationBar;
