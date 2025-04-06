@@ -1,3 +1,5 @@
+/*src/pages/DashboardPage.jsx*/
+
 import React from 'react';
 
 function DashboardPage() {

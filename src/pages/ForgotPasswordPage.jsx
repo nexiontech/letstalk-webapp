@@ -1,3 +1,4 @@
+/*src/pages/ForgotPasswordPage.jsx*/
 import React from 'react';
 import ForgotPasswordForm from '../components/ForgotPasswordForm';
 
