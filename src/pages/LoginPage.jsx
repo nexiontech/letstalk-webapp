@@ -1,14 +1,14 @@
 /*src/pages/LoginPage.jsx*/
 import React from 'react';
 import LoginForm from '../components/LoginForm';
-import Container from '@mui/material/Container'; // Import Container
+import Container from '@mui/material/Container';
 
-function LoginPage() {
+function LoginPage({ setIsAuthenticated }) { 
     return (
-        <Container component="main" maxWidth="xs"> {/* Use Container */}
-            <LoginForm />
+        <Container component="main" maxWidth="xs">
+            <LoginForm setIsAuthenticated={setIsAuthenticated} /> 
         </Container>
     );
 }
 
-export default LoginPage;
+export default LoginPage; 
