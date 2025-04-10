@@ -11,6 +11,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import NavigationBar from './components/NavigationBar';
 import Footer from './components/Footer';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import CommunityHub from './pages/CommunityHub';
 import theme from './theme';
 import './App.css';
 import './styles/global.css';
@@ -46,6 +47,7 @@ function App() {
 
                         <Route path="/register" element={<RegisterPage />} />
                         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                        <Route path="/CommunityHub" element={<CommunityHub />} />
                         {isAuthenticated ? (
                             <Route path="/dashboard" element={<DashboardPage />} />
                         ) : (

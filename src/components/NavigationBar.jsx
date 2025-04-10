@@ -46,6 +46,9 @@ function NavigationBar() {
             <Link to="/services" className="nav-link">Government Services</Link>
           </li>
           <li className="nav-item">
+            <Link to="/CommunityHub" className="nav-link">Community Hub</Link>
+          </li>
+          <li className="nav-item">
             <Link to="/dashboard" className="nav-link">Dashbaord</Link>
           </li>
           <li className="nav-item">
