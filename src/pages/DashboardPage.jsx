@@ -37,7 +37,7 @@ const DashboardPage = () => {
               <img src={dashboardIcon} alt="Dashboard Icon" className="nav-icon" />
               <span>Dashboard</span>
             </a>
-            <a href="#" className="nav-link active">
+            <a href="service-issues" className="nav-link active">
               <img src={serviceIssuesIcon} alt="Service Issues Icon" className="nav-icon" />
               <span>Service Issues</span>
             </a>

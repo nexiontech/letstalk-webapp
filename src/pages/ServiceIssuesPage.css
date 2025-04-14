@@ -1,0 +1,160 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&family=REM:wght@500&family=Roboto:wght@500;600&display=swap');
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0;
+}
+
+.content-wrapper {
+  display: flex;
+  flex: 1; 
+  justify-content: center; 
+  align-items: flex-start; 
+  max-width: 1400px; 
+  margin: 0 auto; 
+  padding-top: 100px; 
+  padding-bottom: 50px; 
+}
+
+.service-issues-title {
+  position: absolute;
+  top: 107px;
+  left: 120px;
+  font-size: 45px;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  color: #1F1F1F;
+  line-height: 77px;
+}
+
+.map-section {
+  width: 710.99px;
+  height: 900.24px;
+  margin-right: 20px; 
+}
+
+.map-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.change-location-btn {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  color: #2563eb;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+}
+
+.change-location-btn:hover {
+  text-decoration: underline;
+}
+
+.issues-sidebar {
+  width: 458.04px;
+  height: 958.24px;
+}
+
+.sidebar-header {
+  font-size: 22px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  color: #1B1B1B;
+  margin-bottom: 24px;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.filter-btn {
+  padding: 16px 24px;
+  border-radius: 20px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+}
+
+.filter-btn.active {
+  background-color: #2F2F2F;
+  color: white;
+}
+
+.filter-btn:not(.active) {
+  background-color: #FBFBFB;
+  color: #C5C5C5;
+}
+
+.issues-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.issue-card {
+  background: linear-gradient(180deg, rgba(129, 129, 129, 0.4) 39%, rgba(27, 27, 27, 0.16) 100%);
+  border-radius: 15px;
+  padding: 24px;
+  height: 140.77px;
+}
+
+.issue-location {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: white;
+}
+
+.issue-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.issue-icon {
+  width: 43.3px;
+  height: 43.3px;
+}
+
+.issue-title {
+  font-family: 'REM', sans-serif;
+  font-size: 16px;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.issue-details {
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+  color: white;
+  line-height: 1.5;
+}
+
+.report-button {
+  width: 100%;
+  height: 85.46px;
+  background-color: #000;
+  border-radius: 20px;
+  border: none;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 13px 26px -2px rgba(0, 0, 0, 0.12);
+}
+
+.report-button:hover {
+  background-color: #333;
+}

@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
+import ServiceIssuesPage from './pages/ServiceIssuesPage';
 import NotFoundPage from './pages/NotFoundPage';
 import NavigationBar from './components/NavigationBar';
 import Footer from './components/Footer';
@@ -48,6 +49,7 @@ function App() {
                         <Route path="/register" element={<RegisterPage />} />
                         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                         <Route path="/CommunityHub" element={<CommunityHub />} />
+                        <Route path="/service-issues" element={<ServiceIssuesPage />} />
                         {isAuthenticated ? (
                             <Route path="/dashboard" element={<DashboardPage />} />
                         ) : (
