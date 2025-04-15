@@ -1,0 +1,192 @@
+.report-issue-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;       
+    justify-content: center;
+    min-height: calc(100vh - 64px - 60px);
+    padding: 2rem;
+  }
+  
+  
+  .report-issue-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 45px;
+    font-weight: bold;
+    line-height: 66px;
+    color: #1F1F1F;
+    margin-bottom: 2rem;
+    left: 120px;
+  }
+  
+  .form-card {
+    width: 603px;
+    flex-shrink: 0;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .form-content {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background-color: white;
+  }
+  
+  .location-section {
+    display: flex;
+    align-items: center;
+  }
+  
+  .location-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #4B5563;
+    white-space: nowrap;
+  }
+  
+  .input-group {
+    display: flex;
+    align-items: center;
+  }
+  
+  .relative.flex-grow {
+    width: 100%;
+  }
+  
+  .location-input {
+    font-family: 'Inter', sans-serif;
+    padding: 0.75rem 2.5rem 0.75rem 2.5rem;
+    border: 1px solid #D1D5DB;
+    border-radius: 0.375rem;
+    outline: none;
+    width: 100%;
+    font-size: 0.875rem;
+  }
+  
+  .location-input.with-icon {
+    padding-left: 2.5rem;
+  }
+  
+  .location-input:focus {
+    border-color: #0D4346;
+    outline: none;
+  }
+  
+  .location-icon-inner {
+    height: 1.25rem;
+    width: 1.25rem;
+    color: #6B7280;
+    position: absolute;
+    left: 0.75rem;
+  }
+  
+  .search-button {
+    background-color: #0D4346;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    padding: 0.75rem 1rem;
+    border-radius: 0.375rem;
+    margin-left: 0.5rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+  }
+  
+  .search-button:hover {
+    background-color: #0A3437;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-label {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    color: #4B5563;
+    font-weight: normal;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    text-align: left;
+  }
+  
+  .form-select {
+    font-family: 'Inter', sans-serif;
+    appearance: none;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid #D1D5DB;
+    border-radius: 0.375rem;
+    width: 100%;
+    padding: 0.75rem 2.5rem 0.75rem 0.75rem;
+    color: #4B5563;
+    line-height: 1.5;
+    outline: none;
+    font-size: 0.875rem;
+  }
+  
+  .form-select.with-icon {
+    padding-right: 2.5rem;
+  }
+  
+  .form-select:focus {
+    border-color: #0D4346;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(13, 67, 70, 0.5);
+  }
+  
+  .select-arrow-inner {
+    fill: currentColor;
+    height: 1rem;
+    width: 1rem;
+    color: #6B7280;
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 0.75rem;
+  }
+  
+  .cancel-button {
+    background-color: #F9FAFB;
+    color: #9CA3AF;
+    font-family: 'Inter', sans-serif;
+    border-radius: 0.375rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    width: 50%;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+    border: 1px solid #D1D5DB;
+  }
+  
+  .cancel-button:hover {
+    background-color: #F3F4F6;
+    color: #6B7280;
+  }
+  
+  .submit-button {
+    background-color: #0D4346;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    width: 50%;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+  }
+  
+  .submit-button:hover {
+    background-color: #0A3437;
+  }

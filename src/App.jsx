@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate} from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Box } from '@mui/material';
@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import ServiceIssuesPage from './pages/ServiceIssuesPage';
+import ReportIssuePage from './pages/ReportIssuePage'
 import NotFoundPage from './pages/NotFoundPage';
 import NavigationBar from './components/NavigationBar';
 import Footer from './components/Footer';
@@ -39,6 +40,7 @@ function App() {
                         flexDirection: 'column',
                     }}
                 >
+                    
                     <Routes>
                         <Route path="/" element={<HomePage />} />
                         <Route
@@ -50,6 +52,7 @@ function App() {
                         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                         <Route path="/CommunityHub" element={<CommunityHub />} />
                         <Route path="/service-issues" element={<ServiceIssuesPage />} />
+                        <Route path="/report-issue" element={<ReportIssuePage />} />
                         {isAuthenticated ? (
                             <Route path="/dashboard" element={<DashboardPage />} />
                         ) : (
