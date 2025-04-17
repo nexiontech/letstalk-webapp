@@ -1,6 +1,6 @@
 /*src/styles/global.css*/
-/* Global styles moved from NavigationBar.css */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,500;1,400&display=swap');
+/* Global styles for the entire application */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap');
 
 * {
     margin: 0;
@@ -9,20 +9,25 @@
 }
 
 html {
-    font-size: 62.5%;
+    font-size: 16px; /* Standard base font size */
     font-family: 'Roboto', sans-serif;
-    /* Added for full-page layout */
     height: 100%;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 body {
-    /* Ensures the body fills the viewport */
     height: 100%;
+    width: 100%;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    background-color: #ffffff;
+    color: #213547;
 }
 
 #root {
-    /* Ensures the root element fills the viewport (if you're using one) */
     height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 li {
@@ -31,4 +36,23 @@ li {
 
 a {
     text-decoration: none;
+}
+
+/* Common spacing variables */
+:root {
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+    --spacing-3xl: 4rem;
+
+    /* Common colors */
+    --color-primary: #00933C;
+    --color-secondary: #E3B800;
+    --color-dark-green: #0D4346;
+    --color-text: #1F1F1F;
+    --color-text-light: #666666;
+    --color-background: #ffffff;
 }
