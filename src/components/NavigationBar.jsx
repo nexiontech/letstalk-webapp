@@ -2,9 +2,14 @@
 
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
+import { useTranslation } from '../translations';
+import LanguageSelector from './LanguageSelector';
 import './NavigationBar.css';
 
 function NavigationBar() {
+  const { currentLanguage, changeLanguage } = useLanguage();
+  const { t } = useTranslation(currentLanguage);
   useEffect(() => {
     const hamburger = document.querySelector(".hamburger");
     const navMenu = document.querySelector(".nav-menu");
@@ -35,29 +40,35 @@ function NavigationBar() {
     <header className="header">
       <nav className="navbar">
         <Link to="/" className="nav-logo">Let's Talk</Link>
-        <ul className="nav-menu">
+        <div className="nav-right">
+          <LanguageSelector
+            currentLanguage={currentLanguage}
+            onLanguageChange={changeLanguage}
+          />
+          <ul className="nav-menu">
           <li className="nav-item">
-            <Link to="/service-issues" className="nav-link">Service Issues</Link>
+            <Link to="/service-issues" className="nav-link">{t('nav.serviceIssues')}</Link>
           </li>
           <li className="nav-item">
-            <Link to="/press-releases" className="nav-link">Press Releases</Link>
+            <Link to="/press-releases" className="nav-link">{t('nav.pressReleases')}</Link>
           </li>
           <li className="nav-item">
-            <Link to="/services" className="nav-link">Government Services</Link>
+            <Link to="/services" className="nav-link">{t('nav.governmentServices')}</Link>
           </li>
           <li className="nav-item">
-            <Link to="/CommunityHub" className="nav-link">Community Hub</Link>
+            <Link to="/CommunityHub" className="nav-link">{t('nav.communityHub')}</Link>
           </li>
           <li className="nav-item">
-            <Link to="/dashboard" className="nav-link">Dashboard</Link>
+            <Link to="/dashboard" className="nav-link">{t('nav.dashboard')}</Link>
           </li>
           <li className="nav-item">
-            <Link to="/login" className="nav-link login-btn">Log In</Link>
+            <Link to="/login" className="nav-link login-btn">{t('nav.login')}</Link>
           </li>
           <li className="nav-item">
-            <Link to="/register" className="nav-link signup-btn">Sign Up</Link>
+            <Link to="/register" className="nav-link signup-btn">{t('nav.signup')}</Link>
           </li>
         </ul>
+        </div>
         <div className="hamburger">
           <span className="bar"></span>
           <span className="bar"></span>

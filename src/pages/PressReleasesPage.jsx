@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useLanguage } from '../contexts/LanguageContext';
+import { useTranslation } from '../translations';
 import {
-  faSearch, faFilter, faCalendarAlt, faPlayCircle, 
+  faSearch, faFilter, faCalendarAlt, faPlayCircle,
   faNewspaper, faVideo, faBuilding, faPeopleGroup,
   faMapMarkerAlt, faChevronRight, faDownload, faShare,
   faBookmark, faEye, faClock, faTag, faStream, faBell
@@ -9,11 +11,13 @@ import {
 import './PressReleasesPage.css';
 
 const PressReleasesPage = () => {
+  const { currentLanguage } = useLanguage();
+  const { t } = useTranslation(currentLanguage);
   const [activeTab, setActiveTab] = useState('news');
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItem, setSelectedItem] = useState(null);
-  
+
   // Sample data for news releases
   const newsReleases = [
     {
@@ -101,7 +105,7 @@ const PressReleasesPage = () => {
       `
     }
   ];
-  
+
   // Sample data for live and recorded meetings
   const meetings = [
     {
@@ -170,51 +174,51 @@ const PressReleasesPage = () => {
       downloadable: true
     }
   ];
-  
+
   const filteredNews = newsReleases.filter(item => {
     // Filter by search query
-    if (searchQuery && !item.title.toLowerCase().includes(searchQuery.toLowerCase()) && 
+    if (searchQuery && !item.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
         !item.summary.toLowerCase().includes(searchQuery.toLowerCase())) {
       return false;
     }
-    
+
     // Filter by category
     if (activeFilter !== 'all' && item.category.toLowerCase() !== activeFilter.toLowerCase()) {
       return false;
     }
-    
+
     return true;
   });
-  
+
   const filteredMeetings = meetings.filter(item => {
     // Filter by search query
-    if (searchQuery && !item.title.toLowerCase().includes(searchQuery.toLowerCase()) && 
+    if (searchQuery && !item.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
         !item.description.toLowerCase().includes(searchQuery.toLowerCase())) {
       return false;
     }
-    
+
     // Filter by type
     if (activeFilter !== 'all' && item.type.toLowerCase() !== activeFilter.toLowerCase()) {
       return false;
     }
-    
+
     return true;
   });
-  
+
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     setActiveFilter('all');
     setSelectedItem(null);
   };
-  
+
   const handleFilterChange = (filter) => {
     setActiveFilter(filter);
   };
-  
+
   const handleItemSelect = (item) => {
     setSelectedItem(item);
   };
-  
+
   const getStatusColor = (status) => {
     switch(status) {
       case 'Live': return '#e74c3c';
@@ -223,34 +227,34 @@ const PressReleasesPage = () => {
       default: return '#95a5a6';
     }
   };
-  
+
   const renderNewsFilters = () => (
     <div className="press-filters">
-      <button 
+      <button
         className={`filter-btn ${activeFilter === 'all' ? 'active' : ''}`}
         onClick={() => handleFilterChange('all')}
       >
-        All
+        {t('common.all')}
       </button>
-      <button 
+      <button
         className={`filter-btn ${activeFilter === 'Water Services' ? 'active' : ''}`}
         onClick={() => handleFilterChange('Water Services')}
       >
         Water Services
       </button>
-      <button 
+      <button
         className={`filter-btn ${activeFilter === 'Electricity' ? 'active' : ''}`}
         onClick={() => handleFilterChange('Electricity')}
       >
         Electricity
       </button>
-      <button 
+      <button
         className={`filter-btn ${activeFilter === 'Waste Management' ? 'active' : ''}`}
         onClick={() => handleFilterChange('Waste Management')}
       >
         Waste Management
       </button>
-      <button 
+      <button
         className={`filter-btn ${activeFilter === 'Roads and Transport' ? 'active' : ''}`}
         onClick={() => handleFilterChange('Roads and Transport')}
       >
@@ -258,48 +262,48 @@ const PressReleasesPage = () => {
       </button>
     </div>
   );
-  
+
   const renderMeetingFilters = () => (
     <div className="press-filters">
-      <button 
+      <button
         className={`filter-btn ${activeFilter === 'all' ? 'active' : ''}`}
         onClick={() => handleFilterChange('all')}
       >
-        All
+        {t('common.all')}
       </button>
-      <button 
+      <button
         className={`filter-btn ${activeFilter === 'parliament' ? 'active' : ''}`}
         onClick={() => handleFilterChange('parliament')}
       >
         Parliament
       </button>
-      <button 
+      <button
         className={`filter-btn ${activeFilter === 'municipality' ? 'active' : ''}`}
         onClick={() => handleFilterChange('municipality')}
       >
         Municipality
       </button>
-      <button 
+      <button
         className={`filter-btn ${activeFilter === 'ward' ? 'active' : ''}`}
         onClick={() => handleFilterChange('ward')}
       >
         Ward
       </button>
-      <button 
+      <button
         className={`filter-btn ${activeFilter === 'live' ? 'active' : ''}`}
         onClick={() => handleFilterChange('live')}
       >
-        Live Now
+        {t('pressReleases.live')}
       </button>
     </div>
   );
-  
+
   const renderNewsList = () => (
     <div className="press-list">
       {filteredNews.length > 0 ? (
         filteredNews.map(item => (
-          <div 
-            key={item.id} 
+          <div
+            key={item.id}
             className={`press-card ${selectedItem?.id === item.id ? 'selected' : ''}`}
             onClick={() => handleItemSelect(item)}
           >
@@ -334,19 +338,19 @@ const PressReleasesPage = () => {
       )}
     </div>
   );
-  
+
   const renderMeetingsList = () => (
     <div className="press-list">
       {filteredMeetings.length > 0 ? (
         filteredMeetings.map(item => (
-          <div 
-            key={item.id} 
+          <div
+            key={item.id}
             className={`press-card meeting-card ${selectedItem?.id === item.id ? 'selected' : ''}`}
             onClick={() => handleItemSelect(item)}
           >
             <div className="press-card-image">
               <img src={item.thumbnail} alt={item.title} />
-              <div 
+              <div
                 className="meeting-status"
                 style={{ backgroundColor: getStatusColor(item.status) }}
               >
@@ -361,10 +365,10 @@ const PressReleasesPage = () => {
             </div>
             <div className="press-card-content">
               <div className="meeting-type">
-                <FontAwesomeIcon 
-                  icon={item.type === 'Parliament' ? faBuilding : 
-                        item.type === 'Municipality' ? faBuilding : 
-                        faPeopleGroup} 
+                <FontAwesomeIcon
+                  icon={item.type === 'Parliament' ? faBuilding :
+                        item.type === 'Municipality' ? faBuilding :
+                        faPeopleGroup}
                 />
                 <span>{item.type}</span>
               </div>
@@ -399,10 +403,10 @@ const PressReleasesPage = () => {
       )}
     </div>
   );
-  
+
   const renderNewsDetail = () => {
     if (!selectedItem) return null;
-    
+
     return (
       <div className="press-detail">
         <div className="press-detail-header">
@@ -422,15 +426,15 @@ const PressReleasesPage = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="press-detail-image">
           <img src={selectedItem.image} alt={selectedItem.title} />
         </div>
-        
+
         <div className="press-detail-content">
           <div dangerouslySetInnerHTML={{ __html: selectedItem.content }} />
         </div>
-        
+
         <div className="press-detail-actions">
           <button className="action-button">
             <FontAwesomeIcon icon={faShare} />
@@ -444,14 +448,14 @@ const PressReleasesPage = () => {
       </div>
     );
   };
-  
+
   const renderMeetingDetail = () => {
     if (!selectedItem) return null;
-    
+
     return (
       <div className="press-detail">
         <div className="press-detail-header">
-          <div 
+          <div
             className="meeting-status-large"
             style={{ backgroundColor: getStatusColor(selectedItem.status) }}
           >
@@ -468,16 +472,16 @@ const PressReleasesPage = () => {
               <span>{selectedItem.duration}</span>
             </div>
             <div className="detail-meta-item">
-              <FontAwesomeIcon 
-                icon={selectedItem.type === 'Parliament' ? faBuilding : 
-                      selectedItem.type === 'Municipality' ? faBuilding : 
-                      faPeopleGroup} 
+              <FontAwesomeIcon
+                icon={selectedItem.type === 'Parliament' ? faBuilding :
+                      selectedItem.type === 'Municipality' ? faBuilding :
+                      faPeopleGroup}
               />
               <span>{selectedItem.type}</span>
             </div>
           </div>
         </div>
-        
+
         <div className="video-container">
           {selectedItem.status === 'Live' || selectedItem.status === 'Recorded' ? (
             <div className="video-player">
@@ -502,12 +506,12 @@ const PressReleasesPage = () => {
             </div>
           )}
         </div>
-        
+
         <div className="meeting-description">
           <h3>About this meeting</h3>
           <p>{selectedItem.description}</p>
         </div>
-        
+
         <div className="press-detail-actions">
           {selectedItem.downloadable && (
             <button className="action-button">
@@ -532,73 +536,73 @@ const PressReleasesPage = () => {
     <div className="press-container">
       <div className="press-header">
         <div className="press-title-section">
-          <h1>Press & Media Center</h1>
-          <p>Stay informed about service delivery news and government proceedings</p>
+          <h1>{t('pressReleases.title')}</h1>
+          <p>{t('pressReleases.subtitle')}</p>
         </div>
-        
+
         <div className="press-actions">
           <div className="press-search">
             <FontAwesomeIcon icon={faSearch} className="search-icon" />
-            <input 
-              type="text" 
-              placeholder="Search news and meetings..." 
+            <input
+              type="text"
+              placeholder={t('pressReleases.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
       </div>
-      
+
       <div className="press-tabs">
-        <button 
+        <button
           className={`press-tab ${activeTab === 'news' ? 'active' : ''}`}
           onClick={() => handleTabChange('news')}
         >
           <FontAwesomeIcon icon={faNewspaper} />
-          <span>News & Press Releases</span>
+          <span>{t('pressReleases.newsTab')}</span>
         </button>
-        <button 
+        <button
           className={`press-tab ${activeTab === 'meetings' ? 'active' : ''}`}
           onClick={() => handleTabChange('meetings')}
         >
           <FontAwesomeIcon icon={faVideo} />
-          <span>Live & Recorded Meetings</span>
+          <span>{t('pressReleases.meetingsTab')}</span>
         </button>
       </div>
-      
+
       <div className="press-content">
         <div className="press-sidebar">
           <div className="filter-section">
             <div className="filter-header">
               <FontAwesomeIcon icon={faFilter} />
-              <h3>Filters</h3>
+              <h3>{t('pressReleases.filters')}</h3>
             </div>
-            
+
             {activeTab === 'news' ? renderNewsFilters() : renderMeetingFilters()}
           </div>
-          
+
           <div className="press-items-container">
             <h3 className="list-title">
               {activeTab === 'news' ? (
                 <>
                   <FontAwesomeIcon icon={faNewspaper} />
-                  <span>Press Releases</span>
+                  <span>{t('pressReleases.pressReleasesList')}</span>
                 </>
               ) : (
                 <>
                   <FontAwesomeIcon icon={faStream} />
-                  <span>Meetings</span>
+                  <span>{t('pressReleases.meetingsList')}</span>
                 </>
               )}
               <span className="item-count">
                 {activeTab === 'news' ? filteredNews.length : filteredMeetings.length}
               </span>
             </h3>
-            
+
             {activeTab === 'news' ? renderNewsList() : renderMeetingsList()}
           </div>
         </div>
-        
+
         <div className="press-main">
           {selectedItem ? (
             activeTab === 'news' ? renderNewsDetail() : renderMeetingDetail()
@@ -611,11 +615,11 @@ const PressReleasesPage = () => {
                   <FontAwesomeIcon icon={faVideo} />
                 )}
               </div>
-              <h2>Select an item to view details</h2>
+              <h2>{t('pressReleases.selectToView')}</h2>
               <p>
-                {activeTab === 'news' 
-                  ? 'Choose a press release from the list to read the full article' 
-                  : 'Select a meeting to watch the live stream or recording'}
+                {activeTab === 'news'
+                  ? t('pressReleases.selectNewsPrompt')
+                  : t('pressReleases.selectMeetingPrompt')}
               </p>
             </div>
           )}

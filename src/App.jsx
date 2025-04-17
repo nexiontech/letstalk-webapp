@@ -13,6 +13,7 @@ import Footer from './components/Footer';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import CommunityHub from './pages/CommunityHub';
 import PressReleasesPage from './pages/PressReleasesPage';
+import { LanguageProvider } from './contexts/LanguageContext';
 import './App.css';
 import './styles/global.css';
 
@@ -20,14 +21,15 @@ function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                minHeight: '100vh',
-                width: '100%'
-            }}
-        >
+        <LanguageProvider>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    minHeight: '100vh',
+                    width: '100%'
+                }}
+            >
             <NavigationBar />
             <Box
                 component="main"
@@ -62,6 +64,7 @@ function App() {
             </Box>
             <Footer />
         </Box>
+        </LanguageProvider>
     );
 }
 
