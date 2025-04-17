@@ -3,12 +3,13 @@
 /* Header styles */
 .header {
   width: 100%;
-  border-bottom: 1px solid #E2E8F0;
-  background-color: var(--color-dark-green);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: var(--color-primary);
   color: #fff;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Navbar styles */
@@ -56,6 +57,7 @@
 
 .nav-link:hover {
   color: var(--color-secondary);
+  text-shadow: 0 0 1px rgba(255, 182, 29, 0.3);
 }
 
 /* Hamburger menu styles */
@@ -76,16 +78,19 @@
 /* Button styles for login and signup */
 .login-btn, .signup-btn {
   background-color: var(--color-secondary);
-  color: white;
-  padding: 0.5rem 1rem;
+  color: var(--color-text);
+  padding: 0.5rem 1.25rem;
   border-radius: 25px;
   font-weight: 600;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .login-btn:hover,
 .signup-btn:hover {
-  background-color: #c69f00;
+  background-color: var(--color-secondary-light);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Mobile Responsive Styles */

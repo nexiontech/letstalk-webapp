@@ -48,11 +48,33 @@ a {
     --spacing-2xl: 3rem;
     --spacing-3xl: 4rem;
 
-    /* Common colors */
-    --color-primary: #00933C;
-    --color-secondary: #E3B800;
-    --color-dark-green: #0D4346;
+    /* Primary color palette - Green */
+    --color-primary: #0E4649;
+    --color-primary-light: #1A5C60;
+    --color-primary-lighter: #267377;
+    --color-primary-dark: #0A3437;
+    --color-primary-darker: #062224;
+
+    /* Secondary color palette - Yellow */
+    --color-secondary: #FFB61D;
+    --color-secondary-light: #FFC54A;
+    --color-secondary-lighter: #FFD477;
+    --color-secondary-dark: #E6A00A;
+    --color-secondary-darker: #CC8C00;
+
+    /* Text colors */
     --color-text: #1F1F1F;
     --color-text-light: #666666;
+    --color-text-lighter: #888888;
+
+    /* Background colors */
     --color-background: #ffffff;
+    --color-background-light: #f8f8f8;
+    --color-background-dark: #f0f0f0;
+
+    /* Utility colors */
+    --color-success: #2E8B57;
+    --color-warning: #FFA500;
+    --color-error: #DC3545;
+    --color-info: #0D6EFD;
 }

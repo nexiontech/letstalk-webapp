@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Container from '@mui/material/Container';
 import waterIcon from '../assets/images/water_icon.jpg';
 import refusalIcon from '../assets/images/refusal_icon.jpg';
 import powerIcon from '../assets/images/power_icon.jpg';
@@ -41,14 +40,16 @@ const ServiceIssuesPage = () => {
   ];
 
   const handleReportButtonClick = () => {
-    navigate('/issues');
     navigate('/report-issue');
   };
 
   return (
-    <Container maxWidth="1400px" className="main-container">
-      <div className="content-wrapper">
+    <div className="service-issues-container">
+      <div className="service-issues-header">
         <h1 className="service-issues-title">Service Issues</h1>
+      </div>
+
+      <div className="service-issues-content">
         <div className="map-section">
           <iframe
             src="https://maps.google.com/maps?q=Johannesburg&z=13&output=embed"
@@ -57,13 +58,16 @@ const ServiceIssuesPage = () => {
             title="Google Map"
           />
         </div>
+
         <div className="issues-sidebar">
           <h2 className="sidebar-header">Reported Issues In the Area</h2>
+
           <div className="filter-buttons">
             <button className="filter-btn active">My Town</button>
             <button className="filter-btn">Nearby</button>
             <button className="filter-btn">Latest</button>
           </div>
+
           <div className="issues-list">
             {issues.map((issue, index) => (
               <div key={index} className="issue-card">
@@ -81,10 +85,13 @@ const ServiceIssuesPage = () => {
               </div>
             ))}
           </div>
-          <button className="report-button" onClick={handleReportButtonClick}>Report An Issue</button>
+
+          <button className="report-button" onClick={handleReportButtonClick}>
+            Report An Issue
+          </button>
         </div>
       </div>
-    </Container>
+    </div>
   );
 };
 

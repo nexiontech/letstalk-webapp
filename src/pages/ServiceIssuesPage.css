@@ -1,39 +1,39 @@
+/* Service Issues Page Styles */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&family=REM:wght@500&family=Roboto:wght@500;600&display=swap');
-
-.main-container {
+.service-issues-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  padding: 0;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
 }
 
-.content-wrapper {
-  display: flex;
-  flex: 1; 
-  justify-content: center; 
-  align-items: flex-start; 
-  max-width: 1400px; 
-  margin: 0 auto; 
-  padding-top: 100px; 
-  padding-bottom: 50px; 
+.service-issues-header {
+  margin-bottom: 2rem;
 }
 
 .service-issues-title {
-  position: absolute;
-  top: 107px;
-  left: 120px;
-  font-size: 45px;
+  font-size: 2.5rem;
   font-weight: 700;
-  font-family: 'Inter', sans-serif;
-  color: #1F1F1F;
-  line-height: 77px;
+  color: var(--color-text);
+  margin-bottom: 1rem;
 }
 
+.service-issues-content {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+/* Map Section */
 .map-section {
-  width: 710.99px;
-  height: 900.24px;
-  margin-right: 20px; 
+  flex: 1;
+  min-width: 300px;
+  height: 600px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .map-iframe {
@@ -42,119 +42,193 @@
   border: none;
 }
 
-.change-location-btn {
-  position: absolute;
-  bottom: 16px;
-  right: 16px;
-  color: #2563eb;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: 'Roboto', sans-serif;
-}
-
-.change-location-btn:hover {
-  text-decoration: underline;
-}
-
+/* Issues Sidebar */
 .issues-sidebar {
-  width: 458.04px;
-  height: 958.24px;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar-header {
-  font-size: 22px;
+  font-size: 1.5rem;
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
-  color: #1B1B1B;
-  margin-bottom: 24px;
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
 }
 
 .filter-buttons {
   display: flex;
-  gap: 16px;
-  margin-bottom: 32px;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .filter-btn {
-  padding: 16px 24px;
+  padding: 0.75rem 1.25rem;
   border-radius: 20px;
-  font-family: 'Roboto', sans-serif;
-  font-size: 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
   border: none;
+  transition: all 0.3s ease;
 }
 
 .filter-btn.active {
-  background-color: #2F2F2F;
+  background-color: var(--color-primary);
   color: white;
+  box-shadow: 0 2px 6px rgba(14, 70, 73, 0.2);
 }
 
 .filter-btn:not(.active) {
-  background-color: #FBFBFB;
-  color: #C5C5C5;
+  background-color: #f5f5f5;
+  color: #666;
+}
+
+.filter-btn:hover:not(.active) {
+  background-color: #e0e0e0;
 }
 
 .issues-list {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  margin-bottom: 24px;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  overflow-y: auto;
+  max-height: 500px;
 }
 
 .issue-card {
-  background: linear-gradient(180deg, rgba(129, 129, 129, 0.4) 39%, rgba(27, 27, 27, 0.16) 100%);
-  border-radius: 15px;
-  padding: 24px;
-  height: 140.77px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  border-radius: 10px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.issue-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(to left, rgba(255, 182, 29, 0.15), transparent);
+  pointer-events: none;
+}
+
+.issue-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .issue-location {
-  font-family: 'Roboto', sans-serif;
-  font-size: 16px;
-  margin-bottom: 8px;
-  color: white;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .issue-content {
   display: flex;
   align-items: flex-start;
-  gap: 16px;
+  gap: 1rem;
 }
 
 .issue-icon {
-  width: 43.3px;
-  height: 43.3px;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
 }
 
 .issue-title {
-  font-family: 'REM', sans-serif;
-  font-size: 16px;
+  font-size: 1.1rem;
+  font-weight: 600;
   color: white;
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
 }
 
 .issue-details {
-  font-family: 'Roboto', sans-serif;
-  font-size: 12px;
-  color: white;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.9);
   line-height: 1.5;
 }
 
 .report-button {
   width: 100%;
-  height: 85.46px;
-  background-color: #000;
-  border-radius: 20px;
+  padding: 1rem;
+  background-color: var(--color-secondary);
+  border-radius: 10px;
   border: none;
-  color: white;
-  font-family: 'Roboto', sans-serif;
-  font-size: 20px;
-  font-weight: 500;
+  color: var(--color-text);
+  font-size: 1.1rem;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 13px 26px -2px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.report-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.1), transparent, rgba(255, 255, 255, 0.1));
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
 }
 
 .report-button:hover {
-  background-color: #333;
+  background-color: var(--color-secondary-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.report-button:hover::before {
+  transform: translateX(100%);
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+  .service-issues-content {
+    flex-direction: column;
+  }
+
+  .map-section {
+    height: 400px;
+    width: 100%;
+  }
+
+  .issues-sidebar {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .service-issues-title {
+    font-size: 2rem;
+  }
+
+  .map-section {
+    height: 300px;
+  }
+
+  .filter-buttons {
+    justify-content: center;
+  }
+
+  .filter-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .issue-card {
+    padding: 1rem;
+  }
 }
