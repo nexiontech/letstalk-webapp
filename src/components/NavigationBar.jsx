@@ -37,7 +37,7 @@ function NavigationBar() {
         <Link to="/" className="nav-logo">Let's Talk</Link>
         <ul className="nav-menu">
           <li className="nav-item">
-            <Link to="/issues" className="nav-link">Service Issues</Link>
+            <Link to="/service-issues" className="nav-link">Service Issues</Link>
           </li>
           <li className="nav-item">
             <Link to="/press" className="nav-link">Press Releases</Link>
@@ -49,7 +49,7 @@ function NavigationBar() {
             <Link to="/CommunityHub" className="nav-link">Community Hub</Link>
           </li>
           <li className="nav-item">
-            <Link to="/dashboard" className="nav-link">Dashbaord</Link>
+            <Link to="/dashboard" className="nav-link">Dashboard</Link>
           </li>
           <li className="nav-item">
             <Link to="/login" className="nav-link login-btn">Log In</Link>
