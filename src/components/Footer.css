@@ -1,61 +1,73 @@
 /*src/components/Footer.css*/
 
 .footer {
-    background-color: #0D4346;
-    color: #FFFFFF;
-    width: 100%;
-    padding: 4rem 2rem;
-    box-sizing: border-box;
-    width: 99vw; 
-    position: static;
-  }
-  
-  .footer-container {
-    width: 100%;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
-  
-  /* Each footer column styling */
+  background-color: var(--color-dark-green);
+  color: #FFFFFF;
+  width: 100%;
+  padding: 3rem 1.5rem;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.footer-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+/* Each footer column styling */
+.footer-column {
+  flex: 1;
+  min-width: 160px;
+  margin-bottom: 1.5rem;
+}
+
+/* Column title styling */
+.footer-column h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Link styling within each column */
+.footer-column a {
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.footer-column a:hover {
+  color: var(--color-secondary);
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 992px) {
   .footer-column {
-    flex: 1;
-    min-width: 200px; 
-    margin-bottom: 2rem;
+    min-width: 140px;
   }
-  
-  /* Column title styling */
-  .footer-column h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 2rem 1rem;
   }
-  
-  /* Link styling within each column */
-  .footer-column a {
-    color: #FFFFFF;
-    text-decoration: none;
-    font-size: 0.9rem;
-    display: block;
+
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .footer-column {
+    width: 100%;
+    text-align: center;
     margin-bottom: 0.5rem;
-    transition: color 0.3s ease;
   }
-  
-  .footer-column a:hover {
-    color: #E3B800;
-  }
-  
-  /* Mobile Responsive Styles */
-  @media (max-width: 768px) {
-    .footer-container {
-      flex-direction: column;
-      align-items: center;
-    }
-    
-    .footer-column {
-      width: 100%;
-      text-align: center;
-    }
-  }
-  
+}
