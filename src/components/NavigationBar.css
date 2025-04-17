@@ -1,13 +1,10 @@
 /*src/components/NavigationBar.css*/
 
-/* Import global styles (e.g., CSS reset) */
-@import '../styles/global.css';
-
 /* Header styles */
 .header {
-  width: 100vw; 
+  width: 100%;
   border-bottom: 1px solid #E2E8F0;
-  background-color: #0D4346;
+  background-color: var(--color-dark-green);
   color: #fff;
   margin: 0;
   padding: 0;
@@ -16,18 +13,20 @@
 
 /* Navbar styles */
 .navbar {
-  width: 100%; /* full width */
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem;
+  padding: 1rem 1.5rem;
   box-sizing: border-box;
 }
 
 /* Navigation logo */
 .nav-logo {
-  font-size: 3rem;
-  font-weight: 500;
+  font-size: 1.75rem;
+  font-weight: 600;
   color: #fff;
   text-decoration: none;
 }
@@ -43,20 +42,20 @@
 
 /* Nav item spacing */
 .nav-item {
-  margin-left: 5rem;
+  margin-left: 2rem;
 }
 
 /* Nav link styles */
 .nav-link {
-  font-size: 2rem;
-  font-weight: 400;
+  font-size: 1rem;
+  font-weight: 500;
   color: #fff;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .nav-link:hover {
-  color: #c69f00;
+  color: var(--color-secondary);
 }
 
 /* Hamburger menu styles */
@@ -74,19 +73,41 @@
   background-color: #fff;
 }
 
+/* Button styles for login and signup */
+.login-btn, .signup-btn {
+  background-color: var(--color-secondary);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  font-weight: 600;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.login-btn:hover,
+.signup-btn:hover {
+  background-color: #c69f00;
+}
+
 /* Mobile Responsive Styles */
+@media only screen and (max-width: 992px) {
+  .nav-item {
+    margin-left: 1.5rem;
+  }
+}
+
 @media only screen and (max-width: 768px) {
   .nav-menu {
     position: fixed;
     left: -100%;
-    top: 5rem;
+    top: 4rem;
     flex-direction: column;
-    background-color: #00933C;
+    background-color: var(--color-primary);
     width: 100%;
     text-align: center;
     padding: 1rem 0;
     border-radius: 10px;
     box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+    z-index: 100;
   }
 
   .nav-menu.active {
@@ -94,7 +115,7 @@
   }
 
   .nav-item {
-    margin: 2.5rem 0;
+    margin: 1.5rem 0;
   }
 
   .hamburger {
@@ -113,28 +134,4 @@
   .hamburger.active .bar:nth-child(3) {
     transform: translateY(-8px) rotate(-45deg);
   }
-}
-
-/* Button styles for login and signup */
-.login-btn {
-  background-color: #E3B800;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 25px;
-  font-weight: 600;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.signup-btn {
-  background-color: #E3B800;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 25px;
-  font-weight: 600;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.login-btn:hover,
-.signup-btn:hover {
-  background-color: #c69f00;
 }
