@@ -124,7 +124,8 @@ function CommunityHub() {
 
   return (
     <div className="hub-container">
-      <div className="hub-sidebar">
+      <div style={{ display: 'flex', width: '100%', minHeight: '600px' }}>
+        <div className="hub-sidebar">
         <div className="hub-sidebar-header">
           <div className="hub-user-profile">
             <div className="hub-avatar">
@@ -334,6 +335,7 @@ function CommunityHub() {
             <p>Choose a chat from the sidebar to start messaging</p>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

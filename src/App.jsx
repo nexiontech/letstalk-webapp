@@ -24,8 +24,7 @@ function App() {
                 display: 'flex',
                 flexDirection: 'column',
                 minHeight: '100vh',
-                width: '100%',
-                overflow: 'hidden'
+                width: '100%'
             }}
         >
             <NavigationBar />
@@ -36,6 +35,7 @@ function App() {
                     display: 'flex',
                     flexDirection: 'column',
                     width: '100%',
+                    overflow: 'visible'
                 }}
                 className="main-content"
             >
