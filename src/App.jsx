@@ -29,6 +29,8 @@ function App() {
                     display: 'flex',
                     flexDirection: 'column',
                     minHeight: '100vh',
+                    width: '100%',
+                    overflow: 'hidden'
                 }}
             >
                 <NavigationBar />
@@ -38,16 +40,16 @@ function App() {
                         flex: 1,
                         display: 'flex',
                         flexDirection: 'column',
+                        width: '100%',
                     }}
+                    className="main-content"
                 >
-                    
                     <Routes>
                         <Route path="/" element={<HomePage />} />
                         <Route
                            path="/login"
                             element={<LoginPage setIsAuthenticated={setIsAuthenticated} />}
-                              />
-
+                        />
                         <Route path="/register" element={<RegisterPage />} />
                         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                         <Route path="/CommunityHub" element={<CommunityHub />} />
