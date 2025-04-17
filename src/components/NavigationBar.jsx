@@ -40,7 +40,7 @@ function NavigationBar() {
             <Link to="/service-issues" className="nav-link">Service Issues</Link>
           </li>
           <li className="nav-item">
-            <Link to="/press" className="nav-link">Press Releases</Link>
+            <Link to="/press-releases" className="nav-link">Press Releases</Link>
           </li>
           <li className="nav-item">
             <Link to="/services" className="nav-link">Government Services</Link>

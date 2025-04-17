@@ -12,6 +12,7 @@ import NavigationBar from './components/NavigationBar';
 import Footer from './components/Footer';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import CommunityHub from './pages/CommunityHub';
+import PressReleasesPage from './pages/PressReleasesPage';
 import './App.css';
 import './styles/global.css';
 
@@ -50,6 +51,7 @@ function App() {
                     <Route path="/CommunityHub" element={<CommunityHub />} />
                     <Route path="/service-issues" element={<ServiceIssuesPage />} />
                     <Route path="/report-issue" element={<ReportIssuePage />} />
+                    <Route path="/press-releases" element={<PressReleasesPage />} />
                     {isAuthenticated ? (
                         <Route path="/dashboard" element={<DashboardPage />} />
                     ) : (
