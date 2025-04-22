@@ -13,6 +13,7 @@ import Footer from './components/Footer';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import CommunityHub from './pages/CommunityHub';
 import PressReleasesPage from './pages/PressReleasesPage';
+import GovernmentServicesPage from './pages/GovernmentServicesPage';
 import { LanguageProvider } from './contexts/LanguageContext';
 import './App.css';
 import './styles/global.css';
@@ -54,6 +55,7 @@ function App() {
                     <Route path="/service-issues" element={<ServiceIssuesPage />} />
                     <Route path="/report-issue" element={<ReportIssuePage />} />
                     <Route path="/press-releases" element={<PressReleasesPage />} />
+                    <Route path="/services" element={<GovernmentServicesPage />} />
                     {isAuthenticated ? (
                         <Route path="/dashboard" element={<DashboardPage />} />
                     ) : (

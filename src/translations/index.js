@@ -17,6 +17,26 @@ const translations = {
       login: "Log In",
       signup: "Sign Up"
     },
+    // Government Services page
+    governmentServices: {
+      title: "Government Services",
+      subtitle: "Pay for municipal and government services securely online",
+      searchPlaceholder: "Search for a service...",
+      allServices: "All Services",
+      utilities: "Utilities",
+      property: "Property",
+      transport: "Transport",
+      tax: "Tax",
+      identity: "Identity",
+      education: "Education",
+      other: "Other",
+      popularServices: "Popular Services",
+      recentPayments: "Recent Payments",
+      accountDetails: "Account Details",
+      paymentMethod: "Payment Method",
+      confirmPayment: "Confirm Payment",
+      paymentSuccess: "Payment Successful!"
+    },
     // Common UI elements
     common: {
       search: "Search",
@@ -64,7 +84,7 @@ const translations = {
       aboutMeeting: "About this meeting"
     }
   },
-  
+
   // Afrikaans
   af: {
     nav: {
@@ -121,7 +141,7 @@ const translations = {
       aboutMeeting: "Oor hierdie vergadering"
     }
   },
-  
+
   // isiZulu
   zu: {
     nav: {
@@ -136,7 +156,7 @@ const translations = {
     },
     // Add more translations as needed
   },
-  
+
   // isiXhosa
   xh: {
     nav: {
@@ -151,7 +171,7 @@ const translations = {
     },
     // Add more translations as needed
   },
-  
+
   // Add more languages as needed
 };
 
@@ -159,14 +179,14 @@ const translations = {
 export const getTranslation = (langCode, key) => {
   // Split the key by dots to access nested properties
   const keys = key.split('.');
-  
+
   // Start with the language object
   let result = translations[langCode] || translations.en; // Fallback to English
-  
+
   // Navigate through the nested properties
   for (const k of keys) {
     result = result[k];
-    
+
     // If the key doesn't exist, fall back to English
     if (result === undefined) {
       let fallback = translations.en;
@@ -179,7 +199,7 @@ export const getTranslation = (langCode, key) => {
       return fallback;
     }
   }
-  
+
   return result;
 };
 
