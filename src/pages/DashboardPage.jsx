@@ -1,6 +1,7 @@
 // src/pages/DashboardPage.jsx
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './DashboardPage.css';
 import dashboardIcon from '../assets/images/dashboard_icon.png';
 import serviceIssuesIcon from '../assets/images/service_issues_icon.png';
@@ -10,10 +11,19 @@ import logoutIcon from '../assets/images/logout_icon.png';
 import alertsIcon from '../assets/images/alerts_icon.png';
 import payBillsIcon from '../assets/images/pay_bills_icon.png';
 import locationIcon from '../assets/images/location_icon.png';
-import Container from '@mui/material/Container'; 
+import Container from '@mui/material/Container';
 
 const DashboardPage = () => {
   const userName = 'User';
+  const navigate = useNavigate();
+
+  const handlePayBillsClick = () => {
+    navigate('/utilities');
+  };
+
+  const handleAlertsClick = () => {
+    navigate('/service-issues');
+  };
 
   return (
     <Container maxWidth="xl"> {/* Wrap in Container */}
@@ -62,14 +72,14 @@ const DashboardPage = () => {
           </div>
           <div className="dashboard-cards-map-container">
             <div className="dashboard-cards">
-              <div className="dashboard-card">
+              <div className="dashboard-card clickable" onClick={handleAlertsClick}>
                 <div className="card-header">
                   <img src={alertsIcon} alt="Alerts Icon" className="card-icon" />
                   <h2 className="card-title">Alerts</h2>
                 </div>
                 <p className="card-text">Your alerts would be displayed here.</p>
               </div>
-              <div className="dashboard-card">
+              <div className="dashboard-card clickable" onClick={handlePayBillsClick}>
                 <div className="card-header">
                   <img src={payBillsIcon} alt="Pay Bills Icon" className="card-icon" />
                   <h2 className="card-title">Pay Bills Now</h2>
@@ -82,7 +92,6 @@ const DashboardPage = () => {
                 src="https://maps.google.com/maps?q=Johannesburg&z=13&output=embed"
                 width="100%"
                 height="100%"
-                frameBorder="0"
                 style={{ border: '0' }}
                 allowFullScreen
               ></iframe>

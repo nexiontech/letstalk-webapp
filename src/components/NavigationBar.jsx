@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTranslation } from '../translations';
 import LanguageSelector from './LanguageSelector';
+import letsTalkLogo from '../assets/images/lets-talk-logo.png';
 import './NavigationBar.css';
 
 function NavigationBar() {
@@ -39,7 +40,9 @@ function NavigationBar() {
   return (
     <header className="header">
       <nav className="navbar">
-        <Link to="/" className="nav-logo">Let's Talk</Link>
+        <Link to="/" className="nav-logo">
+          <img src={letsTalkLogo} alt="Let's Talk Logo" className="logo-image" />
+        </Link>
         <div className="nav-right">
           <LanguageSelector
             currentLanguage={currentLanguage}

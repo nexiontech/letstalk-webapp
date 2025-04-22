@@ -26,10 +26,14 @@
 
 /* Navigation logo */
 .nav-logo {
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: #fff;
+  display: flex;
+  align-items: center;
   text-decoration: none;
+}
+
+.logo-image {
+  height: 40px;
+  width: auto;
 }
 
 /* Nav right section */
@@ -105,9 +109,16 @@
   .nav-item {
     margin-left: 1.5rem;
   }
+
+  .logo-image {
+    height: 35px;
+  }
 }
 
 @media only screen and (max-width: 768px) {
+  .logo-image {
+    height: 30px;
+  }
   .nav-right {
     flex-direction: column;
     align-items: flex-end;
