@@ -14,7 +14,11 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import CommunityHub from './pages/CommunityHub';
 import PressReleasesPage from './pages/PressReleasesPage';
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import GovernmentServicesPage from './pages/GovernmentServicesPage';
+=======
+import UtilitiesPage from './pages/UtilitiesPage';
+>>>>>>> Stashed changes
 =======
 import UtilitiesPage from './pages/UtilitiesPage';
 >>>>>>> Stashed changes
@@ -60,7 +64,11 @@ function App() {
                     <Route path="/report-issue" element={<ReportIssuePage />} />
                     <Route path="/press-releases" element={<PressReleasesPage />} />
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                     <Route path="/services" element={<GovernmentServicesPage />} />
+=======
+                    <Route path="/utilities" element={<UtilitiesPage />} />
+>>>>>>> Stashed changes
 =======
                     <Route path="/utilities" element={<UtilitiesPage />} />
 >>>>>>> Stashed changes
