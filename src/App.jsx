@@ -13,15 +13,8 @@ import Footer from './components/Footer';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import CommunityHub from './pages/CommunityHub';
 import PressReleasesPage from './pages/PressReleasesPage';
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 import GovernmentServicesPage from './pages/GovernmentServicesPage';
-=======
 import UtilitiesPage from './pages/UtilitiesPage';
->>>>>>> Stashed changes
-=======
-import UtilitiesPage from './pages/UtilitiesPage';
->>>>>>> Stashed changes
 import { LanguageProvider } from './contexts/LanguageContext';
 import './App.css';
 import './styles/global.css';
@@ -63,15 +56,8 @@ function App() {
                     <Route path="/service-issues" element={<ServiceIssuesPage />} />
                     <Route path="/report-issue" element={<ReportIssuePage />} />
                     <Route path="/press-releases" element={<PressReleasesPage />} />
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
                     <Route path="/services" element={<GovernmentServicesPage />} />
-=======
                     <Route path="/utilities" element={<UtilitiesPage />} />
->>>>>>> Stashed changes
-=======
-                    <Route path="/utilities" element={<UtilitiesPage />} />
->>>>>>> Stashed changes
                     {isAuthenticated ? (
                         <Route path="/dashboard" element={<DashboardPage />} />
                     ) : (
