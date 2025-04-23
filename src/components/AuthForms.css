@@ -6,6 +6,7 @@
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: white;
 }
 
 .auth-form-container h1 {
@@ -32,6 +33,23 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1rem;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #00933C;
+    box-shadow: 0 0 0 2px rgba(0, 147, 60, 0.2);
+}
+
+.form-group input:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+.form-hint {
+    font-size: 0.75rem;
+    color: #666;
+    margin-top: 0.25rem;
 }
 
 .form-options {
@@ -61,10 +79,18 @@
     font-size: 1rem;
     cursor: pointer;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .submit-button:hover {
     background-color: #c69f00; /* Darker gold */
+}
+
+.submit-button:disabled {
+    background-color: #e8d78e;
+    cursor: not-allowed;
 }
 
 .divider {
@@ -103,6 +129,16 @@
     cursor: pointer;
 }
 
+.google-sso:hover {
+    background-color: #f5f5f5;
+}
+
+.google-sso:disabled {
+    color: #999;
+    cursor: not-allowed;
+    background-color: #f9f9f9;
+}
+
 .auth-link {
     text-align: center;
     margin-top: 1rem;
@@ -134,6 +170,39 @@
     justify-content: center;
     align-items: center;
     z-index: 1000; /* Ensure it's on top */
+}
+
+/* Authentication-related styles */
+.auth-alert {
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    font-size: 1rem;
+    color: #00933C;
+}
+
+.user-greeting {
+    font-weight: 500;
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #e74c3c;
+    font-weight: 500;
+    padding: 0;
+    font-size: inherit;
+}
+
+.logout-btn:hover {
+    text-decoration: underline;
 }
 
 .otp-popup {

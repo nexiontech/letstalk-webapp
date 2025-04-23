@@ -86,8 +86,8 @@
   background-color: #fff;
 }
 
-/* Button styles for login and signup */
-.login-btn, .signup-btn {
+/* Button styles for login, signup, and logout */
+.login-btn, .signup-btn, .logout-btn {
   background-color: var(--color-secondary);
   color: var(--color-text);
   padding: 0.5rem 1.25rem;
@@ -102,6 +102,25 @@
   background-color: var(--color-secondary-light);
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.logout-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.user-greeting {
+  color: white;
+  font-weight: 500;
+  padding: 0.5rem 0;
 }
 
 /* Mobile Responsive Styles */

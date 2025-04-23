@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Routes, Route, Navigate} from 'react-router-dom';
 import { Box } from '@mui/material';
 import HomePage from './pages/HomePage';
@@ -17,22 +17,40 @@ import GovernmentServicesPage from './pages/GovernmentServicesPage';
 import UtilitiesPage from './pages/UtilitiesPage';
 import ThusongAIChatbot from './pages/ThusongAIChatbot';
 import { LanguageProvider } from './contexts/LanguageContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './App.css';
 import './styles/global.css';
 
-function App() {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+// Protected route component
+const ProtectedRoute = ({ children }) => {
+    const { isAuthenticated, loading } = useAuth();
+
+    // If still loading auth state, show nothing (or could add a loading spinner)
+    if (loading) {
+        return <div className="loading-spinner">Loading...</div>;
+    }
+
+    // If not authenticated, redirect to login
+    if (!isAuthenticated) {
+        return <Navigate to="/login" />;
+    }
+
+    // If authenticated, render the children
+    return children;
+};
+
+function AppContent() {
+    const { isAuthenticated } = useAuth();
 
     return (
-        <LanguageProvider>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    minHeight: '100vh',
-                    width: '100%'
-                }}
-            >
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                minHeight: '100vh',
+                width: '100%'
+            }}
+        >
             <NavigationBar />
             <Box
                 component="main"
@@ -47,29 +65,60 @@ function App() {
             >
                 <Routes>
                     <Route path="/" element={<HomePage />} />
-                    <Route
-                        path="/login"
-                        element={<LoginPage setIsAuthenticated={setIsAuthenticated} />}
-                    />
+                    <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage />} />
                     <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                    <Route path="/CommunityHub" element={<CommunityHub />} />
-                    <Route path="/service-issues" element={<ServiceIssuesPage />} />
-                    <Route path="/report-issue" element={<ReportIssuePage />} />
+
+                    {/* Public routes */}
                     <Route path="/press-releases" element={<PressReleasesPage />} />
-                    <Route path="/services" element={<GovernmentServicesPage />} />
-                    <Route path="/utilities" element={<UtilitiesPage />} />
                     <Route path="/thusong-ai" element={<ThusongAIChatbot />} />
-                    {isAuthenticated ? (
-                        <Route path="/dashboard" element={<DashboardPage />} />
-                    ) : (
-                        <Route path="/dashboard" element={<Navigate to="/login" />} />
-                    )}
+
+                    {/* Protected routes */}
+                    <Route path="/dashboard" element={
+                        <ProtectedRoute>
+                            <DashboardPage />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/CommunityHub" element={
+                        <ProtectedRoute>
+                            <CommunityHub />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/service-issues" element={
+                        <ProtectedRoute>
+                            <ServiceIssuesPage />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/report-issue" element={
+                        <ProtectedRoute>
+                            <ReportIssuePage />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/services" element={
+                        <ProtectedRoute>
+                            <GovernmentServicesPage />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/utilities" element={
+                        <ProtectedRoute>
+                            <UtilitiesPage />
+                        </ProtectedRoute>
+                    } />
+
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </Box>
             <Footer />
         </Box>
+    );
+}
+
+function App() {
+    return (
+        <LanguageProvider>
+            <AuthProvider>
+                <AppContent />
+            </AuthProvider>
         </LanguageProvider>
     );
 }
