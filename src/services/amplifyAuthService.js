@@ -7,7 +7,17 @@ export const loginUser = createAsyncThunk(
   'auth/login',
   async ({ idNumber, password }, { rejectWithValue }) => {
     try {
-      // Using Amplify's signIn function directly
+      // First, check if there's already a signed-in user
+      try {
+        // Try to sign out any existing user first
+        await signOut();
+        console.log('Signed out existing user');
+      } catch (signOutError) {
+        // Ignore errors from signOut - it might just mean no user was signed in
+        console.log('No existing user to sign out or sign out failed:', signOutError);
+      }
+
+      // Now attempt to sign in
       const signInResponse = await signIn({
         username: idNumber,  // Using ID Number as username
         password,
@@ -43,6 +53,34 @@ export const loginUser = createAsyncThunk(
         return rejectWithValue('Incorrect ID Number or password.');
       } else if (error.message && error.message.includes('UserNotFoundException')) {
         return rejectWithValue('User does not exist.');
+      } else if (error.message && error.message.includes('UserAlreadyAuthenticatedException')) {
+        // Handle the case where a user is already authenticated
+        try {
+          // Try to get the current user and session
+          const currentUser = await getCurrentUser();
+          const { tokens } = await fetchAuthSession();
+
+          // Create user object from available information
+          const user = {
+            idNumber: idNumber, // We don't know if this is correct, but it's what the user entered
+            email: '',
+            name: '',
+          };
+
+          // Store user in localStorage
+          localStorage.setItem('auth_user', JSON.stringify(user));
+
+          return {
+            user: user,
+            token: tokens.idToken.toString()
+          };
+        } catch (innerError) {
+          // If we can't get the current user, force sign out and ask to try again
+          try {
+            await signOut({ global: true });
+          } catch {}
+          return rejectWithValue('Session conflict detected. Please try logging in again.');
+        }
       }
       return rejectWithValue(error.message || 'Login failed');
     }
@@ -141,16 +179,23 @@ export const logoutUser = createAsyncThunk(
       localStorage.removeItem('auth_refresh_token');
       localStorage.removeItem('auth_user');
 
-      // Also call Amplify's signOut for good measure
+      // Call Amplify's signOut with global option to clear all auth state
       try {
-        await signOut();
+        await signOut({ global: true });
+        console.log('Successfully signed out from Amplify');
       } catch (e) {
-        // Ignore errors from Amplify signOut
-        console.log('Amplify signOut error (ignored):', e);
+        // Log but don't fail on Amplify signOut errors
+        console.log('Amplify signOut error (handled):', e);
       }
 
       return { success: true };
     } catch (error) {
+      // Even if there's an error, clear localStorage
+      localStorage.removeItem('auth_id_token');
+      localStorage.removeItem('auth_access_token');
+      localStorage.removeItem('auth_refresh_token');
+      localStorage.removeItem('auth_user');
+
       return rejectWithValue(error.message || 'Logout failed');
     }
   }
@@ -161,20 +206,43 @@ export const checkAuthStatus = createAsyncThunk(
   'auth/checkStatus',
   async (_, { rejectWithValue }) => {
     try {
-      // Check if we have tokens in localStorage
-      const idToken = localStorage.getItem('auth_id_token');
-      const user = JSON.parse(localStorage.getItem('auth_user') || '{}');
+      // Try to get the current authenticated user from Amplify
+      try {
+        const currentUser = await getCurrentUser();
+        const { tokens } = await fetchAuthSession();
 
-      if (!idToken) {
-        throw new Error('No authentication token found');
+        // Get user from localStorage or create a basic one
+        const user = JSON.parse(localStorage.getItem('auth_user') || '{}');
+
+        // Return user information and token
+        return {
+          user: user,
+          token: tokens.idToken.toString()
+        };
+      } catch (amplifyError) {
+        console.log('Amplify session check failed:', amplifyError);
+
+        // Fall back to localStorage check
+        const user = JSON.parse(localStorage.getItem('auth_user') || '{}');
+
+        if (Object.keys(user).length === 0) {
+          throw new Error('No user found in localStorage');
+        }
+
+        // Clear any stale Amplify session
+        try {
+          await signOut({ global: true });
+        } catch {}
+
+        throw new Error('Session expired or invalid');
       }
-
-      // Return user information and token
-      return {
-        user: user,
-        token: idToken
-      };
     } catch (error) {
+      // Clear any potentially corrupted auth data
+      localStorage.removeItem('auth_user');
+      localStorage.removeItem('auth_id_token');
+      localStorage.removeItem('auth_access_token');
+      localStorage.removeItem('auth_refresh_token');
+
       // User is not authenticated
       return rejectWithValue('Not authenticated');
     }

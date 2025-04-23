@@ -222,6 +222,34 @@
     text-decoration: underline;
 }
 
+.auth-help-links {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.text-button {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+
+.text-button:hover {
+    color: var(--color-primary-dark);
+}
+
+.text-button:disabled {
+    color: #999;
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
 .otp-popup {
     background-color: white;
     padding: 2rem;

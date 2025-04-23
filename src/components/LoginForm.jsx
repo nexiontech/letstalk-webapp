@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Alert, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
-import { confirmRegistration, resendVerificationCode } from '../services/amplifyAuthService';
+import { Alert, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Tooltip } from '@mui/material';
+import { confirmRegistration, resendVerificationCode, logoutUser } from '../services/amplifyAuthService';
 import { useDispatch } from 'react-redux';
 import './AuthForms.css';
 
@@ -105,6 +105,22 @@ function LoginForm() {
             }
         } catch (error) {
             setLoginError('An unexpected error occurred. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleClearSession = async () => {
+        setIsSubmitting(true);
+        setLoginError(null);
+
+        try {
+            // Call the logout function to clear any existing session
+            await dispatch(logoutUser());
+            setLoginError(null);
+            alert('Session cleared successfully. You can now try logging in again.');
+        } catch (error) {
+            setLoginError('Failed to clear session. Please try again.');
         } finally {
             setIsSubmitting(false);
         }
@@ -211,6 +227,19 @@ function LoginForm() {
                 <p className="auth-link">
                     Don't have an account? <Link to="/register">Sign up</Link>
                 </p>
+
+                <div className="auth-help-links">
+                    <Tooltip title="Use this if you're having trouble logging in due to session conflicts">
+                        <button
+                            type="button"
+                            className="text-button"
+                            onClick={handleClearSession}
+                            disabled={isSubmitting}
+                        >
+                            Clear Session
+                        </button>
+                    </Tooltip>
+                </div>
             </form>
 
             {/* Email Verification Dialog */}
