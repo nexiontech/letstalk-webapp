@@ -298,12 +298,10 @@
 }
 
 .issue-card-footer {
-  padding: 10px 12px;
+  padding: 8px 12px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
   background-color: #f9f9f9;
   font-size: 11px;
   color: #666;
@@ -319,31 +317,14 @@
   letter-spacing: 0.5px;
 }
 
-.issue-details-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
 .issue-time, .issue-eta {
   display: flex;
   align-items: center;
   gap: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 80px;
 }
 
 .issue-time svg, .issue-eta svg {
   font-size: 10px;
-  flex-shrink: 0;
-}
-
-.issue-time span, .issue-eta span {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .no-issues {
@@ -673,22 +654,5 @@
 
   .issue-info-grid {
     grid-template-columns: 1fr;
-  }
-
-  .issue-card-footer {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-
-  .issue-details-wrapper {
-    width: 100%;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-
-  .issue-time, .issue-eta {
-    width: 100%;
   }
 }

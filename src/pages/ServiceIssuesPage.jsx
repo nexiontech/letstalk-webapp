@@ -216,15 +216,13 @@ const ServiceIssuesPage = () => {
                     <div className="issue-status" style={{ backgroundColor: getSeverityColor(issue.severity) }}>
                       {issue.status}
                     </div>
-                    <div className="issue-details-wrapper">
-                      <div className="issue-time">
-                        <FontAwesomeIcon icon={faClock} />
-                        <span>Reported: {issue.reported}</span>
-                      </div>
-                      <div className="issue-eta">
-                        <FontAwesomeIcon icon={faCalendarAlt} />
-                        <span>ETA: {issue.eta}</span>
-                      </div>
+                    <div className="issue-time">
+                      <FontAwesomeIcon icon={faClock} />
+                      <span>Reported: {issue.reported}</span>
+                    </div>
+                    <div className="issue-eta">
+                      <FontAwesomeIcon icon={faCalendarAlt} />
+                      <span>ETA: {issue.eta}</span>
                     </div>
                   </div>
                 </div>
