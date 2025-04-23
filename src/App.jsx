@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate} from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Box } from '@mui/material';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -16,14 +16,16 @@ import PressReleasesPage from './pages/PressReleasesPage';
 import GovernmentServicesPage from './pages/GovernmentServicesPage';
 import UtilitiesPage from './pages/UtilitiesPage';
 import ThusongAIChatbot from './pages/ThusongAIChatbot';
+import DashboardLayout from './layouts/DashboardLayout';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './App.css';
 import './styles/global.css';
 
-// Protected route component
+// Protected route component with dashboard layout
 const ProtectedRoute = ({ children }) => {
     const { isAuthenticated, loading } = useAuth();
+    const location = useLocation();
 
     // If still loading auth state, show nothing (or could add a loading spinner)
     if (loading) {
@@ -32,15 +34,16 @@ const ProtectedRoute = ({ children }) => {
 
     // If not authenticated, redirect to login
     if (!isAuthenticated) {
-        return <Navigate to="/login" />;
+        return <Navigate to="/login" state={{ from: location }} />;
     }
 
-    // If authenticated, render the children
-    return children;
+    // If authenticated, render the children within the dashboard layout
+    return <DashboardLayout>{children}</DashboardLayout>;
 };
 
 function AppContent() {
     const { isAuthenticated } = useAuth();
+    const location = useLocation();
     // State to control initial minimized state of the chatbot
     const [isChatbotInitiallyMinimized, setIsChatbotInitiallyMinimized] = useState(true);
 
@@ -60,16 +63,29 @@ function AppContent() {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    // Check if the current route is a protected route that should use the dashboard layout
+    const isProtectedRoute = [
+        '/dashboard',
+        '/service-issues',
+        '/report-issue',
+        '/services',
+        '/utilities',
+        '/CommunityHub'
+    ].includes(location.pathname);
+
     return (
         <Box
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 minHeight: '100vh',
-                width: '100%'
+                width: '100%',
+                overflow: isProtectedRoute ? 'hidden' : 'visible'
             }}
         >
-            <NavigationBar />
+            {/* Only show NavigationBar for non-protected routes */}
+            {!isProtectedRoute && <NavigationBar />}
+
             <Box
                 component="main"
                 sx={{
@@ -77,9 +93,10 @@ function AppContent() {
                     display: 'flex',
                     flexDirection: 'column',
                     width: '100%',
-                    overflow: 'visible'
+                    overflow: isProtectedRoute ? 'hidden' : 'visible',
+                    height: isProtectedRoute ? '100vh' : 'auto'
                 }}
-                className="main-content"
+                className={isProtectedRoute ? '' : 'main-content'}
             >
                 <Routes>
                     <Route path="/" element={<HomePage />} />
@@ -90,7 +107,7 @@ function AppContent() {
                     {/* Public routes */}
                     <Route path="/press-releases" element={<PressReleasesPage />} />
 
-                    {/* Protected routes */}
+                    {/* Protected routes with Dashboard Layout */}
                     <Route path="/dashboard" element={
                         <ProtectedRoute>
                             <DashboardPage />
@@ -128,7 +145,9 @@ function AppContent() {
                 {/* Thusong AI Chatbot - visible on all pages */}
                 <ThusongAIChatbot initiallyMinimized={isChatbotInitiallyMinimized} />
             </Box>
-            <Footer />
+
+            {/* Only show Footer for non-protected routes */}
+            {!isProtectedRoute && <Footer />}
         </Box>
     );
 }

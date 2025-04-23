@@ -1,94 +1,14 @@
+/* Dashboard page specific styles */
 
+.greeting-section {
+  margin-bottom: 24px;
+}
 
-.dashboard-container {
-    display: flex;
-    height: 100vh;
-    background-color: #f9fafb;
-    font-family: 'Inter', sans-serif;
-  }
-
-  .dashboard-sidebar {
-    width: 256px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    padding: 24px;
-  }
-
-  .dashboard-heading {
-    font-size: 36px;
-    font-weight: 700;
-    color: #000;
-    margin-bottom: 24px;
-    line-height: 1.6;
-  }
-
-  .location-input-container {
-    position: relative;
-    margin-bottom: 16px;
-  }
-
-  .location-input {
-    width: 100%;
-    padding: 6px 12px;
-    padding-right: 32px;
-    font-size: 14px;
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 9999px;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    color: #000;
-  }
-
-  .location-icon {
-    position: absolute;
-    width: 24px;
-    height: 24px;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0.65;
-  }
-
-  .dashboard-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .nav-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: #000;
-  }
-
-  .nav-link.active{
-      color: #000;
-  }
-
-  .nav-icon {
-    width: 32px;
-    height: 32px;
-  }
-
-  .logout {
-      margin-top: auto;
-  }
-
-  .dashboard-main-content {
-    flex: 1;
-    padding: 24px;
-  }
-
-  .greeting-section {
-    margin-bottom: 24px;
-  }
-
-  .greeting-heading {
-    font-size: 24px;
-    font-weight: 600;
-    color: #0d4346;
-  }
+.greeting-heading {
+  font-size: 24px;
+  font-weight: 600;
+  color: #0d4346;
+}
 
   .dashboard-cards-map-container {
     display: flex;
