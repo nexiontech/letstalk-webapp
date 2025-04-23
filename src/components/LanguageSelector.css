@@ -6,13 +6,13 @@
 .language-selector-button {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background-color: transparent;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
-  padding: 6px 12px;
+  padding: 5px 10px;
   color: white;
-  font-size: 14px;
+  font-size: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -22,15 +22,16 @@
 }
 
 .globe-icon {
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .current-language {
   font-weight: 500;
+  font-size: 12px;
 }
 
 .dropdown-arrow {
-  font-size: 10px;
+  font-size: 8px;
   transition: transform 0.2s ease;
 }
 
@@ -143,11 +144,11 @@
   .language-selector-button {
     padding: 6px 10px;
   }
-  
+
   .current-language {
     display: none;
   }
-  
+
   .language-dropdown {
     right: -10px;
   }

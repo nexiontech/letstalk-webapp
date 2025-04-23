@@ -20,8 +20,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.5rem;
+  padding: 0.8rem 1.5rem;
   box-sizing: border-box;
+}
+
+/* Nav left section with logo and main menu */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 }
 
 /* Navigation logo */
@@ -36,25 +43,39 @@
   width: auto;
 }
 
-/* Nav right section */
+/* Nav right section with auth controls and language selector */
 .nav-right {
   display: flex;
   align-items: center;
   gap: 1.5rem;
 }
 
+/* Auth controls container */
+.auth-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Language control container */
+.language-control {
+  margin-left: 0.5rem;
+}
+
 /* Nav menu styles */
 .nav-menu {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   list-style: none;
   transition: left 0.3s ease;
+  margin: 0;
+  padding: 0;
 }
 
 /* Nav item spacing */
 .nav-item {
-  margin-left: 2rem;
+  margin-right: 1.5rem;
 }
 
 /* Nav link styles */
@@ -64,6 +85,7 @@
   color: #fff;
   text-decoration: none;
   transition: color 0.3s ease;
+  white-space: nowrap;
 }
 
 .nav-link:hover {
@@ -126,22 +148,45 @@
 /* Mobile Responsive Styles */
 @media only screen and (max-width: 992px) {
   .nav-item {
-    margin-left: 1.5rem;
+    margin-right: 1rem;
   }
 
   .logo-image {
     height: 35px;
   }
+
+  .nav-left {
+    gap: 1.5rem;
+  }
 }
 
 @media only screen and (max-width: 768px) {
+  .navbar {
+    padding: 0.8rem 1rem;
+  }
+
   .logo-image {
     height: 30px;
   }
+
+  .nav-left {
+    flex: 1;
+  }
+
   .nav-right {
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.5rem;
+    order: 2;
+  }
+
+  .auth-controls {
+    display: none; /* Hide auth controls in mobile view, they'll be in the menu */
+  }
+
+  .language-control {
+    margin-right: 1rem;
+  }
+
+  .language-selector-button {
+    padding: 4px 8px;
   }
 
   .nav-menu {
@@ -163,11 +208,23 @@
   }
 
   .nav-item {
-    margin: 1.5rem 0;
+    margin: 1rem 0;
+  }
+
+  /* Add auth controls to mobile menu */
+  .nav-menu.active .auth-controls {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .hamburger {
     display: block;
+    order: 3;
   }
 
   /* Transform hamburger to "X" on active state */

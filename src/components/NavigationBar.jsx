@@ -22,10 +22,23 @@ function NavigationBar() {
   useEffect(() => {
     const hamburger = document.querySelector(".hamburger");
     const navMenu = document.querySelector(".nav-menu");
+    const authControls = document.querySelector(".auth-controls");
 
     function mobileMenu() {
       hamburger.classList.toggle("active");
       navMenu.classList.toggle("active");
+
+      // Clone auth controls into mobile menu if not already there
+      if (navMenu.classList.contains("active") && !navMenu.querySelector(".auth-controls")) {
+        const authControlsClone = authControls.cloneNode(true);
+        navMenu.appendChild(authControlsClone);
+
+        // Add event listeners to cloned buttons
+        const logoutBtn = authControlsClone.querySelector(".logout-btn");
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", handleLogout);
+        }
+      }
     }
 
     hamburger.addEventListener("click", mobileMenu);
@@ -43,19 +56,16 @@ function NavigationBar() {
       hamburger.removeEventListener("click", mobileMenu);
       navLink.forEach(n => n.removeEventListener("click", closeMenu));
     };
-  }, []);
+  }, [handleLogout, navigate]);
 
   return (
     <header className="header">
       <nav className="navbar">
-        <Link to="/" className="nav-logo">
-          <img src={letsTalkLogo} alt="Let's Talk Logo" className="logo-image" />
-        </Link>
-        <div className="nav-right">
-          <LanguageSelector
-            currentLanguage={currentLanguage}
-            onLanguageChange={changeLanguage}
-          />
+        <div className="nav-left">
+          <Link to="/" className="nav-logo">
+            <img src={letsTalkLogo} alt="Let's Talk Logo" className="logo-image" />
+          </Link>
+
           <ul className="nav-menu">
             {/* Always visible links */}
             <li className="nav-item">
@@ -79,29 +89,34 @@ function NavigationBar() {
                 </li>
               </>
             )}
+          </ul>
+        </div>
 
-            {/* Authentication links */}
+        <div className="nav-right">
+          {/* Authentication links */}
+          <div className="auth-controls">
             {!isAuthenticated ? (
               <>
-                <li className="nav-item">
-                  <Link to="/login" className="nav-link login-btn">{t('nav.login')}</Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="/register" className="nav-link signup-btn">{t('nav.signup')}</Link>
-                </li>
+                <Link to="/login" className="nav-link login-btn">{t('nav.login')}</Link>
+                <Link to="/register" className="nav-link signup-btn">{t('nav.signup')}</Link>
               </>
             ) : (
               <>
-                <li className="nav-item">
-                  <span className="nav-link user-greeting">Hello, {user?.name || 'User'}</span>
-                </li>
-                <li className="nav-item">
-                  <button onClick={handleLogout} className="nav-link logout-btn">{t('nav.logout')}</button>
-                </li>
+                <span className="nav-link user-greeting">Hello, {user?.name || 'User'}</span>
+                <button onClick={handleLogout} className="nav-link logout-btn">{t('nav.logout')}</button>
               </>
             )}
-          </ul>
+          </div>
+
+          {/* Language selector moved to the far right */}
+          <div className="language-control">
+            <LanguageSelector
+              currentLanguage={currentLanguage}
+              onLanguageChange={changeLanguage}
+            />
+          </div>
         </div>
+
         <div className="hamburger">
           <span className="bar"></span>
           <span className="bar"></span>
