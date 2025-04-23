@@ -1,7 +1,20 @@
 // src/contexts/AuthContext.jsx
 import React, { createContext, useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkAuthStatus, loginUser, logoutUser, registerUser, clearError } from '../services/authService';
+import {
+  checkAuthStatus,
+  loginUser,
+  logoutUser,
+  registerUser,
+  confirmRegistration,
+  resendVerificationCode,
+  forgotPassword,
+  confirmForgotPassword,
+  clearError,
+  clearRegistrationStatus,
+  clearPasswordResetStatus,
+  clearVerificationStatus
+} from '../services/amplifyAuthService';
 
 // Create the context
 const AuthContext = createContext();
@@ -23,9 +36,17 @@ export const AuthProvider = ({ children }) => {
       if (loginUser.fulfilled.match(resultAction)) {
         return { success: true };
       } else {
-        return { 
-          success: false, 
-          error: resultAction.payload || 'Login failed' 
+        // Check if this is a user not confirmed error
+        if (resultAction.payload && resultAction.payload.includes('not confirmed')) {
+          return {
+            success: false,
+            userConfirmationRequired: true,
+            error: 'Please verify your email before logging in.'
+          };
+        }
+        return {
+          success: false,
+          error: resultAction.payload || 'Login failed'
         };
       }
     } catch (error) {
@@ -38,14 +59,14 @@ export const AuthProvider = ({ children }) => {
     try {
       const resultAction = await dispatch(registerUser(userData));
       if (registerUser.fulfilled.match(resultAction)) {
-        return { 
-          success: true, 
-          message: resultAction.payload.message 
+        return {
+          success: true,
+          message: resultAction.payload.message
         };
       } else {
-        return { 
-          success: false, 
-          error: resultAction.payload || 'Registration failed' 
+        return {
+          success: false,
+          error: resultAction.payload || 'Registration failed'
         };
       }
     } catch (error) {
@@ -63,9 +84,68 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Forgot password function
+  const forgotPasswordRequest = async (idNumber) => {
+    try {
+      const resultAction = await dispatch(forgotPassword(idNumber));
+      if (forgotPassword.fulfilled.match(resultAction)) {
+        return {
+          success: true,
+          message: resultAction.payload.message
+        };
+      } else {
+        return {
+          success: false,
+          error: resultAction.payload || 'Password reset request failed'
+        };
+      }
+    } catch (error) {
+      return { success: false, error: error.message || 'Password reset request failed' };
+    }
+  };
+
+  // Confirm forgot password function
+  const confirmPasswordReset = async (idNumber, code, newPassword) => {
+    try {
+      const resultAction = await dispatch(confirmForgotPassword({
+        idNumber,
+        code,
+        newPassword
+      }));
+      if (confirmForgotPassword.fulfilled.match(resultAction)) {
+        return {
+          success: true,
+          message: resultAction.payload.message
+        };
+      } else {
+        return {
+          success: false,
+          error: resultAction.payload || 'Password reset confirmation failed'
+        };
+      }
+    } catch (error) {
+      return { success: false, error: error.message || 'Password reset confirmation failed' };
+    }
+  };
+
   // Clear any auth errors
   const clearAuthError = () => {
     dispatch(clearError());
+  };
+
+  // Clear registration status
+  const clearRegStatus = () => {
+    dispatch(clearRegistrationStatus());
+  };
+
+  // Clear password reset status
+  const clearPwdResetStatus = () => {
+    dispatch(clearPasswordResetStatus());
+  };
+
+  // Clear verification status
+  const clearVerifStatus = () => {
+    dispatch(clearVerificationStatus());
   };
 
   // Create the context value
@@ -76,10 +156,19 @@ export const AuthProvider = ({ children }) => {
     error: auth.error,
     registrationSuccess: auth.registrationSuccess,
     registrationMessage: auth.registrationMessage,
+    passwordResetRequested: auth.passwordResetRequested,
+    passwordResetMessage: auth.passwordResetMessage,
+    verificationSuccess: auth.verificationSuccess,
+    verificationMessage: auth.verificationMessage,
     login,
     register,
     logout,
-    clearAuthError
+    forgotPasswordRequest,
+    confirmPasswordReset,
+    clearAuthError,
+    clearRegStatus,
+    clearPwdResetStatus,
+    clearVerifStatus
   };
 
   return (

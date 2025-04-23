@@ -1,7 +1,7 @@
 /**
  * Validates an email address format
- * @param {string} email 
- * @returns {boolean} 
+ * @param {string} email
+ * @returns {boolean}
  */
 export const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -10,8 +10,8 @@ export const validateEmail = (email) => {
 
 /**
  * Validates password strength
- * @param {string} password 
- * @returns {Object} 
+ * @param {string} password
+ * @returns {Object}
  */
 export const validatePassword = (password) => {
     const result = {
@@ -45,8 +45,8 @@ export const validatePassword = (password) => {
 
 /**
  * Validates an ID number format
- * @param {string} idNumber 
- * @returns {boolean} 
+ * @param {string} idNumber
+ * @returns {boolean}
  */
 export const validateIdNumber = (idNumber) => {
     // Assuming ID numbers should be 13 digits
@@ -56,9 +56,9 @@ export const validateIdNumber = (idNumber) => {
 
 /**
  * Validates that two passwords match
- * @param {string} password 
- * @param {string} confirmPassword 
- * @returns {boolean} 
+ * @param {string} password
+ * @param {string} confirmPassword
+ * @returns {boolean}
  */
 export const doPasswordsMatch = (password, confirmPassword) => {
     return password === confirmPassword;
@@ -66,11 +66,26 @@ export const doPasswordsMatch = (password, confirmPassword) => {
 
 /**
  * Validates OTP format
- * @param {string} otp 
- * @returns {boolean} 
+ * @param {string} otp
+ * @returns {boolean}
  */
 export const validateOTP = (otp) => {
     // Assuming OTP should be 6 digits
     const otpRegex = /^\d{6}$/;
     return otpRegex.test(otp);
+};
+
+/**
+ * Formats a user object from Cognito
+ * @param {object} cognitoUser - The user object from Cognito
+ * @returns {object} - Formatted user object
+ */
+export const formatCognitoUser = (cognitoUser) => {
+    if (!cognitoUser) return null;
+
+    return {
+        idNumber: cognitoUser.username,
+        name: cognitoUser.attributes?.name || '',
+        email: cognitoUser.attributes?.email || '',
+    };
 };

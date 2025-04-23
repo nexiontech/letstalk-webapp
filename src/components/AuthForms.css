@@ -1,4 +1,5 @@
 /*src/components/AuthForms.css*/
+/* Updated for AWS Cognito integration */
 
 .auth-form-container {
     max-width: 400px;
@@ -52,6 +53,12 @@
     margin-top: 0.25rem;
 }
 
+.error-message {
+    color: #d32f2f;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
 .form-options {
     display: flex;
     justify-content: space-between;
@@ -66,12 +73,16 @@
 }
 
 .forgot-password {
-    color: #00933C;
+    color: #FFB61D; /* Updated to brand yellow */
     text-decoration: none;
 }
 
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
 .submit-button {
-    background-color: #E3B800; /* Gold color from image */
+    background-color: #0E4649; /* Updated to brand green */
     color: white;
     padding: 0.8rem;
     border: none;
@@ -82,14 +93,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: background-color 0.3s ease;
 }
 
 .submit-button:hover {
-    background-color: #c69f00; /* Darker gold */
+    background-color: #0A3437; /* Darker green */
 }
 
 .submit-button:disabled {
-    background-color: #e8d78e;
+    background-color: #6c9b9d;
     cursor: not-allowed;
 }
 
@@ -145,8 +157,13 @@
 }
 
 .auth-link a {
-    color: #00933C;
+    color: #FFB61D; /* Updated to brand yellow */
     text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-link a:hover {
+    text-decoration: underline;
 }
 
 .success-message {
@@ -228,7 +245,7 @@
 .otp-popup .link-button {
     background: none;
     border: none;
-    color: #E3B800; /* Gold color */
+    color: #FFB61D; /* Updated to brand yellow */
     text-decoration: underline;
     cursor: pointer;
     padding: 0;
@@ -236,7 +253,7 @@
 }
 
 .otp-popup .link-button:hover {
-    color: #c69f00; /* Darker gold */
+    color: #E6A00A; /* Darker yellow */
 }
 
 .otp-popup form {

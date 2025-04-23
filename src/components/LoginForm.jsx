@@ -3,7 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Alert, CircularProgress } from '@mui/material';
+import { Alert, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
+import { confirmRegistration, resendVerificationCode } from '../services/amplifyAuthService';
+import { useDispatch } from 'react-redux';
 import './AuthForms.css';
 
 function LoginForm() {
@@ -14,7 +16,11 @@ function LoginForm() {
     });
     const [loginError, setLoginError] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showVerificationDialog, setShowVerificationDialog] = useState(false);
+    const [verificationCode, setVerificationCode] = useState('');
+    const [unverifiedUser, setUnverifiedUser] = useState(null);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const { login, isAuthenticated, error, clearAuthError } = useAuth();
 
     // If already authenticated, redirect to dashboard
@@ -41,6 +47,10 @@ function LoginForm() {
 
             if (result.success) {
                 // Login successful, will redirect via the useEffect above
+            } else if (result.userConfirmationRequired) {
+                // User needs to verify their email
+                setUnverifiedUser(formData.idNumber);
+                setShowVerificationDialog(true);
             } else {
                 // Login failed
                 setLoginError(result.error || 'Login failed. Please check your credentials.');
@@ -52,9 +62,58 @@ function LoginForm() {
         }
     };
 
+    const handleVerificationSubmit = async () => {
+        if (!verificationCode.trim()) {
+            setLoginError('Please enter the verification code');
+            return;
+        }
+
+        setIsSubmitting(true);
+        setLoginError(null);
+
+        try {
+            const result = await dispatch(confirmRegistration({ idNumber: unverifiedUser, code: verificationCode }));
+
+            if (confirmRegistration.fulfilled.match(result)) {
+                setShowVerificationDialog(false);
+                setVerificationCode('');
+                // Try to log in automatically after verification
+                await login(formData.idNumber, formData.password);
+            } else {
+                setLoginError(result.payload || 'Verification failed. Please try again.');
+            }
+        } catch (error) {
+            setLoginError('An unexpected error occurred during verification. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleResendCode = async () => {
+        if (!unverifiedUser) return;
+
+        setIsSubmitting(true);
+        setLoginError(null);
+
+        try {
+            const result = await dispatch(resendVerificationCode(unverifiedUser));
+
+            if (resendVerificationCode.fulfilled.match(result)) {
+                alert('Verification code has been resent to your email.');
+            } else {
+                setLoginError(result.payload || 'Failed to resend verification code. Please try again.');
+            }
+        } catch (error) {
+            setLoginError('An unexpected error occurred. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     const handleGoogleSignIn = () => {
-        // In a real implementation, this would integrate with AWS Cognito's federated identity
-        alert('Google Sign-In is not implemented in this demo.');
+        // This would integrate with AWS Cognito's federated identity
+        // For now, we'll just show a message
+        alert('Google Sign-In will be implemented with AWS Cognito federated identity.');
     };
 
     const handleChange = (e) => {
@@ -82,13 +141,13 @@ function LoginForm() {
                     <input
                         type="text"
                         name="idNumber"
-                        placeholder="Enter your ID N.O"
+                        placeholder="Enter your ID Number"
                         value={formData.idNumber}
                         onChange={handleChange}
                         disabled={isSubmitting}
                         required
                     />
-                    <div className="form-hint">Dummy ID: 7208145695082</div>
+                    <div className="form-hint">South African ID Number (13 digits)</div>
                 </div>
 
                 <div className="form-group">
@@ -101,7 +160,7 @@ function LoginForm() {
                         disabled={isSubmitting}
                         required
                     />
-                    <div className="form-hint">Dummy Password: P@ssword</div>
+                    <div className="form-hint">Minimum 8 characters with letters, numbers & symbols</div>
                 </div>
 
                 <div className="form-options">
@@ -153,6 +212,40 @@ function LoginForm() {
                     Don't have an account? <Link to="/register">Sign up</Link>
                 </p>
             </form>
+
+            {/* Email Verification Dialog */}
+            <Dialog open={showVerificationDialog} onClose={() => setShowVerificationDialog(false)}>
+                <DialogTitle>Verify Your Email</DialogTitle>
+                <DialogContent>
+                    <p>Please enter the verification code sent to your email.</p>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="Verification Code"
+                        type="text"
+                        fullWidth
+                        value={verificationCode}
+                        onChange={(e) => setVerificationCode(e.target.value)}
+                        disabled={isSubmitting}
+                    />
+                    {loginError && (
+                        <Alert severity="error" className="auth-alert" style={{ marginTop: '10px' }}>
+                            {loginError}
+                        </Alert>
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleResendCode} disabled={isSubmitting}>
+                        Resend Code
+                    </Button>
+                    <Button onClick={() => setShowVerificationDialog(false)} disabled={isSubmitting}>
+                        Cancel
+                    </Button>
+                    <Button onClick={handleVerificationSubmit} disabled={isSubmitting} variant="contained" color="primary">
+                        {isSubmitting ? <CircularProgress size={20} color="inherit" /> : 'Verify'}
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 }

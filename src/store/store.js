@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 // Import reducers from feature slices
 import counterReducer from './features/counter/counterSlice';
-import authReducer from '../services/authService';
+import authReducer from '../services/amplifyAuthService';
 
 export const store = configureStore({
   reducer: {
@@ -13,7 +13,14 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         // Ignore these action types
-        ignoredActions: ['auth/login/fulfilled', 'auth/checkStatus/fulfilled'],
+        ignoredActions: [
+          'auth/login/fulfilled',
+          'auth/checkStatus/fulfilled',
+          'auth/register/fulfilled',
+          'auth/confirmRegistration/fulfilled',
+          'auth/forgotPassword/fulfilled',
+          'auth/confirmForgotPassword/fulfilled'
+        ],
       },
     }),
 });
