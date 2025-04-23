@@ -74,6 +74,27 @@ In the project directory, you can run the following scripts:
 *   `npm run lint`: Lints the code using ESLint to check for code quality and style issues.
 *   `npm run preview`: Serves the production build locally to preview before deployment.
 
+## Testing
+
+The project uses Jest and React Testing Library for testing. To run tests:
+
+1. Make sure you have all dependencies installed:
+   ```bash
+   npm install
+   ```
+
+2. Run the test suite:
+   ```bash
+   npm test
+   ```
+
+Tests are configured to run in a jsdom environment, which simulates a browser-like environment. The testing setup includes:
+
+* Jest as the test runner and assertion library
+* React Testing Library for component testing
+* jest-environment-jsdom for browser API simulation
+* @testing-library/jest-dom for additional DOM matchers
+
 ## Project Structure
 ```
 letstalk-webapp/

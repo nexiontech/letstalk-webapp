@@ -1,3 +1,5 @@
+/*src/components/AuthForms.css*/
+
 .auth-form-container {
     max-width: 400px;
     margin: 2rem auto;
@@ -51,7 +53,7 @@
 }
 
 .submit-button {
-    background-color: #E3B800;
+    background-color: #E3B800; /* Gold color from image */
     color: white;
     padding: 0.8rem;
     border: none;
@@ -62,7 +64,7 @@
 }
 
 .submit-button:hover {
-    background-color: #c69f00;
+    background-color: #c69f00; /* Darker gold */
 }
 
 .divider {
@@ -118,4 +120,76 @@
     border-radius: 4px;
     margin-bottom: 1rem;
     text-align: center;
+}
+
+/* OTP Popup Styles */
+.otp-popup-overlay {
+    position: fixed; /* Cover the whole screen */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's on top */
+}
+
+.otp-popup {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 350px; /* Adjust as needed */
+    width: 90%;
+}
+
+.otp-popup h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.otp-popup p {
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+.otp-popup .link-button {
+    background: none;
+    border: none;
+    color: #E3B800; /* Gold color */
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+}
+
+.otp-popup .link-button:hover {
+    color: #c69f00; /* Darker gold */
+}
+
+.otp-popup form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.otp-input {
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1.5rem; /* Larger font for OTP */
+    text-align: center;
+    letter-spacing: 0.5em; /* Space out digits */
+    width: 80%; /* Adjust width */
+    max-width: 200px;
+}
+
+/* Style adjustments for the main submit button within the popup */
+.otp-popup .submit-button {
+    width: auto; /* Don't force full width */
+    padding: 0.8rem 2rem; /* Adjust padding */
 }

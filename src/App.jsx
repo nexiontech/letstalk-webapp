@@ -1,29 +1,74 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Routes, Route, Navigate} from 'react-router-dom';
+import { Box } from '@mui/material';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
+import ServiceIssuesPage from './pages/ServiceIssuesPage';
+import ReportIssuePage from './pages/ReportIssuePage'
 import NotFoundPage from './pages/NotFoundPage';
-import NavigationBar from './components/NavigationBar/NavigationBar';
+import NavigationBar from './components/NavigationBar';
+import Footer from './components/Footer';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import CommunityHub from './pages/CommunityHub';
+import PressReleasesPage from './pages/PressReleasesPage';
+import GovernmentServicesPage from './pages/GovernmentServicesPage';
+import UtilitiesPage from './pages/UtilitiesPage';
+import { LanguageProvider } from './contexts/LanguageContext';
 import './App.css';
+import './styles/global.css';
 
 function App() {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
     return (
-        <div className="App">
+        <LanguageProvider>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    minHeight: '100vh',
+                    width: '100%'
+                }}
+            >
             <NavigationBar />
-            <main className="content">
+            <Box
+                component="main"
+                sx={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '100%',
+                    overflow: 'visible'
+                }}
+                className="main-content"
+            >
                 <Routes>
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/login" element={<LoginPage />} />
+                    <Route
+                        path="/login"
+                        element={<LoginPage setIsAuthenticated={setIsAuthenticated} />}
+                    />
                     <Route path="/register" element={<RegisterPage />} />
                     <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                    <Route path="/dashboard" element={<DashboardPage />} />
+                    <Route path="/CommunityHub" element={<CommunityHub />} />
+                    <Route path="/service-issues" element={<ServiceIssuesPage />} />
+                    <Route path="/report-issue" element={<ReportIssuePage />} />
+                    <Route path="/press-releases" element={<PressReleasesPage />} />
+                    <Route path="/services" element={<GovernmentServicesPage />} />
+                    <Route path="/utilities" element={<UtilitiesPage />} />
+                    {isAuthenticated ? (
+                        <Route path="/dashboard" element={<DashboardPage />} />
+                    ) : (
+                        <Route path="/dashboard" element={<Navigate to="/login" />} />
+                    )}
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
-            </main>
-        </div>
+            </Box>
+            <Footer />
+        </Box>
+        </LanguageProvider>
     );
 }
 

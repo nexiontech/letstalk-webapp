@@ -1,3 +1,4 @@
+/*src/components/RegisterForm.jsx*/
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './AuthForms.css';
@@ -11,6 +12,8 @@ function RegisterForm() {
         confirmPassword: ''
     });
     const [successMessage, setSuccessMessage] = useState('');
+    const [showOtpPopup, setShowOtpPopup] = useState(false); // State for OTP popup visibility
+    const [otp, setOtp] = useState(''); // State for OTP input
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -18,9 +21,31 @@ function RegisterForm() {
             alert('Passwords do not match!');
             return;
         }
-        // Handle registration logic here
-        setSuccessMessage('Registration Successful...');
+        // Simulate sending OTP and show popup
+        console.log('Simulating OTP send for:', formData.email); // Replace with actual API call
+        setShowOtpPopup(true);
+        // setSuccessMessage('Registration Successful...'); // Move this to OTP verification
     };
+
+    const handleOtpChange = (e) => {
+        setOtp(e.target.value); // Basic OTP handling, can be enhanced for 6 digits
+    };
+
+    const handleOtpSubmit = (e) => {
+        e.preventDefault();
+        // Simulate OTP verification
+        console.log('Verifying OTP:', otp); // Replace with actual API call
+        if (otp === '123456') { // Replace with actual verification logic
+            setSuccessMessage('Registration Successful!');
+            setShowOtpPopup(false);
+            setOtp(''); // Clear OTP input
+        } else {
+            alert('Invalid OTP. Please try again.');
+            // Optionally clear OTP input or provide feedback
+            setOtp('');
+        }
+    };
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -105,6 +130,30 @@ function RegisterForm() {
                     Already have an account? <Link to="/login">Log In</Link>
                 </p>
             </form>
+
+            {/* OTP Popup */}
+            {showOtpPopup && (
+                <div className="otp-popup-overlay">
+                    <div className="otp-popup">
+                        <h3>Enter Your 6 Digit OTP Code Sent To Your Email</h3>
+                        <p>Did Not Receive OTP Code? <button className="link-button">Resend OTP</button></p> {/* Add Resend logic later */}
+                        <form onSubmit={handleOtpSubmit}>
+                            {/* Basic OTP input, enhance later for individual boxes */}
+                            <input
+                                type="text"
+                                name="otp"
+                                placeholder="------"
+                                value={otp}
+                                onChange={handleOtpChange}
+                                maxLength="6"
+                                required
+                                className="otp-input"
+                            />
+                            <button type="submit" className="submit-button">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
