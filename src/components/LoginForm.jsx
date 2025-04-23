@@ -1,24 +1,35 @@
+/*src/components/LoginForm.jsx*/
+
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './AuthForms.css';
 
-function LoginForm() {
+function LoginForm({ setIsAuthenticated }) {
     const [formData, setFormData] = useState({
         idNumber: '',
         password: '',
-        rememberMe: false
+        rememberMe: false,
     });
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle login logic here
+        // Handle login logic 
+        setIsAuthenticated(true);
+        navigate('/dashboard');
     };
+    const handleGoogleSignIn = () => {
+        // Simulate Google sign-in
+        setIsAuthenticated(true);
+        navigate('/dashboard');
+    };
+
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            [name]: type === 'checkbox' ? checked : value
+            [name]: type === 'checkbox' ? checked : value,
         }));
     };
 
@@ -26,7 +37,7 @@ function LoginForm() {
         <div className="auth-form-container">
             <h1>Log in to your account</h1>
             <p className="subtitle">Welcome back! Please enter your details.</p>
-            
+
             <form onSubmit={handleSubmit} className="auth-form">
                 <div className="form-group">
                     <input
@@ -38,7 +49,7 @@ function LoginForm() {
                         required
                     />
                 </div>
-                
+
                 <div className="form-group">
                     <input
                         type="password"
@@ -73,11 +84,14 @@ function LoginForm() {
                     <span>OR</span>
                 </div>
 
-                <button type="button" className="google-sso flex items-center">
-    <img src="/google-icon.png" alt="" className="w-5 h-5 mr-2" />
-    Sign in with Google
-</button>
-
+                <button
+               type="button"
+                className="google-sso flex items-center"
+                onClick={handleGoogleSignIn}
+              >
+                 <img src="/google-icon.png" alt="" className="w-5 h-5 mr-2" />
+                  Sign in with Google
+                </button>
 
                 <p className="auth-link">
                     Don't have an account? <Link to="/register">Sign up</Link>

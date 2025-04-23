@@ -1,17 +1,24 @@
+/* src/main.jsx */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom'; // Import BrowserRouter
-import { Provider } from 'react-redux'; // Import Redux Provider
-import { store } from './store/store'; // Import the store
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import App from './App';
+import theme from './theme';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-    <React.StrictMode>
-        <Provider store={store}> {/* Wrap with Redux Provider */}
-            <BrowserRouter> {/* Wrap the entire App */}
-                <App />
-            </BrowserRouter>
-        </Provider>
-    </React.StrictMode>
+  <React.StrictMode>
+    <Provider store={store}>
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <App />
+        </ThemeProvider>
+      </BrowserRouter>
+    </Provider>
+  </React.StrictMode>
 );

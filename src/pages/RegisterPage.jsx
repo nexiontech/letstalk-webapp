@@ -1,11 +1,13 @@
+/*src/pages/RegisterPage.jsx*/
 import React from 'react';
-import RegisterForm from '../components/AuthForms/RegisterForm';
+import RegisterForm from '../components/RegisterForm';
+import Container from '@mui/material/Container'; // Import Container
 
 function RegisterPage() {
     return (
-        <div>
+        <Container component="main" maxWidth="xs"> {/* Use Container */}
             <RegisterForm />
-        </div>
+        </Container>
     );
 }
 

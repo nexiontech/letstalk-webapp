@@ -1,46 +1,73 @@
-#root {
-  max-width: 1280px;
+/*src/App.css*/
+/* Main application styles */
+
+/* Main content container */
+.main-content {
+  flex: 1;
+  width: 100%;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+/* Page container - used for consistent page layouts */
+.page-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* Section container - used for content sections */
+.section-container {
+  margin-bottom: 2rem;
+}
+
+/* Card component styling */
+.card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Utility classes */
+.text-center {
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.text-left {
+  text-align: left;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.text-right {
+  text-align: right;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+/* Responsive container */
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Responsive utilities */
+@media (max-width: 992px) {
+  .page-container {
+    padding: 1.5rem 1rem;
   }
 }
 
-.card {
-  padding: 2em;
-}
+@media (max-width: 768px) {
+  .page-container {
+    padding: 1rem;
+  }
 
-.read-the-docs {
-  color: #888;
-}
-
-.content {
-  padding: 1rem; /* Add some space below the navbar */
+  .card {
+    padding: 1rem;
+  }
 }
