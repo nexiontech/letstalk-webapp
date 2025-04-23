@@ -11,7 +11,6 @@ import logoutIcon from '../assets/images/logout_icon.png';
 import alertsIcon from '../assets/images/alerts_icon.png';
 import payBillsIcon from '../assets/images/pay_bills_icon.png';
 import locationIcon from '../assets/images/location_icon.png';
-import aiIcon from '../assets/images/ai_icon.png';
 import helpIcon from '../assets/images/help_icon.png';
 import Container from '@mui/material/Container';
 
@@ -26,9 +25,6 @@ const DashboardPage = () => {
 
   const handleAlertsClick = () => {
     navigate('/service-issues');
-  };
-  const handleAIClick = () => {
-    navigate('/thusong-ai');
   };
   return (
     <Container maxWidth="xl"> {/* Wrap in Container */}
@@ -59,10 +55,6 @@ const DashboardPage = () => {
             <a href="#" className="nav-link active">
               <img src={governmentIcon} alt="Government Icon" className="nav-icon" />
               <span>Government</span>
-            </a>
-            <a href="thusong-ai" className="nav-link active">
-              <img src={aiIcon} alt="Thusong AI Icon" className="nav-icon" />
-              <span>Thusong AI</span>
             </a>
             <a href="#" className="nav-link active">
               <img src={recordedIcon} alt="Recorded Icon" className="nav-icon" />

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane, faRobot, faUser, faSpinner, faTimes, faComments } from '@fortawesome/free-solid-svg-icons';
 import './ThusongAIChatbot.css';
 
-const ThusongAIChatbot = () => {
+const ThusongAIChatbot = ({ initiallyMinimized = false }) => {
   const [messages, setMessages] = useState([
     {
       text: 'Hi there! I\'m Thusong AI, your virtual assistant. How can I help you today?',
@@ -14,8 +14,13 @@ const ThusongAIChatbot = () => {
   ]);
   const [userInput, setUserInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [isChatMinimized, setIsChatMinimized] = useState(false);
+  const [isChatMinimized, setIsChatMinimized] = useState(initiallyMinimized);
   const messagesEndRef = useRef(null);
+
+  // Update minimized state if initiallyMinimized prop changes
+  useEffect(() => {
+    setIsChatMinimized(initiallyMinimized);
+  }, [initiallyMinimized]);
 
   // Sample suggested questions
   const suggestedQuestions = [

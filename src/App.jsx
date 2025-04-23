@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate} from 'react-router-dom';
 import { Box } from '@mui/material';
 import HomePage from './pages/HomePage';
@@ -41,6 +41,24 @@ const ProtectedRoute = ({ children }) => {
 
 function AppContent() {
     const { isAuthenticated } = useAuth();
+    // State to control initial minimized state of the chatbot
+    const [isChatbotInitiallyMinimized, setIsChatbotInitiallyMinimized] = useState(true);
+
+    // Set chatbot to be initially minimized on mobile devices
+    useEffect(() => {
+        const handleResize = () => {
+            setIsChatbotInitiallyMinimized(window.innerWidth < 768);
+        };
+
+        // Set initial state
+        handleResize();
+
+        // Add event listener
+        window.addEventListener('resize', handleResize);
+
+        // Cleanup
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     return (
         <Box
@@ -71,7 +89,6 @@ function AppContent() {
 
                     {/* Public routes */}
                     <Route path="/press-releases" element={<PressReleasesPage />} />
-                    <Route path="/thusong-ai" element={<ThusongAIChatbot />} />
 
                     {/* Protected routes */}
                     <Route path="/dashboard" element={
@@ -107,6 +124,9 @@ function AppContent() {
 
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
+
+                {/* Thusong AI Chatbot - visible on all pages */}
+                <ThusongAIChatbot initiallyMinimized={isChatbotInitiallyMinimized} />
             </Box>
             <Footer />
         </Box>
