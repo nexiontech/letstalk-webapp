@@ -11,7 +11,10 @@ import logoutIcon from '../assets/images/logout_icon.png';
 import alertsIcon from '../assets/images/alerts_icon.png';
 import payBillsIcon from '../assets/images/pay_bills_icon.png';
 import locationIcon from '../assets/images/location_icon.png';
+import aiIcon from '../assets/images/ai_icon.png';
+import helpIcon from '../assets/images/help_icon.png';
 import Container from '@mui/material/Container';
+
 
 const DashboardPage = () => {
   const userName = 'User';
@@ -24,7 +27,9 @@ const DashboardPage = () => {
   const handleAlertsClick = () => {
     navigate('/service-issues');
   };
-
+  const handleAIClick = () => {
+    navigate('/thusong-ai');
+  };
   return (
     <Container maxWidth="xl"> {/* Wrap in Container */}
       <div className="dashboard-container">
@@ -55,11 +60,19 @@ const DashboardPage = () => {
               <img src={governmentIcon} alt="Government Icon" className="nav-icon" />
               <span>Government</span>
             </a>
+            <a href="thusong-ai" className="nav-link active">
+              <img src={aiIcon} alt="Thusong AI Icon" className="nav-icon" />
+              <span>Thusong AI</span>
+            </a>
             <a href="#" className="nav-link active">
               <img src={recordedIcon} alt="Recorded Icon" className="nav-icon" />
               <span>Recorded</span>
             </a>
-            <div style={{ height: '250px' }}></div>
+            <div style={{ height: '180px' }}></div>
+            <a href="#" className="nav-link active">
+              <img src={helpIcon} alt="Help Icon" className="nav-icon" />
+              <span>Help</span>
+            </a>
             <a href="#" className="nav-link logout active">
               <img src={logoutIcon} alt="Log Out Icon" className="nav-icon" />
               <span>Log Out</span>

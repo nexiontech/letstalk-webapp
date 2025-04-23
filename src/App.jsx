@@ -15,6 +15,7 @@ import CommunityHub from './pages/CommunityHub';
 import PressReleasesPage from './pages/PressReleasesPage';
 import GovernmentServicesPage from './pages/GovernmentServicesPage';
 import UtilitiesPage from './pages/UtilitiesPage';
+import ThusongAIChatbot from './pages/ThusongAIChatbot';
 import { LanguageProvider } from './contexts/LanguageContext';
 import './App.css';
 import './styles/global.css';
@@ -58,6 +59,7 @@ function App() {
                     <Route path="/press-releases" element={<PressReleasesPage />} />
                     <Route path="/services" element={<GovernmentServicesPage />} />
                     <Route path="/utilities" element={<UtilitiesPage />} />
+                    <Route path="/thusong-ai" element={<ThusongAIChatbot />} />
                     {isAuthenticated ? (
                         <Route path="/dashboard" element={<DashboardPage />} />
                     ) : (
