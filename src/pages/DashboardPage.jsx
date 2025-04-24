@@ -21,14 +21,15 @@ import './DashboardPage.css';
 
 const DashboardPage = () => {
   const { user, isAuthenticated } = useAuth();
-  const userName = user?.name || 'User';
+  const fullName = user?.name || 'User';
+  const firstName = fullName.split(' ')[0]; // Extract first name
   const hasRealName = user?.name && user.name !== 'User' && user.name.trim() !== '';
   const navigate = useNavigate();
 
   // Log user info for debugging
   useEffect(() => {
-    console.log('Dashboard - Auth state:', { user, isAuthenticated, hasRealName });
-  }, [user, isAuthenticated, hasRealName]);
+    console.log('Dashboard - Auth state:', { user, isAuthenticated, hasRealName, firstName, fullName });
+  }, [user, isAuthenticated, hasRealName, firstName, fullName]);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [weatherData, setWeatherData] = useState({
     temp: '24°C',
@@ -143,7 +144,7 @@ const DashboardPage = () => {
       <div className="dashboard-header">
         <div className="greeting-container">
           <h1 className="greeting-heading">
-            {getGreeting()}{hasRealName ? `, ${userName}` : ''}
+            {getGreeting()}{hasRealName ? `, ${firstName}` : ''}
           </h1>
           <p className="date-display">{formattedDate}</p>
         </div>
