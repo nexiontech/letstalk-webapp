@@ -1,0 +1,226 @@
+/* src/pages/LegalPages.css */
+
+.legal-page {
+  color: var(--color-text);
+  overflow-x: hidden;
+}
+
+/* Hero Section */
+.legal-hero-section {
+  padding: 4rem 0 2rem;
+  background: linear-gradient(135deg, rgba(14, 70, 73, 0.05) 0%, rgba(14, 70, 73, 0.1) 100%);
+  position: relative;
+}
+
+.legal-hero-title {
+  font-size: 2.8rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 1rem !important;
+  color: var(--color-primary-dark);
+  line-height: 1.2 !important;
+}
+
+.legal-hero-subtitle {
+  font-size: 1.2rem !important;
+  font-weight: 400 !important;
+  margin-bottom: 2rem !important;
+  color: var(--color-text-light);
+}
+
+.breadcrumbs {
+  margin-top: 1.5rem !important;
+}
+
+.breadcrumb-link {
+  display: flex;
+  align-items: center;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.breadcrumb-link:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+}
+
+.breadcrumb-icon {
+  margin-right: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* Content Section */
+.legal-content-section {
+  padding: 3rem 0 5rem;
+  background-color: #ffffff;
+}
+
+.legal-content-container {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  padding: 2.5rem;
+}
+
+.legal-content-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.legal-last-updated {
+  color: var(--color-text-light);
+  font-size: 0.9rem !important;
+}
+
+.legal-content {
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.legal-section {
+  margin-bottom: 2.5rem;
+}
+
+.section-title {
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 1.2rem !important;
+  color: var(--color-primary-dark);
+}
+
+.section-content {
+  margin-bottom: 1.2rem !important;
+  color: var(--color-text);
+  line-height: 1.7 !important;
+}
+
+.legal-list {
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.legal-list li {
+  margin-bottom: 1rem;
+}
+
+.list-title {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.legal-contact-list {
+  padding-left: 0;
+  list-style: none;
+  margin-top: 1.5rem;
+}
+
+.legal-contact-list li {
+  margin-bottom: 0.8rem;
+}
+
+/* Cookie Table Styles */
+.cookie-table-container {
+  overflow-x: auto;
+  margin: 1.5rem 0 2.5rem;
+}
+
+.cookie-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 0.9rem;
+}
+
+.cookie-table th {
+  background-color: var(--color-primary);
+  color: white;
+  text-align: left;
+  padding: 1rem;
+  font-weight: 600;
+}
+
+.cookie-table th:first-child {
+  border-top-left-radius: 8px;
+}
+
+.cookie-table th:last-child {
+  border-top-right-radius: 8px;
+}
+
+.cookie-table td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  color: var(--color-text);
+}
+
+.cookie-table tr:last-child td {
+  border-bottom: none;
+}
+
+.cookie-table tr:nth-child(even) {
+  background-color: rgba(14, 70, 73, 0.03);
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+  .legal-hero-title {
+    font-size: 2.4rem !important;
+  }
+  
+  .legal-content-container {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .legal-hero-section {
+    padding: 3rem 0 2rem;
+  }
+  
+  .legal-hero-title {
+    font-size: 2rem !important;
+  }
+  
+  .legal-hero-subtitle {
+    font-size: 1.1rem !important;
+  }
+  
+  .legal-content-section {
+    padding: 2rem 0 4rem;
+  }
+  
+  .legal-content-container {
+    padding: 1.5rem;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+  }
+  
+  .section-title {
+    font-size: 1.3rem !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .legal-hero-title {
+    font-size: 1.8rem !important;
+  }
+  
+  .legal-hero-subtitle {
+    font-size: 1rem !important;
+  }
+  
+  .legal-content-container {
+    padding: 1.2rem;
+  }
+  
+  .section-title {
+    font-size: 1.2rem !important;
+  }
+  
+  .cookie-table th,
+  .cookie-table td {
+    padding: 0.8rem;
+    font-size: 0.8rem;
+  }
+}

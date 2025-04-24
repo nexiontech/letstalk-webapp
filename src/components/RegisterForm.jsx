@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Alert, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
 import { registerUser, confirmRegistration, resendVerificationCode, clearRegistrationStatus, clearError } from '../services/amplifyAuthService';
 import { validateEmail, validatePassword, validateIdNumber, doPasswordsMatch } from '../utils/authUtils';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash, faLock, faIdCard, faUser, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import './AuthForms.css';
 
 function RegisterForm() {
@@ -15,6 +17,8 @@ function RegisterForm() {
         password: '',
         confirmPassword: ''
     });
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [validationErrors, setValidationErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showVerificationDialog, setShowVerificationDialog] = useState(false);
@@ -153,10 +157,28 @@ function RegisterForm() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+
+        if (name === 'idNumber') {
+            // Only allow digits and limit to 13 characters
+            const sanitizedValue = value.replace(/[^0-9]/g, '').slice(0, 13);
+            setFormData(prev => ({
+                ...prev,
+                [name]: sanitizedValue
+            }));
+        } else {
+            setFormData(prev => ({
+                ...prev,
+                [name]: value
+            }));
+        }
+    };
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+
+    const toggleConfirmPasswordVisibility = () => {
+        setShowConfirmPassword(!showConfirmPassword);
     };
 
     return (
@@ -180,15 +202,19 @@ function RegisterForm() {
 
             <form onSubmit={handleSubmit} className="auth-form">
                 <div className="form-group">
-                    <input
-                        type="text"
-                        name="idNumber"
-                        placeholder="ID Number"
-                        value={formData.idNumber}
-                        onChange={handleChange}
-                        disabled={isSubmitting}
-                        required
-                    />
+                    <div className="input-with-icon">
+                        <input
+                            type="text"
+                            name="idNumber"
+                            placeholder="ID Number"
+                            value={formData.idNumber}
+                            onChange={handleChange}
+                            disabled={isSubmitting}
+                            required
+                            pattern="[0-9]{13}"
+                            title="ID Number must be exactly 13 digits"
+                        />
+                    </div>
                     {validationErrors.idNumber && (
                         <div className="error-message">{validationErrors.idNumber}</div>
                     )}
@@ -196,45 +222,61 @@ function RegisterForm() {
                 </div>
 
                 <div className="form-group">
-                    <input
-                        type="text"
-                        name="name"
-                        placeholder="Name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        disabled={isSubmitting}
-                        required
-                    />
+                    <div className="input-with-icon">
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            disabled={isSubmitting}
+                            required
+                        />
+                    </div>
                     {validationErrors.name && (
                         <div className="error-message">{validationErrors.name}</div>
                     )}
                 </div>
 
                 <div className="form-group">
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="Email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        disabled={isSubmitting}
-                        required
-                    />
+                    <div className="input-with-icon">
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            disabled={isSubmitting}
+                            required
+                        />
+                    </div>
                     {validationErrors.email && (
                         <div className="error-message">{validationErrors.email}</div>
                     )}
                 </div>
 
                 <div className="form-group">
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        disabled={isSubmitting}
-                        required
-                    />
+                    <div className="input-with-icon">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            placeholder="Password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            disabled={isSubmitting}
+                            required
+                        />
+                        <button
+                            type="button"
+                            className="password-toggle"
+                            onClick={togglePasswordVisibility}
+                            tabIndex="-1"
+                        >
+                            <span className="password-toggle-text">
+                                {showPassword ? "Hide" : "Show"}
+                            </span>
+                        </button>
+                    </div>
                     {validationErrors.password && (
                         <div className="error-message">{validationErrors.password}</div>
                     )}
@@ -242,21 +284,33 @@ function RegisterForm() {
                 </div>
 
                 <div className="form-group">
-                    <input
-                        type="password"
-                        name="confirmPassword"
-                        placeholder="Confirm Password"
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
-                        disabled={isSubmitting}
-                        required
-                    />
+                    <div className="input-with-icon">
+                        <input
+                            type={showConfirmPassword ? "text" : "password"}
+                            name="confirmPassword"
+                            placeholder="Confirm Password"
+                            value={formData.confirmPassword}
+                            onChange={handleChange}
+                            disabled={isSubmitting}
+                            required
+                        />
+                        <button
+                            type="button"
+                            className="password-toggle"
+                            onClick={toggleConfirmPasswordVisibility}
+                            tabIndex="-1"
+                        >
+                            <span className="password-toggle-text">
+                                {showConfirmPassword ? "Hide" : "Show"}
+                            </span>
+                        </button>
+                    </div>
                     {validationErrors.confirmPassword && (
                         <div className="error-message">{validationErrors.confirmPassword}</div>
                     )}
                 </div>
 
-                <button type="submit" className="submit-button" disabled={isSubmitting}>
+                <button type="submit" className="submit-button" disabled={isSubmitting} style={{ color: 'white' }}>
                     {isSubmitting ? (
                         <>
                             <CircularProgress size={20} color="inherit" />
@@ -273,10 +327,53 @@ function RegisterForm() {
             </form>
 
             {/* Email Verification Dialog */}
-            <Dialog open={showVerificationDialog} onClose={() => !isSubmitting && setShowVerificationDialog(false)}>
-                <DialogTitle>Verify Your Email</DialogTitle>
-                <DialogContent>
-                    <p>Please enter the verification code sent to your email.</p>
+            <Dialog
+                open={showVerificationDialog}
+                onClose={() => !isSubmitting && setShowVerificationDialog(false)}
+                PaperProps={{
+                    style: {
+                        borderRadius: '16px',
+                        padding: '10px',
+                        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.05)',
+                        maxWidth: '450px',
+                        width: '100%',
+                        background: 'linear-gradient(145deg, #ffffff, #f8f9fa)',
+                        border: '1px solid rgba(14, 70, 73, 0.05)',
+                        overflow: 'hidden'
+                    }
+                }}
+            >
+                <div style={{
+                    width: '100%',
+                    height: '5px',
+                    background: 'linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%)',
+                    marginBottom: '15px'
+                }}></div>
+
+                <DialogTitle style={{
+                    textAlign: 'center',
+                    fontSize: '1.5rem',
+                    fontWeight: '700',
+                    background: 'linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    color: 'transparent',
+                    padding: '10px 24px'
+                }}>
+                    Verify Your Email
+                </DialogTitle>
+
+                <DialogContent style={{ padding: '20px 24px' }}>
+                    <p style={{
+                        textAlign: 'center',
+                        marginBottom: '20px',
+                        fontSize: '1.05rem',
+                        color: '#555'
+                    }}>
+                        Please enter the verification code sent to your email.
+                    </p>
+
                     <TextField
                         autoFocus
                         margin="dense"
@@ -288,33 +385,106 @@ function RegisterForm() {
                         disabled={isSubmitting}
                         error={!!validationErrors.verificationCode}
                         helperText={validationErrors.verificationCode}
+                        InputProps={{
+                            style: {
+                                borderRadius: '12px',
+                                padding: '5px 15px',
+                                fontSize: '1.1rem',
+                                letterSpacing: '2px'
+                            }
+                        }}
+                        sx={{
+                            '& .MuiOutlinedInput-root': {
+                                '&:hover fieldset': {
+                                    borderColor: 'var(--color-primary-light)',
+                                },
+                                '&.Mui-focused fieldset': {
+                                    borderColor: 'var(--color-primary)',
+                                    borderWidth: '2px',
+                                },
+                            },
+                        }}
                     />
+
                     {error && (
-                        <Alert severity="error" className="auth-alert" style={{ marginTop: '10px' }}>
+                        <Alert
+                            severity="error"
+                            className="auth-alert"
+                            style={{
+                                marginTop: '15px',
+                                borderRadius: '12px',
+                                animation: 'fadeIn 0.5s ease-out'
+                            }}
+                        >
                             {error}
                         </Alert>
                     )}
+
                     {verificationSuccess && (
-                        <Alert severity="success" className="auth-alert" style={{ marginTop: '10px' }}>
+                        <Alert
+                            severity="success"
+                            className="auth-alert"
+                            style={{
+                                marginTop: '15px',
+                                borderRadius: '12px',
+                                animation: 'fadeIn 0.5s ease-out'
+                            }}
+                        >
                             Email verified successfully! Redirecting to login...
                         </Alert>
                     )}
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleResendCode} disabled={isSubmitting}>
+
+                <DialogActions style={{
+                    padding: '15px 24px 24px',
+                    display: 'flex',
+                    justifyContent: 'space-between'
+                }}>
+                    <Button
+                        onClick={handleResendCode}
+                        disabled={isSubmitting}
+                        style={{
+                            color: 'var(--color-secondary)',
+                            fontWeight: '500',
+                            textTransform: 'none',
+                            fontSize: '0.95rem'
+                        }}
+                    >
                         Resend Code
                     </Button>
-                    <Button onClick={() => setShowVerificationDialog(false)} disabled={isSubmitting || verificationSuccess}>
-                        Cancel
-                    </Button>
-                    <Button
-                        onClick={handleVerificationSubmit}
-                        disabled={isSubmitting || verificationSuccess}
-                        variant="contained"
-                        color="primary"
-                    >
-                        {isSubmitting ? <CircularProgress size={20} color="inherit" /> : 'Verify'}
-                    </Button>
+
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                        <Button
+                            onClick={() => setShowVerificationDialog(false)}
+                            disabled={isSubmitting || verificationSuccess}
+                            style={{
+                                borderRadius: '10px',
+                                textTransform: 'none',
+                                padding: '8px 16px',
+                                fontSize: '0.95rem'
+                            }}
+                        >
+                            Cancel
+                        </Button>
+
+                        <Button
+                            onClick={handleVerificationSubmit}
+                            disabled={isSubmitting || verificationSuccess}
+                            variant="contained"
+                            style={{
+                                background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)',
+                                color: 'white',
+                                borderRadius: '10px',
+                                padding: '8px 24px',
+                                boxShadow: '0 4px 12px rgba(14, 70, 73, 0.2)',
+                                textTransform: 'none',
+                                fontSize: '0.95rem',
+                                fontWeight: '600'
+                            }}
+                        >
+                            {isSubmitting ? <CircularProgress size={20} color="inherit" /> : 'Verify'}
+                        </Button>
+                    </div>
                 </DialogActions>
             </Dialog>
         </div>
