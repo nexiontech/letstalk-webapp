@@ -9,6 +9,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import App from './App';
 import theme from './theme';
 import './index.css';
+// Import Amplify configuration
+import './config/amplify';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

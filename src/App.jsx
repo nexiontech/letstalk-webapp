@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Routes, Route, Navigate} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Box } from '@mui/material';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -15,24 +15,77 @@ import CommunityHub from './pages/CommunityHub';
 import PressReleasesPage from './pages/PressReleasesPage';
 import GovernmentServicesPage from './pages/GovernmentServicesPage';
 import UtilitiesPage from './pages/UtilitiesPage';
+import ThusongAIChatbot from './pages/ThusongAIChatbot';
+import DashboardLayout from './layouts/DashboardLayout';
 import { LanguageProvider } from './contexts/LanguageContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './App.css';
 import './styles/global.css';
 
-function App() {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+// Protected route component with dashboard layout
+const ProtectedRoute = ({ children }) => {
+    const { isAuthenticated, loading } = useAuth();
+    const location = useLocation();
+
+    // If still loading auth state, show nothing (or could add a loading spinner)
+    if (loading) {
+        return <div className="loading-spinner">Loading...</div>;
+    }
+
+    // If not authenticated, redirect to login
+    if (!isAuthenticated) {
+        return <Navigate to="/login" state={{ from: location }} />;
+    }
+
+    // If authenticated, render the children within the dashboard layout
+    return <DashboardLayout>{children}</DashboardLayout>;
+};
+
+function AppContent() {
+    const { isAuthenticated } = useAuth();
+    const location = useLocation();
+    // State to control initial minimized state of the chatbot
+    const [isChatbotInitiallyMinimized, setIsChatbotInitiallyMinimized] = useState(true);
+
+    // Set chatbot to be initially minimized on mobile devices
+    useEffect(() => {
+        const handleResize = () => {
+            setIsChatbotInitiallyMinimized(window.innerWidth < 768);
+        };
+
+        // Set initial state
+        handleResize();
+
+        // Add event listener
+        window.addEventListener('resize', handleResize);
+
+        // Cleanup
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    // Check if the current route is a protected route that should use the dashboard layout
+    const isProtectedRoute = [
+        '/dashboard',
+        '/service-issues',
+        '/report-issue',
+        '/services',
+        '/utilities',
+        '/CommunityHub'
+    ].includes(location.pathname);
 
     return (
-        <LanguageProvider>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    minHeight: '100vh',
-                    width: '100%'
-                }}
-            >
-            <NavigationBar />
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                minHeight: '100vh',
+                width: '100%',
+                overflow: isProtectedRoute ? 'hidden' : 'visible'
+            }}
+        >
+            {/* Only show NavigationBar for non-protected routes */}
+            {!isProtectedRoute && <NavigationBar />}
+
             <Box
                 component="main"
                 sx={{
@@ -40,34 +93,69 @@ function App() {
                     display: 'flex',
                     flexDirection: 'column',
                     width: '100%',
-                    overflow: 'visible'
+                    overflow: isProtectedRoute ? 'hidden' : 'visible',
+                    height: isProtectedRoute ? '100vh' : 'auto'
                 }}
-                className="main-content"
+                className={isProtectedRoute ? '' : 'main-content'}
             >
                 <Routes>
                     <Route path="/" element={<HomePage />} />
-                    <Route
-                        path="/login"
-                        element={<LoginPage setIsAuthenticated={setIsAuthenticated} />}
-                    />
+                    <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage />} />
                     <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                    <Route path="/CommunityHub" element={<CommunityHub />} />
-                    <Route path="/service-issues" element={<ServiceIssuesPage />} />
-                    <Route path="/report-issue" element={<ReportIssuePage />} />
+
+                    {/* Public routes */}
                     <Route path="/press-releases" element={<PressReleasesPage />} />
-                    <Route path="/services" element={<GovernmentServicesPage />} />
-                    <Route path="/utilities" element={<UtilitiesPage />} />
-                    {isAuthenticated ? (
-                        <Route path="/dashboard" element={<DashboardPage />} />
-                    ) : (
-                        <Route path="/dashboard" element={<Navigate to="/login" />} />
-                    )}
+
+                    {/* Protected routes with Dashboard Layout */}
+                    <Route path="/dashboard" element={
+                        <ProtectedRoute>
+                            <DashboardPage />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/CommunityHub" element={
+                        <ProtectedRoute>
+                            <CommunityHub />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/service-issues" element={
+                        <ProtectedRoute>
+                            <ServiceIssuesPage />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/report-issue" element={
+                        <ProtectedRoute>
+                            <ReportIssuePage />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/services" element={
+                        <ProtectedRoute>
+                            <GovernmentServicesPage />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/utilities" element={
+                        <Navigate to="/services" replace />
+                    } />
+
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
+
+                {/* Thusong AI Chatbot - visible on all pages */}
+                <ThusongAIChatbot initiallyMinimized={isChatbotInitiallyMinimized} />
             </Box>
-            <Footer />
+
+            {/* Only show Footer for non-protected routes */}
+            {!isProtectedRoute && <Footer />}
         </Box>
+    );
+}
+
+function App() {
+    return (
+        <LanguageProvider>
+            <AuthProvider>
+                <AppContent />
+            </AuthProvider>
         </LanguageProvider>
     );
 }

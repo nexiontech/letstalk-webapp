@@ -15,7 +15,8 @@ const translations = {
       communityHub: "Community Hub",
       dashboard: "Dashboard",
       login: "Log In",
-      signup: "Sign Up"
+      signup: "Sign Up",
+      logout: "Log Out"
     },
     // Government Services page
     governmentServices: {
@@ -95,7 +96,8 @@ const translations = {
       communityHub: "Gemeenskapsentrum",
       dashboard: "Kontrolepaneel",
       login: "Meld Aan",
-      signup: "Registreer"
+      signup: "Registreer",
+      logout: "Teken Uit"
     },
     common: {
       search: "Soek",
@@ -152,7 +154,8 @@ const translations = {
       communityHub: "Isikhungo Somphakathi",
       dashboard: "Ideshibhodi",
       login: "Ngena",
-      signup: "Bhalisela"
+      signup: "Bhalisela",
+      logout: "Phuma"
     },
     // Add more translations as needed
   },
@@ -167,7 +170,8 @@ const translations = {
       communityHub: "Iziko Loluntu",
       dashboard: "Ideshibhodi",
       login: "Ngena",
-      signup: "Bhalisela"
+      signup: "Bhalisela",
+      logout: "Phuma"
     },
     // Add more translations as needed
   },

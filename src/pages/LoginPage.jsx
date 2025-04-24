@@ -3,12 +3,12 @@ import React from 'react';
 import LoginForm from '../components/LoginForm';
 import Container from '@mui/material/Container';
 
-function LoginPage({ setIsAuthenticated }) { 
+function LoginPage() {
     return (
         <Container component="main" maxWidth="xs">
-            <LoginForm setIsAuthenticated={setIsAuthenticated} /> 
+            <LoginForm />
         </Container>
     );
 }
 
-export default LoginPage; 
+export default LoginPage;
