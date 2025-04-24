@@ -109,19 +109,29 @@ const ThusongAIChatbot = ({ initiallyMinimized = false }) => {
 
   return (
     <div className={`thusong-chatbot-container ${isChatMinimized ? 'minimized' : ''}`}>
-      <div className="thusong-chatbot-header">
-        <div className="thusong-chatbot-header-content">
-          <FontAwesomeIcon icon={faRobot} className="thusong-chatbot-icon" />
-          <h1 className="thusong-chatbot-title">Thusong AI Assistant</h1>
-        </div>
+      {isChatMinimized ? (
         <button
-          className="thusong-minimize-button"
+          className="thusong-chat-bubble"
           onClick={toggleMinimize}
-          aria-label={isChatMinimized ? "Expand chat" : "Minimize chat"}
+          aria-label="Open chat with Thusong AI"
         >
-          <FontAwesomeIcon icon={isChatMinimized ? faComments : faTimes} />
+          <FontAwesomeIcon icon={faComments} className="thusong-bubble-icon" />
         </button>
-      </div>
+      ) : (
+        <div className="thusong-chatbot-header">
+          <div className="thusong-chatbot-header-content">
+            <FontAwesomeIcon icon={faRobot} className="thusong-chatbot-icon" />
+            <h1 className="thusong-chatbot-title">Thusong AI Assistant</h1>
+          </div>
+          <button
+            className="thusong-minimize-button"
+            onClick={toggleMinimize}
+            aria-label="Minimize chat"
+          >
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
+        </div>
+      )}
 
       {!isChatMinimized && (
         <>
