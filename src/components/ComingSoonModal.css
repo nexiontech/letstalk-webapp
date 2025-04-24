@@ -1,0 +1,47 @@
+/* src/components/ComingSoonModal.css */
+
+.modal-paper {
+  border-radius: 12px !important;
+  overflow: hidden;
+  max-width: 450px;
+  width: 100%;
+}
+
+.modal-title {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 1.5rem !important;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.title-icon {
+  font-size: 1.5rem;
+  color: var(--color-secondary);
+}
+
+.modal-content {
+  padding: 2rem 1.5rem !important;
+}
+
+.modal-message {
+  margin-top: 1rem !important;
+}
+
+.modal-actions {
+  padding: 1rem 1.5rem 1.5rem !important;
+  justify-content: center !important;
+}
+
+.modal-button {
+  padding: 0.5rem 2rem !important;
+  border-radius: 50px !important;
+  text-transform: none !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  box-shadow: 0 4px 10px rgba(14, 70, 73, 0.2) !important;
+}
