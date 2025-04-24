@@ -13,7 +13,7 @@ const DashboardPage = () => {
   const navigate = useNavigate();
 
   const handlePayBillsClick = () => {
-    navigate('/utilities');
+    navigate('/services');
   };
 
   const handleAlertsClick = () => {
@@ -39,7 +39,7 @@ const DashboardPage = () => {
               <img src={payBillsIcon} alt="Pay Bills Icon" className="card-icon" />
               <h2 className="card-title">Pay Bills Now</h2>
             </div>
-            <p className="card-text">View/Pay your Electricity, Water, Rent, or Retire Balance.</p>
+            <p className="card-text">Pay for government services, utilities, rates, and other municipal accounts.</p>
           </div>
         </div>
         <div className="dashboard-map">

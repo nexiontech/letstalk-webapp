@@ -134,9 +134,7 @@ function AppContent() {
                         </ProtectedRoute>
                     } />
                     <Route path="/utilities" element={
-                        <ProtectedRoute>
-                            <UtilitiesPage />
-                        </ProtectedRoute>
+                        <Navigate to="/services" replace />
                     } />
 
                     <Route path="*" element={<NotFoundPage />} />
