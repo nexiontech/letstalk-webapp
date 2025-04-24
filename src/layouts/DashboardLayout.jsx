@@ -1,14 +1,20 @@
 // src/layouts/DashboardLayout.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import dashboardIcon from '../assets/images/dashboard_icon.png';
-import serviceIssuesIcon from '../assets/images/service_issues_icon.png';
-import governmentIcon from '../assets/images/government_icon.png';
-import recordedIcon from '../assets/images/recorded_icon.png';
-import logoutIcon from '../assets/images/logout_icon.png';
-import helpIcon from '../assets/images/help_icon.png';
-import locationIcon from '../assets/images/location_icon.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faTachometerAlt,
+  faExclamationTriangle,
+  faCreditCard,
+  faUsers,
+  faQuestionCircle,
+  faSignOutAlt,
+  faMapMarkerAlt,
+  faSearch,
+  faBars,
+  faTimes
+} from '@fortawesome/free-solid-svg-icons';
 import './DashboardLayout.css';
 
 const DashboardLayout = ({ children }) => {
@@ -16,6 +22,7 @@ const DashboardLayout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const userName = user?.name || 'User';
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
@@ -24,98 +31,144 @@ const DashboardLayout = ({ children }) => {
 
   // Determine which nav link is active based on current path
   const isActive = (path) => {
-    return location.pathname === path ? 'active current' : 'active';
+    if (Array.isArray(path)) {
+      return path.some(p => location.pathname === p) ? 'active current' : '';
+    }
+    return location.pathname === path ? 'active current' : '';
   };
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  // Navigation items configuration
+  const navItems = [
+    {
+      path: '/dashboard',
+      icon: faTachometerAlt,
+      label: 'Dashboard',
+      onClick: () => navigate('/dashboard')
+    },
+    {
+      path: '/service-issues',
+      icon: faExclamationTriangle,
+      label: 'Service Issues',
+      onClick: () => navigate('/service-issues')
+    },
+    {
+      path: ['/services', '/utilities'],
+      icon: faCreditCard,
+      label: 'Pay Bills',
+      onClick: () => navigate('/services')
+    },
+    {
+      path: '/CommunityHub',
+      icon: faUsers,
+      label: 'Community Hub',
+      onClick: () => navigate('/CommunityHub')
+    }
+  ];
+
+  // Footer navigation items
+  const footerNavItems = [
+    {
+      icon: faQuestionCircle,
+      label: 'Help',
+      onClick: () => {
+        // Handle help action
+        console.log('Help clicked');
+      }
+    },
+    {
+      icon: faSignOutAlt,
+      label: 'Log Out',
+      className: 'logout',
+      onClick: handleLogout
+    }
+  ];
 
   return (
     <div className="dashboard-container">
-      <aside className="dashboard-sidebar">
-        <h2 className="dashboard-heading">Dashboard</h2>
+      {/* Mobile menu toggle button */}
+      <button
+        className="mobile-menu-toggle"
+        onClick={toggleMobileMenu}
+        aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+      >
+        <FontAwesomeIcon icon={mobileMenuOpen ? faTimes : faBars} />
+      </button>
+
+      {/* Sidebar */}
+      <aside className={`dashboard-sidebar ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+        <div className="sidebar-header">
+          <h2 className="dashboard-heading">LetsTalk</h2>
+          <div className="sidebar-close-mobile" onClick={toggleMobileMenu}>
+            <FontAwesomeIcon icon={faTimes} />
+          </div>
+        </div>
+
         <div className="location-input-container">
+          <FontAwesomeIcon icon={faSearch} className="search-icon" />
           <input
             type="text"
-            placeholder="Enter Your Location"
+            placeholder="Search..."
             className="location-input"
           />
-          <img
-            src={locationIcon}
-            alt="Location Icon"
-            className="location-icon"
-          />
+          <FontAwesomeIcon icon={faMapMarkerAlt} className="location-icon" />
         </div>
+
         <nav className="dashboard-nav">
-          <a
-            href="/dashboard"
-            className={`nav-link ${isActive('/dashboard')}`}
-            onClick={(e) => {
-              e.preventDefault();
-              navigate('/dashboard');
-            }}
-          >
-            <img src={dashboardIcon} alt="Dashboard Icon" className="nav-icon" />
-            <span>Dashboard</span>
-          </a>
-          <a
-            href="/service-issues"
-            className={`nav-link ${isActive('/service-issues')}`}
-            onClick={(e) => {
-              e.preventDefault();
-              navigate('/service-issues');
-            }}
-          >
-            <img src={serviceIssuesIcon} alt="Service Issues Icon" className="nav-icon" />
-            <span>Service Issues</span>
-          </a>
-          <a
-            href="/services"
-            className={`nav-link ${isActive('/services') || isActive('/utilities')}`}
-            onClick={(e) => {
-              e.preventDefault();
-              navigate('/services');
-            }}
-          >
-            <img src={governmentIcon} alt="Government Services" className="nav-icon" />
-            <span>Pay Bills</span>
-          </a>
-          <a
-            href="/CommunityHub"
-            className={`nav-link ${isActive('/CommunityHub')}`}
-            onClick={(e) => {
-              e.preventDefault();
-              navigate('/CommunityHub');
-            }}
-          >
-            <img src={recordedIcon} alt="Community Hub" className="nav-icon" />
-            <span>Community Hub</span>
-          </a>
-          <div style={{ height: '180px' }}></div>
-          <a
-            href="#"
-            className="nav-link active"
-            onClick={(e) => {
-              e.preventDefault();
-              // Handle help action
-            }}
-          >
-            <img src={helpIcon} alt="Help Icon" className="nav-icon" />
-            <span>Help</span>
-          </a>
-          <a
-            href="#"
-            className="nav-link logout active"
-            onClick={(e) => {
-              e.preventDefault();
-              handleLogout();
-            }}
-          >
-            <img src={logoutIcon} alt="Log Out Icon" className="nav-icon" />
-            <span>Log Out</span>
-          </a>
+          <div className="nav-section">
+            {navItems.map((item, index) => (
+              <a
+                key={index}
+                href={Array.isArray(item.path) ? item.path[0] : item.path}
+                className={`nav-link ${isActive(item.path)}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  item.onClick();
+                  if (mobileMenuOpen) setMobileMenuOpen(false);
+                }}
+              >
+                <div className="nav-icon-container">
+                  <FontAwesomeIcon icon={item.icon} className="nav-icon" />
+                </div>
+                <span>{item.label}</span>
+              </a>
+            ))}
+          </div>
+
+          <div className="nav-section footer">
+            {footerNavItems.map((item, index) => (
+              <a
+                key={index}
+                href="#"
+                className={`nav-link ${item.className || ''}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  item.onClick();
+                  if (mobileMenuOpen) setMobileMenuOpen(false);
+                }}
+              >
+                <div className="nav-icon-container">
+                  <FontAwesomeIcon icon={item.icon} className="nav-icon" />
+                </div>
+                <span>{item.label}</span>
+              </a>
+            ))}
+          </div>
         </nav>
       </aside>
+
+      {/* Main content */}
       <main className="dashboard-main-content">
         {children}
       </main>
+
+      {/* Overlay for mobile */}
+      {mobileMenuOpen && (
+        <div className="mobile-overlay" onClick={toggleMobileMenu}></div>
+      )}
     </div>
   );
 };
