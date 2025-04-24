@@ -251,9 +251,7 @@ const DashboardPage = () => {
           <div className="map-container">
             <iframe
               src="https://maps.google.com/maps?q=Johannesburg&z=13&output=embed"
-              width="100%"
-              height="100%"
-              style={{ border: '0' }}
+              title="Area Map"
               allowFullScreen
             ></iframe>
             <div className="map-overlay">
