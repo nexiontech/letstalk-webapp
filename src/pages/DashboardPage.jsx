@@ -239,40 +239,50 @@ const DashboardPage = () => {
           </section>
         </div>
 
-        {/* Map Section */}
-        <section className="map-section">
-          <div className="section-header">
-            <h2 className="section-title">Your Area</h2>
-            <div className="map-search">
-              <FontAwesomeIcon icon={faSearch} className="search-icon" />
-              <input type="text" placeholder="Search location..." />
-            </div>
-          </div>
-          <div className="map-container">
-            <iframe
-              src="https://maps.google.com/maps?q=Johannesburg&z=13&output=embed"
-              title="Area Map"
-              allowFullScreen
-            ></iframe>
-            <div className="map-overlay">
-              <div className="upcoming-events">
-                <h3>Upcoming Events</h3>
-                {upcomingEvents.map(event => (
-                  <div className="event-item" key={event.id}>
-                    <div className="event-date">
-                      <FontAwesomeIcon icon={faCalendarAlt} />
-                      <span>{event.date}</span>
-                    </div>
-                    <div className="event-details">
-                      <h4>{event.title}</h4>
-                      <p>{event.time} • {event.location}</p>
-                    </div>
-                  </div>
-                ))}
+        {/* Map and Events Section */}
+        <div className="map-events-container">
+          {/* Map Section */}
+          <section className="map-section">
+            <div className="section-header">
+              <h2 className="section-title">Your Area</h2>
+              <div className="map-search">
+                <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                <input type="text" placeholder="Search location..." />
               </div>
             </div>
-          </div>
-        </section>
+            <div className="map-container">
+              <iframe
+                src="https://maps.google.com/maps?q=Johannesburg&z=13&output=embed"
+                title="Area Map"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </section>
+
+          {/* Events Section */}
+          <section className="events-section">
+            <div className="section-header">
+              <h2 className="section-title">Upcoming Events</h2>
+              <button className="view-all-button" onClick={handleCommunityHubClick}>
+                View All <FontAwesomeIcon icon={faChevronRight} />
+              </button>
+            </div>
+            <div className="events-list">
+              {upcomingEvents.map(event => (
+                <div className="event-item" key={event.id}>
+                  <div className="event-date">
+                    <FontAwesomeIcon icon={faCalendarAlt} />
+                    <span>{event.date}</span>
+                  </div>
+                  <div className="event-details">
+                    <h4>{event.title}</h4>
+                    <p>{event.time} • {event.location}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   );
