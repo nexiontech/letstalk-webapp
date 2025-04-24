@@ -740,8 +740,8 @@ const GovernmentServicesPage = () => {
     <div className="government-services-container">
       <div className="services-header">
         <div className="services-title-section">
-          <h1>{t('governmentServices.title')}</h1>
-          <p>{t('governmentServices.subtitle')}</p>
+          <h1>Pay Bills & Government Services</h1>
+          <p>Pay for utilities, rates, and access government services</p>
         </div>
 
         <div className="services-actions">

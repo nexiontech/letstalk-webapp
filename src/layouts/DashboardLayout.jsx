@@ -44,8 +44,8 @@ const DashboardLayout = ({ children }) => {
           />
         </div>
         <nav className="dashboard-nav">
-          <a 
-            href="/dashboard" 
+          <a
+            href="/dashboard"
             className={`nav-link ${isActive('/dashboard')}`}
             onClick={(e) => {
               e.preventDefault();
@@ -55,8 +55,8 @@ const DashboardLayout = ({ children }) => {
             <img src={dashboardIcon} alt="Dashboard Icon" className="nav-icon" />
             <span>Dashboard</span>
           </a>
-          <a 
-            href="/service-issues" 
+          <a
+            href="/service-issues"
             className={`nav-link ${isActive('/service-issues')}`}
             onClick={(e) => {
               e.preventDefault();
@@ -66,19 +66,19 @@ const DashboardLayout = ({ children }) => {
             <img src={serviceIssuesIcon} alt="Service Issues Icon" className="nav-icon" />
             <span>Service Issues</span>
           </a>
-          <a 
-            href="/services" 
-            className={`nav-link ${isActive('/services')}`}
+          <a
+            href="/services"
+            className={`nav-link ${isActive('/services') || isActive('/utilities')}`}
             onClick={(e) => {
               e.preventDefault();
               navigate('/services');
             }}
           >
             <img src={governmentIcon} alt="Government Services" className="nav-icon" />
-            <span>Government</span>
+            <span>Pay Bills</span>
           </a>
-          <a 
-            href="/CommunityHub" 
+          <a
+            href="/CommunityHub"
             className={`nav-link ${isActive('/CommunityHub')}`}
             onClick={(e) => {
               e.preventDefault();
@@ -89,8 +89,8 @@ const DashboardLayout = ({ children }) => {
             <span>Community Hub</span>
           </a>
           <div style={{ height: '180px' }}></div>
-          <a 
-            href="#" 
+          <a
+            href="#"
             className="nav-link active"
             onClick={(e) => {
               e.preventDefault();
@@ -100,8 +100,8 @@ const DashboardLayout = ({ children }) => {
             <img src={helpIcon} alt="Help Icon" className="nav-icon" />
             <span>Help</span>
           </a>
-          <a 
-            href="#" 
+          <a
+            href="#"
             className="nav-link logout active"
             onClick={(e) => {
               e.preventDefault();
