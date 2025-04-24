@@ -1,6 +1,16 @@
 // src/services/amplifyAuthService.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { signIn, signUp, confirmSignUp, signOut, getCurrentUser, fetchAuthSession, resetPassword, confirmResetPassword } from 'aws-amplify/auth';
+import {
+  signIn,
+  signUp,
+  confirmSignUp,
+  signOut,
+  getCurrentUser,
+  fetchAuthSession,
+  resetPassword,
+  confirmResetPassword,
+  fetchUserAttributes
+} from 'aws-amplify/auth';
 
 // Async thunk for login
 export const loginUser = createAsyncThunk(
@@ -30,12 +40,25 @@ export const loginUser = createAsyncThunk(
       const currentUser = await getCurrentUser();
       const { tokens } = await fetchAuthSession();
 
-      // Create user object from available information
+      // Fetch user attributes
+      let userAttributes = {};
+      try {
+        userAttributes = await fetchUserAttributes();
+        console.log('User attributes fetched:', userAttributes);
+      } catch (attributesError) {
+        console.error('Error fetching user attributes:', attributesError);
+      }
+
+      // Create user object with attributes
       const user = {
         idNumber: idNumber,
-        email: '', // Will be updated with attributes later
-        name: '', // Will be updated with attributes later
+        email: userAttributes.email || '',
+        name: userAttributes.name || '',
+        // Add custom attributes if available
+        ...(userAttributes['custom:idNumber'] ? { 'custom:idNumber': userAttributes['custom:idNumber'] } : {})
       };
+
+      console.log('User object created:', user);
 
       // Store user in localStorage for persistence
       localStorage.setItem('auth_user', JSON.stringify(user));
@@ -56,8 +79,8 @@ export const loginUser = createAsyncThunk(
       } else if (error.message && error.message.includes('UserAlreadyAuthenticatedException')) {
         // Handle the case where a user is already authenticated
         try {
-          // Try to get the current user and session
-          const currentUser = await getCurrentUser();
+          // Try to get the current session
+          await getCurrentUser(); // Verify user is authenticated
           const { tokens } = await fetchAuthSession();
 
           // Create user object from available information
@@ -208,11 +231,37 @@ export const checkAuthStatus = createAsyncThunk(
     try {
       // Try to get the current authenticated user from Amplify
       try {
-        const currentUser = await getCurrentUser();
+        await getCurrentUser(); // Verify user is authenticated
         const { tokens } = await fetchAuthSession();
 
-        // Get user from localStorage or create a basic one
-        const user = JSON.parse(localStorage.getItem('auth_user') || '{}');
+        // Fetch user attributes
+        let userAttributes = {};
+        try {
+          userAttributes = await fetchUserAttributes();
+          console.log('User attributes fetched during status check:', userAttributes);
+        } catch (attributesError) {
+          console.error('Error fetching user attributes during status check:', attributesError);
+        }
+
+        // Get existing user from localStorage
+        let user = JSON.parse(localStorage.getItem('auth_user') || '{}');
+
+        // Update user with fresh attributes if available
+        if (Object.keys(userAttributes).length > 0) {
+          user = {
+            ...user,
+            name: userAttributes.name || user.name || '',
+            email: userAttributes.email || user.email || '',
+            // Ensure ID number is always available
+            idNumber: user.idNumber || userAttributes['custom:idNumber'] || '',
+            // Add custom attributes if available
+            ...(userAttributes['custom:idNumber'] ? { 'custom:idNumber': userAttributes['custom:idNumber'] } : {})
+          };
+
+          // Update localStorage with fresh data
+          localStorage.setItem('auth_user', JSON.stringify(user));
+          console.log('Updated user object with fresh attributes:', user);
+        }
 
         // Return user information and token
         return {
