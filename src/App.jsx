@@ -16,6 +16,12 @@ import PressReleasesPage from './pages/PressReleasesPage';
 import GovernmentServicesPage from './pages/GovernmentServicesPage';
 import UtilitiesPage from './pages/UtilitiesPage';
 import ThusongAIChatbot from './pages/ThusongAIChatbot';
+import AboutUsPage from './pages/AboutUsPage';
+import OurServicesPage from './pages/OurServicesPage';
+import FAQPage from './pages/FAQPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsOfServicePage from './pages/TermsOfServicePage';
+import CookiePolicyPage from './pages/CookiePolicyPage';
 import DashboardLayout from './layouts/DashboardLayout';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -106,6 +112,12 @@ function AppContent() {
 
                     {/* Public routes */}
                     <Route path="/press-releases" element={<PressReleasesPage />} />
+                    <Route path="/about-us" element={<AboutUsPage />} />
+                    <Route path="/our-services" element={<OurServicesPage />} />
+                    <Route path="/faq" element={<FAQPage />} />
+                    <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                    <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+                    <Route path="/cookie-policy" element={<CookiePolicyPage />} />
 
                     {/* Protected routes with Dashboard Layout */}
                     <Route path="/dashboard" element={
