@@ -4,8 +4,6 @@ import { Box } from '@mui/material';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import ApiLoginPage from './pages/ApiLoginPage';
-import ApiRegisterPage from './pages/ApiRegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import ServiceIssuesPage from './pages/ServiceIssuesPage';
 import ReportIssuePage from './pages/ReportIssuePage'
@@ -27,20 +25,12 @@ import CookiePolicyPage from './pages/CookiePolicyPage';
 import DashboardLayout from './layouts/DashboardLayout';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { ApiAuthProvider, useApiAuth } from './contexts/ApiAuthContext';
 import './App.css';
 import './styles/global.css';
 
 // Protected route component with dashboard layout
 const ProtectedRoute = ({ children }) => {
-    // Use API Auth if available, otherwise fall back to regular Auth
-    const apiAuth = useApiAuth();
-    const regularAuth = useAuth();
-
-    // Determine which auth to use - prefer API auth if authenticated
-    const auth = apiAuth.isAuthenticated ? apiAuth : regularAuth;
-
-    const { isAuthenticated, loading } = auth;
+    const { isAuthenticated, loading } = useAuth();
     const location = useLocation();
 
     // If still loading auth state, show nothing (or could add a loading spinner)
@@ -58,14 +48,7 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function AppContent() {
-    // Use API Auth if available, otherwise fall back to regular Auth
-    const apiAuth = useApiAuth();
-    const regularAuth = useAuth();
-
-    // Determine which auth to use - prefer API auth if authenticated
-    const auth = apiAuth.isAuthenticated ? apiAuth : regularAuth;
-
-    const { isAuthenticated } = auth;
+    const { isAuthenticated } = useAuth();
     const location = useLocation();
     // State to control initial minimized state of the chatbot
     const [isChatbotInitiallyMinimized, setIsChatbotInitiallyMinimized] = useState(true);
@@ -125,8 +108,6 @@ function AppContent() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage />} />
-                    <Route path="/api-login" element={<ApiLoginPage />} />
-                    <Route path="/api-register" element={<ApiRegisterPage />} />
                     <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
                     {/* Public routes */}
@@ -185,9 +166,7 @@ function App() {
     return (
         <LanguageProvider>
             <AuthProvider>
-                <ApiAuthProvider>
-                    <AppContent />
-                </ApiAuthProvider>
+                <AppContent />
             </AuthProvider>
         </LanguageProvider>
     );
