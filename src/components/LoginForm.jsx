@@ -3,9 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Alert, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Tooltip } from '@mui/material';
-import { confirmRegistration, resendVerificationCode, logoutUser } from '../services/amplifyAuthService';
+import { Alert, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
+import { confirmRegistration, resendVerificationCode } from '../services/amplifyAuthService';
 import { useDispatch } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash, faLock, faIdCard } from '@fortawesome/free-solid-svg-icons';
 import './AuthForms.css';
 
 function LoginForm() {
@@ -14,6 +16,8 @@ function LoginForm() {
         password: '',
         rememberMe: false,
     });
+    const [showPassword, setShowPassword] = useState(false);
+    const [idNumberError, setIdNumberError] = useState('');
     const [loginError, setLoginError] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showVerificationDialog, setShowVerificationDialog] = useState(false);
@@ -110,34 +114,33 @@ function LoginForm() {
         }
     };
 
-    const handleClearSession = async () => {
-        setIsSubmitting(true);
-        setLoginError(null);
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
 
-        try {
-            // Call the logout function to clear any existing session
-            await dispatch(logoutUser());
-            setLoginError(null);
-            alert('Session cleared successfully. You can now try logging in again.');
-        } catch (error) {
-            setLoginError('Failed to clear session. Please try again.');
-        } finally {
-            setIsSubmitting(false);
+        if (name === 'idNumber') {
+            // Only allow digits and limit to 13 characters
+            const sanitizedValue = value.replace(/[^0-9]/g, '').slice(0, 13);
+            setFormData((prev) => ({
+                ...prev,
+                [name]: sanitizedValue,
+            }));
+
+            // Validate ID number length
+            if (sanitizedValue.length > 0 && sanitizedValue.length !== 13) {
+                setIdNumberError('ID Number must be exactly 13 digits');
+            } else {
+                setIdNumberError('');
+            }
+        } else {
+            setFormData((prev) => ({
+                ...prev,
+                [name]: type === 'checkbox' ? checked : value,
+            }));
         }
     };
 
-    const handleGoogleSignIn = () => {
-        // This would integrate with AWS Cognito's federated identity
-        // For now, we'll just show a message
-        alert('Google Sign-In will be implemented with AWS Cognito federated identity.');
-    };
-
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value,
-        }));
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
     };
 
     return (
@@ -154,28 +157,48 @@ function LoginForm() {
 
             <form onSubmit={handleSubmit} className="auth-form">
                 <div className="form-group">
-                    <input
-                        type="text"
-                        name="idNumber"
-                        placeholder="Enter your ID Number"
-                        value={formData.idNumber}
-                        onChange={handleChange}
-                        disabled={isSubmitting}
-                        required
-                    />
-                    <div className="form-hint">South African ID Number (13 digits)</div>
+                    <div className="input-with-icon">
+                        <input
+                            type="text"
+                            name="idNumber"
+                            placeholder="Enter your ID Number"
+                            value={formData.idNumber}
+                            onChange={handleChange}
+                            disabled={isSubmitting}
+                            required
+                            pattern="[0-9]{13}"
+                            title="ID Number must be exactly 13 digits"
+                        />
+                    </div>
+                    {idNumberError ? (
+                        <div className="error-message">{idNumberError}</div>
+                    ) : (
+                        <div className="form-hint">South African ID Number (13 digits)</div>
+                    )}
                 </div>
 
                 <div className="form-group">
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Enter your Password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        disabled={isSubmitting}
-                        required
-                    />
+                    <div className="input-with-icon">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            placeholder="Enter your Password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            disabled={isSubmitting}
+                            required
+                        />
+                        <button
+                            type="button"
+                            className="password-toggle"
+                            onClick={togglePasswordVisibility}
+                            tabIndex="-1"
+                        >
+                            <span className="password-toggle-text">
+                                {showPassword ? "Hide" : "Show"}
+                            </span>
+                        </button>
+                    </div>
                     <div className="form-hint">Minimum 8 characters with letters, numbers & symbols</div>
                 </div>
 
@@ -199,6 +222,7 @@ function LoginForm() {
                     type="submit"
                     className="submit-button"
                     disabled={isSubmitting}
+                    style={{ color: 'white' }}
                 >
                     {isSubmitting ? (
                         <>
@@ -210,43 +234,59 @@ function LoginForm() {
                     )}
                 </button>
 
-                <div className="divider">
-                    <span>OR</span>
-                </div>
-
-                <button
-                    type="button"
-                    className="google-sso flex items-center"
-                    onClick={handleGoogleSignIn}
-                    disabled={isSubmitting}
-                >
-                    <img src="/google-icon.png" alt="" className="w-5 h-5 mr-2" />
-                    Sign in with Google
-                </button>
-
                 <p className="auth-link">
                     Don't have an account? <Link to="/register">Sign up</Link>
                 </p>
-
-                <div className="auth-help-links">
-                    <Tooltip title="Use this if you're having trouble logging in due to session conflicts">
-                        <button
-                            type="button"
-                            className="text-button"
-                            onClick={handleClearSession}
-                            disabled={isSubmitting}
-                        >
-                            Clear Session
-                        </button>
-                    </Tooltip>
-                </div>
             </form>
 
             {/* Email Verification Dialog */}
-            <Dialog open={showVerificationDialog} onClose={() => setShowVerificationDialog(false)}>
-                <DialogTitle>Verify Your Email</DialogTitle>
-                <DialogContent>
-                    <p>Please enter the verification code sent to your email.</p>
+            <Dialog
+                open={showVerificationDialog}
+                onClose={() => setShowVerificationDialog(false)}
+                PaperProps={{
+                    style: {
+                        borderRadius: '16px',
+                        padding: '10px',
+                        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.05)',
+                        maxWidth: '450px',
+                        width: '100%',
+                        background: 'linear-gradient(145deg, #ffffff, #f8f9fa)',
+                        border: '1px solid rgba(14, 70, 73, 0.05)',
+                        overflow: 'hidden'
+                    }
+                }}
+            >
+                <div style={{
+                    width: '100%',
+                    height: '5px',
+                    background: 'linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%)',
+                    marginBottom: '15px'
+                }}></div>
+
+                <DialogTitle style={{
+                    textAlign: 'center',
+                    fontSize: '1.5rem',
+                    fontWeight: '700',
+                    background: 'linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    color: 'transparent',
+                    padding: '10px 24px'
+                }}>
+                    Verify Your Email
+                </DialogTitle>
+
+                <DialogContent style={{ padding: '20px 24px' }}>
+                    <p style={{
+                        textAlign: 'center',
+                        marginBottom: '20px',
+                        fontSize: '1.05rem',
+                        color: '#555'
+                    }}>
+                        Please enter the verification code sent to your email.
+                    </p>
+
                     <TextField
                         autoFocus
                         margin="dense"
@@ -256,23 +296,92 @@ function LoginForm() {
                         value={verificationCode}
                         onChange={(e) => setVerificationCode(e.target.value)}
                         disabled={isSubmitting}
+                        InputProps={{
+                            style: {
+                                borderRadius: '12px',
+                                padding: '5px 15px',
+                                fontSize: '1.1rem',
+                                letterSpacing: '2px'
+                            }
+                        }}
+                        sx={{
+                            '& .MuiOutlinedInput-root': {
+                                '&:hover fieldset': {
+                                    borderColor: 'var(--color-primary-light)',
+                                },
+                                '&.Mui-focused fieldset': {
+                                    borderColor: 'var(--color-primary)',
+                                    borderWidth: '2px',
+                                },
+                            },
+                        }}
                     />
+
                     {loginError && (
-                        <Alert severity="error" className="auth-alert" style={{ marginTop: '10px' }}>
+                        <Alert
+                            severity="error"
+                            className="auth-alert"
+                            style={{
+                                marginTop: '15px',
+                                borderRadius: '12px',
+                                animation: 'fadeIn 0.5s ease-out'
+                            }}
+                        >
                             {loginError}
                         </Alert>
                     )}
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleResendCode} disabled={isSubmitting}>
+
+                <DialogActions style={{
+                    padding: '15px 24px 24px',
+                    display: 'flex',
+                    justifyContent: 'space-between'
+                }}>
+                    <Button
+                        onClick={handleResendCode}
+                        disabled={isSubmitting}
+                        style={{
+                            color: 'var(--color-secondary)',
+                            fontWeight: '500',
+                            textTransform: 'none',
+                            fontSize: '0.95rem'
+                        }}
+                    >
                         Resend Code
                     </Button>
-                    <Button onClick={() => setShowVerificationDialog(false)} disabled={isSubmitting}>
-                        Cancel
-                    </Button>
-                    <Button onClick={handleVerificationSubmit} disabled={isSubmitting} variant="contained" color="primary">
-                        {isSubmitting ? <CircularProgress size={20} color="inherit" /> : 'Verify'}
-                    </Button>
+
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                        <Button
+                            onClick={() => setShowVerificationDialog(false)}
+                            disabled={isSubmitting}
+                            style={{
+                                borderRadius: '10px',
+                                textTransform: 'none',
+                                padding: '8px 16px',
+                                fontSize: '0.95rem'
+                            }}
+                        >
+                            Cancel
+                        </Button>
+
+                        <Button
+                            onClick={handleVerificationSubmit}
+                            disabled={isSubmitting}
+                            variant="contained"
+                            style={{
+                                background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)',
+                                color: 'white',
+                                borderRadius: '10px',
+                                padding: '8px 24px',
+                                boxShadow: '0 4px 12px rgba(14, 70, 73, 0.2)',
+                                textTransform: 'none',
+                                fontSize: '0.95rem',
+                                fontWeight: '600'
+                            }}
+                        >
+                            {isSubmitting ? <CircularProgress size={20} color="inherit" /> : 'Verify'}
+                        </Button>
+                    </div>
                 </DialogActions>
             </Dialog>
         </div>
