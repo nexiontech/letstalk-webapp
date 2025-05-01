@@ -21,7 +21,8 @@ import './DashboardPage.css';
 
 const DashboardPage = () => {
   const { user, isAuthenticated } = useAuth();
-  const userName = user?.name || 'User';
+  const fullName = user?.name || 'User';
+  const firstName = fullName.split(' ')[0]; // Extract just the first name
   const hasRealName = user?.name && user.name !== 'User' && user.name.trim() !== '';
   const navigate = useNavigate();
 
@@ -44,12 +45,10 @@ const DashboardPage = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Format greeting based on time of day
+  // Get a random South African greeting (Howzit or Eita)
   const getGreeting = () => {
-    const hour = currentTime.getHours();
-    if (hour < 12) return 'Good Morning';
-    if (hour < 18) return 'Good Afternoon';
-    return 'Good Evening';
+    const greetings = ['Howzit', 'Eita'];
+    return greetings[Math.floor(Math.random() * greetings.length)];
   };
 
   // Format date
@@ -143,7 +142,7 @@ const DashboardPage = () => {
       <div className="dashboard-header">
         <div className="greeting-container">
           <h1 className="greeting-heading">
-            {getGreeting()}{hasRealName ? `, ${userName}` : ''}
+            {getGreeting()}{hasRealName ? `, ${firstName}` : ''}
           </h1>
           <p className="date-display">{formattedDate}</p>
         </div>
