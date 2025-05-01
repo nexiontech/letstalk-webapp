@@ -1,0 +1,323 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'CloudFormation template for Let''s Talk WebApp API Gateway'
+
+Resources:
+  LetsTalkAPI:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: LetsTalkAPI
+      Description: API for Let's Talk WebApp
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+
+  # API Key and Usage Plan
+  LetsTalkApiKey:
+    Type: AWS::ApiGateway::ApiKey
+    Properties:
+      Name: LetsTalkWebAppKey
+      Description: API Key for Let's Talk WebApp
+      Enabled: true
+    DependsOn: ApiDeployment
+
+  LetsTalkUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      UsagePlanName: LetsTalkUsagePlan
+      Description: Usage plan for Let's Talk WebApp
+      ApiStages:
+        - ApiId: !Ref LetsTalkAPI
+          Stage: !Ref ProdStage
+      Quota:
+        Limit: 1000000
+        Period: MONTH
+      Throttle:
+        BurstLimit: 20
+        RateLimit: 10
+    DependsOn: ProdStage
+
+  ApiKeyUsagePlanAssociation:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties:
+      KeyId: !Ref LetsTalkApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref LetsTalkUsagePlan
+
+  # Auth Resource
+  AuthResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref LetsTalkAPI
+      ParentId: !GetAtt LetsTalkAPI.RootResourceId
+      PathPart: auth
+
+  # Auth Login Resource and Method
+  AuthLoginResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref LetsTalkAPI
+      ParentId: !Ref AuthResource
+      PathPart: login
+
+  AuthLoginMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref LetsTalkAPI
+      ResourceId: !Ref AuthLoginResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      ApiKeyRequired: true
+      Integration:
+        Type: MOCK
+        IntegrationHttpMethod: POST
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              application/json: '{"message": "Login endpoint"}'
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels:
+            application/json: 'Empty'
+
+  # Auth Register Resource and Method
+  AuthRegisterResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref LetsTalkAPI
+      ParentId: !Ref AuthResource
+      PathPart: register
+
+  AuthRegisterMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref LetsTalkAPI
+      ResourceId: !Ref AuthRegisterResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      ApiKeyRequired: true
+      Integration:
+        Type: MOCK
+        IntegrationHttpMethod: POST
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              application/json: '{"message": "Register endpoint"}'
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels:
+            application/json: 'Empty'
+
+  # Users Resource
+  UsersResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref LetsTalkAPI
+      ParentId: !GetAtt LetsTalkAPI.RootResourceId
+      PathPart: users
+
+  # User ID Resource
+  UserIdResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref LetsTalkAPI
+      ParentId: !Ref UsersResource
+      PathPart: '{id}'
+
+  # Get User Profile Method
+  GetUserProfileMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref LetsTalkAPI
+      ResourceId: !Ref UserIdResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      ApiKeyRequired: true
+      Integration:
+        Type: MOCK
+        IntegrationHttpMethod: GET
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              application/json: '{"message": "Get user profile endpoint"}'
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels:
+            application/json: 'Empty'
+
+  # Issues Resource
+  IssuesResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref LetsTalkAPI
+      ParentId: !GetAtt LetsTalkAPI.RootResourceId
+      PathPart: issues
+
+  # Get Issues Method
+  GetIssuesMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref LetsTalkAPI
+      ResourceId: !Ref IssuesResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      ApiKeyRequired: true
+      Integration:
+        Type: MOCK
+        IntegrationHttpMethod: GET
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              application/json: '{"message": "Get issues endpoint"}'
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels:
+            application/json: 'Empty'
+
+  # Services Resource
+  ServicesResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref LetsTalkAPI
+      ParentId: !GetAtt LetsTalkAPI.RootResourceId
+      PathPart: services
+
+  # Get Services Method
+  GetServicesMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref LetsTalkAPI
+      ResourceId: !Ref ServicesResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      ApiKeyRequired: true
+      Integration:
+        Type: MOCK
+        IntegrationHttpMethod: GET
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              application/json: '{"message": "Get services endpoint"}'
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels:
+            application/json: 'Empty'
+
+  # Community Resource
+  CommunityResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref LetsTalkAPI
+      ParentId: !GetAtt LetsTalkAPI.RootResourceId
+      PathPart: community
+
+  # Community Groups Resource
+  CommunityGroupsResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref LetsTalkAPI
+      ParentId: !Ref CommunityResource
+      PathPart: groups
+
+  # Get Community Groups Method
+  GetCommunityGroupsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref LetsTalkAPI
+      ResourceId: !Ref CommunityGroupsResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      ApiKeyRequired: true
+      Integration:
+        Type: MOCK
+        IntegrationHttpMethod: GET
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              application/json: '{"message": "Get community groups endpoint"}'
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels:
+            application/json: 'Empty'
+
+  # CORS Configuration for all resources
+  OptionsMethodForAuth:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref LetsTalkAPI
+      ResourceId: !Ref AuthResource
+      HttpMethod: OPTIONS
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,POST,PUT,DELETE,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            ResponseTemplates:
+              application/json: ''
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+      MethodResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+            method.response.header.Access-Control-Allow-Origin: true
+          ResponseModels:
+            application/json: 'Empty'
+
+  # Deployment and Stage
+  ApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - AuthLoginMethod
+      - AuthRegisterMethod
+      - GetUserProfileMethod
+      - GetIssuesMethod
+      - GetServicesMethod
+      - GetCommunityGroupsMethod
+      - OptionsMethodForAuth
+    Properties:
+      RestApiId: !Ref LetsTalkAPI
+      Description: Initial deployment
+
+  ProdStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      DeploymentId: !Ref ApiDeployment
+      RestApiId: !Ref LetsTalkAPI
+      StageName: prod
+      MethodSettings:
+        - ResourcePath: '/*'
+          HttpMethod: '*'
+          MetricsEnabled: true
+          DataTraceEnabled: true
+          LoggingLevel: INFO
+
+Outputs:
+  ApiGatewayUrl:
+    Description: URL of the API Gateway
+    Value: !Sub https://${LetsTalkAPI}.execute-api.${AWS::Region}.amazonaws.com/prod
+  ApiKey:
+    Description: API Key for accessing the API
+    Value: !Ref LetsTalkApiKey
