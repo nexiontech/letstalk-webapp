@@ -1,5 +1,5 @@
 // src/layouts/DashboardLayout.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,11 +18,17 @@ import {
 import './DashboardLayout.css';
 
 const DashboardLayout = ({ children }) => {
-  const { user, logout } = useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const userName = user?.name || 'User';
+  const hasRealName = user?.name && user.name !== 'User' && user.name.trim() !== '';
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Log user info for debugging
+  useEffect(() => {
+    console.log('DashboardLayout - Auth state:', { user, isAuthenticated, hasRealName });
+  }, [user, isAuthenticated, hasRealName]);
 
   const handleLogout = async () => {
     await logout();
@@ -104,6 +110,20 @@ const DashboardLayout = ({ children }) => {
           <h2 className="dashboard-heading">LetsTalk</h2>
           <div className="sidebar-close-mobile" onClick={toggleMobileMenu}>
             <FontAwesomeIcon icon={faTimes} />
+          </div>
+        </div>
+
+        <div className="user-profile-section">
+          <div className="user-avatar">
+            {hasRealName ? userName.charAt(0).toUpperCase() : 'U'}
+          </div>
+          <div className="user-info">
+            <div className="user-name">{hasRealName ? userName : 'User'}</div>
+            {user?.idNumber && (
+              <div className="user-id-number">
+                ID: {user.idNumber.replace(/(\d{6})(\d{4})(\d{3})/, '$1 $2 $3')}
+              </div>
+            )}
           </div>
         </div>
 

@@ -1,7 +1,8 @@
 //src/pages/HomePage.jsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useAuth } from '../contexts/AuthContext';
 import {
   faWater, faBolt, faComments, faUsers,
   faMapMarkedAlt, faBullhorn, faHandshake, faChevronRight,
@@ -10,6 +11,24 @@ import {
 import './HomePage.css';
 
 function HomePage() {
+    const { user, isAuthenticated } = useAuth();
+    const [greeting, setGreeting] = useState('');
+    const [firstName, setFirstName] = useState('');
+
+    useEffect(() => {
+        if (isAuthenticated && user?.name) {
+            // Extract first name from full name
+            const nameParts = user.name.split(' ');
+            const userFirstName = nameParts[0];
+            setFirstName(userFirstName);
+
+            // Randomly choose between "Howzit" and "Eita"
+            const greetings = ['Howzit', 'Eita'];
+            const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
+            setGreeting(randomGreeting);
+        }
+    }, [isAuthenticated, user]);
+
     const services = [
         {
             icon: faWater,
@@ -53,7 +72,11 @@ function HomePage() {
         <div className="homepage">
             <div className="hero-container">
                 <div className="hero-content">
-                    <h1 className="hero-title">Let's Talk</h1>
+                    {isAuthenticated && firstName && greeting ? (
+                        <h1 className="hero-title">{greeting}, {firstName}!</h1>
+                    ) : (
+                        <h1 className="hero-title">Let's Talk</h1>
+                    )}
                     <h2 className="hero-subtitle">Your community service platform</h2>
                     <p className="hero-description">
                         Stay connected with essential services in your community.
@@ -61,7 +84,11 @@ function HomePage() {
                     </p>
 
                     <div className="hero-cta">
-                        <Link to="/register" className="cta-button primary">Get Started</Link>
+                        {!isAuthenticated ? (
+                            <Link to="/register" className="cta-button primary">Get Started</Link>
+                        ) : (
+                            <Link to="/dashboard" className="cta-button primary">Go to Dashboard</Link>
+                        )}
                         <Link to="/service-issues" className="cta-button secondary">View Service Issues</Link>
                     </div>
                 </div>
@@ -158,12 +185,25 @@ function HomePage() {
 
             <div className="cta-section">
                 <div className="cta-content">
-                    <h2>Ready to get started?</h2>
-                    <p>Join thousands of community members already using Let's Talk</p>
-                    <div className="cta-buttons">
-                        <Link to="/register" className="cta-button primary">Create Account</Link>
-                        <Link to="/login" className="cta-button outline">Sign In</Link>
-                    </div>
+                    {!isAuthenticated ? (
+                        <>
+                            <h2>Ready to get started?</h2>
+                            <p>Join thousands of community members already using Let's Talk</p>
+                            <div className="cta-buttons">
+                                <Link to="/register" className="cta-button primary">Create Account</Link>
+                                <Link to="/login" className="cta-button outline">Sign In</Link>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <h2>Welcome to the community!</h2>
+                            <p>Explore all the features available to you</p>
+                            <div className="cta-buttons">
+                                <Link to="/dashboard" className="cta-button primary">Go to Dashboard</Link>
+                                <Link to="/CommunityHub" className="cta-button outline">Community Hub</Link>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         </div>

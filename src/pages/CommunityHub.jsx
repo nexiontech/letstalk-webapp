@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './CommunityHub.css';
+import { useAuth } from '../contexts/AuthContext';
 
 import circleIcon from '../assets/images/circle_icon.jpg';
 import bubleIcon from '../assets/images/buble_icon.jpg';
@@ -16,8 +17,9 @@ import {
 function CommunityHub() {
   const [activeTab, setActiveTab] = useState('chats');
   const [activeChatId, setActiveChatId] = useState(3);
+  const { user } = useAuth();
 
-  const currentUserName = "Moepi Setona";
+  const currentUserName = user?.name || "Guest User";
   const currentUserLocation = "Johannesburg";
 
   const chatGroups = [
