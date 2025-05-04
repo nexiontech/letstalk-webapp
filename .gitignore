@@ -10,7 +10,10 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
-#*.local
+*.local
+
+# AWS configuration files with sensitive information
+aws/.env.local
 
 # Editor directories and files
 .vscode/*

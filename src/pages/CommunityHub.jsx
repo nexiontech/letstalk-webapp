@@ -20,6 +20,7 @@ function CommunityHub() {
   const { user } = useAuth();
 
   const currentUserName = user?.name || "Guest User";
+  const hasRealName = user?.name && user.name !== 'Guest User' && user.name.trim() !== '';
   const currentUserLocation = "Johannesburg";
 
   const chatGroups = [
@@ -134,7 +135,7 @@ function CommunityHub() {
               <img src={circleIcon} alt="User Avatar" />
             </div>
             <div className="hub-user-info">
-              <h3>{currentUserName}</h3>
+              <h3>{hasRealName ? currentUserName : 'Guest User'}</h3>
               <p>
                 <FontAwesomeIcon icon={faMapMarkerAlt} />
                 <span>{currentUserLocation}</span>
