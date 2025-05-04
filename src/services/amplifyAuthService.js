@@ -14,6 +14,7 @@ import {
   cognitoForgotPassword,
   cognitoConfirmForgotPassword
 } from '../utils/cognitoAuth';
+import { decodeJWT } from '../utils/jwtDecode';
 
 // Async thunk for login
 export const loginUser = createAsyncThunk(
@@ -62,11 +63,15 @@ export const loginUser = createAsyncThunk(
       localStorage.setItem('auth_access_token', accessToken);
       localStorage.setItem('auth_refresh_token', refreshToken);
 
-      // Create user object with basic info (we don't have attributes yet)
+      // Decode the ID token to get user attributes
+      const decodedToken = decodeJWT(idToken);
+      console.log('Decoded ID token:', decodedToken);
+
+      // Create user object with info from the token
       const user = {
         idNumber: idNumber,
-        email: '', // We'll update this later if possible
-        name: '',  // We'll update this later if possible
+        email: decodedToken?.email || '',
+        name: decodedToken?.name || '',  // Extract name from token
       };
 
       console.log('User object created:', user);
@@ -94,11 +99,16 @@ export const loginUser = createAsyncThunk(
           await getCurrentUser(); // Verify user is authenticated
           const { tokens } = await fetchAuthSession();
 
-          // Create user object from available information
+          // Try to decode the ID token to get user attributes
+          const idToken = tokens.idToken.toString();
+          const decodedToken = decodeJWT(idToken);
+          console.log('Decoded ID token from existing session:', decodedToken);
+
+          // Create user object with info from the token
           const user = {
             idNumber: idNumber, // We don't know if this is correct, but it's what the user entered
-            email: '',
-            name: '',
+            email: decodedToken?.email || '',
+            name: decodedToken?.name || '',  // Extract name from token
           };
 
           // Store user in localStorage
@@ -287,7 +297,12 @@ export const checkAuthStatus = createAsyncThunk(
         await getCurrentUser(); // Verify user is authenticated
         const { tokens } = await fetchAuthSession();
 
-        // Fetch user attributes
+        // Try to decode the ID token to get user attributes
+        const idToken = tokens.idToken.toString();
+        const decodedToken = decodeJWT(idToken);
+        console.log('Decoded ID token during status check:', decodedToken);
+
+        // Fetch user attributes from Amplify as a backup
         let userAttributes = {};
         try {
           userAttributes = await fetchUserAttributes();
@@ -299,22 +314,19 @@ export const checkAuthStatus = createAsyncThunk(
         // Get existing user from localStorage
         let user = JSON.parse(localStorage.getItem('auth_user') || '{}');
 
-        // Update user with fresh attributes if available
-        if (Object.keys(userAttributes).length > 0) {
-          user = {
-            ...user,
-            name: userAttributes.name || user.name || '',
-            email: userAttributes.email || user.email || '',
-            // Ensure ID number is always available
-            idNumber: user.idNumber || userAttributes['custom:idNumber'] || '',
-            // Add custom attributes if available
-            ...(userAttributes['custom:idNumber'] ? { 'custom:idNumber': userAttributes['custom:idNumber'] } : {})
-          };
+        // Update user with fresh attributes from token and Amplify
+        user = {
+          ...user,
+          // Prefer token data, then Amplify attributes, then existing data
+          name: decodedToken?.name || userAttributes.name || user.name || '',
+          email: decodedToken?.email || userAttributes.email || user.email || '',
+          // Ensure ID number is always available
+          idNumber: user.idNumber || decodedToken?.['custom:idNumber'] || userAttributes['custom:idNumber'] || '',
+        };
 
-          // Update localStorage with fresh data
-          localStorage.setItem('auth_user', JSON.stringify(user));
-          console.log('Updated user object with fresh attributes:', user);
-        }
+        // Update localStorage with fresh data
+        localStorage.setItem('auth_user', JSON.stringify(user));
+        console.log('Updated user object with fresh attributes:', user);
 
         // Return user information and token
         return {
