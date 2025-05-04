@@ -115,3 +115,22 @@ For production deployment:
 3. Set up proper IAM roles and policies for your Cognito user pool
 4. Configure proper email settings for verification and password reset emails
 5. Consider using AWS WAF to protect your Cognito endpoints from attacks
+
+## Details
+```bash
+Creating Cognito User Pool in af-south-1...
+User Pool created with ID: af-south-1_GQY6bDSyn
+Added custom attribute 'idNumber'
+App Client created with ID: sqnv3kv55jothg6fr075bmbaq
+Client Secret: 8vqu3hk27utkmfsel3ngm175ibab8iu5mpm967dqmb65ssagk9o
+{
+    "ManagedLoginVersion": 1
+}
+Domain created: letstalk-citizen-webapp.auth.af-south-1.amazoncognito.com
+
+Add these values to your .env.local file:
+VITE_COGNITO_REGION=af-south-1
+VITE_COGNITO_USER_POOL_ID=af-south-1_GQY6bDSyn
+VITE_COGNITO_USER_POOL_WEB_CLIENT_ID=sqnv3kv55jothg6fr075bmbaq
+VITE_COGNITO_DOMAIN=https://letstalk-citizen-webapp.auth.af-south-1.amazoncognito.com
+~```

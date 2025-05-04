@@ -1,0 +1,14 @@
+{
+  "name": "letstalk-auth-refresh",
+  "version": "1.0.0",
+  "description": "Refresh authentication tokens",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Let's Talk Team",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1467.0"
+  }
+}
