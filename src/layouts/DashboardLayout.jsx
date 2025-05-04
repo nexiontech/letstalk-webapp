@@ -23,6 +23,8 @@ const DashboardLayout = ({ children }) => {
   const location = useLocation();
   const userName = user?.name || 'User';
   const hasRealName = user?.name && user.name !== 'User' && user.name.trim() !== '';
+  // Get first letter of first name for avatar
+  const userInitial = hasRealName ? userName.split(' ')[0].charAt(0).toUpperCase() : 'U';
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Log user info for debugging
@@ -115,7 +117,7 @@ const DashboardLayout = ({ children }) => {
 
         <div className="user-profile-section">
           <div className="user-avatar">
-            {hasRealName ? userName.charAt(0).toUpperCase() : 'U'}
+            {userInitial}
           </div>
           <div className="user-info">
             <div className="user-name">{hasRealName ? userName : 'User'}</div>
