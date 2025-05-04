@@ -1,16 +1,19 @@
 // src/services/amplifyAuthService.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
-  signIn,
-  signUp,
-  confirmSignUp,
   signOut,
   getCurrentUser,
   fetchAuthSession,
-  resetPassword,
-  confirmResetPassword,
   fetchUserAttributes
 } from 'aws-amplify/auth';
+import {
+  cognitoSignIn,
+  cognitoSignUp,
+  cognitoConfirmSignUp,
+  cognitoResendConfirmationCode,
+  cognitoForgotPassword,
+  cognitoConfirmForgotPassword
+} from '../utils/cognitoAuth';
 
 // Async thunk for login
 export const loginUser = createAsyncThunk(
@@ -27,35 +30,43 @@ export const loginUser = createAsyncThunk(
         console.log('No existing user to sign out or sign out failed:', signOutError);
       }
 
-      // Now attempt to sign in
-      const signInResponse = await signIn({
-        username: idNumber,  // Using ID Number as username
-        password,
-        options: {
-          authFlowType: 'USER_PASSWORD_AUTH'
-        }
+      // Get environment variables
+      const clientId = import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID;
+      const clientSecret = import.meta.env.VITE_COGNITO_CLIENT_SECRET;
+      const region = import.meta.env.VITE_COGNITO_REGION;
+
+      console.log('Using Cognito configuration:', {
+        region,
+        clientId,
+        clientSecret: clientSecret ? '***' : 'not set'
       });
 
-      // Get the current user and session
-      const currentUser = await getCurrentUser();
-      const { tokens } = await fetchAuthSession();
+      // Now attempt to sign in using our custom function
+      const signInResponse = await cognitoSignIn(
+        idNumber, // Using ID Number as username
+        password,
+        clientId,
+        clientSecret,
+        region
+      );
 
-      // Fetch user attributes
-      let userAttributes = {};
-      try {
-        userAttributes = await fetchUserAttributes();
-        console.log('User attributes fetched:', userAttributes);
-      } catch (attributesError) {
-        console.error('Error fetching user attributes:', attributesError);
-      }
+      console.log('Sign in response:', signInResponse);
 
-      // Create user object with attributes
+      // Extract tokens from the response
+      const idToken = signInResponse.AuthenticationResult.IdToken;
+      const accessToken = signInResponse.AuthenticationResult.AccessToken;
+      const refreshToken = signInResponse.AuthenticationResult.RefreshToken;
+
+      // Store tokens in localStorage
+      localStorage.setItem('auth_id_token', idToken);
+      localStorage.setItem('auth_access_token', accessToken);
+      localStorage.setItem('auth_refresh_token', refreshToken);
+
+      // Create user object with basic info (we don't have attributes yet)
       const user = {
         idNumber: idNumber,
-        email: userAttributes.email || '',
-        name: userAttributes.name || '',
-        // Add custom attributes if available
-        ...(userAttributes['custom:idNumber'] ? { 'custom:idNumber': userAttributes['custom:idNumber'] } : {})
+        email: '', // We'll update this later if possible
+        name: '',  // We'll update this later if possible
       };
 
       console.log('User object created:', user);
@@ -65,7 +76,7 @@ export const loginUser = createAsyncThunk(
 
       return {
         user: user,
-        token: tokens.idToken.toString()
+        token: idToken
       };
     } catch (error) {
       console.error('Login error:', error);
@@ -115,19 +126,33 @@ export const registerUser = createAsyncThunk(
   'auth/register',
   async (userData, { rejectWithValue }) => {
     try {
-      // Using Amplify's signUp function directly
-      await signUp({
-        username: userData.idNumber, // Using ID Number as username
-        password: userData.password,
-        options: {
-          userAttributes: {
-            email: userData.email,
-            name: userData.name,
-            'custom:idNumber': userData.idNumber
-          },
-          authFlowType: 'USER_PASSWORD_AUTH'
-        }
+      // Get environment variables
+      const clientId = import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID;
+      const clientSecret = import.meta.env.VITE_COGNITO_CLIENT_SECRET;
+      const region = import.meta.env.VITE_COGNITO_REGION;
+
+      console.log('Using Cognito configuration for registration:', {
+        region,
+        clientId,
+        clientSecret: clientSecret ? '***' : 'not set'
       });
+
+      // Prepare user attributes
+      const userAttributes = {
+        email: userData.email,
+        name: userData.name,
+        'custom:idNumber': userData.idNumber
+      };
+
+      // Using our custom sign up function
+      await cognitoSignUp(
+        userData.idNumber, // Using ID Number as username
+        userData.password,
+        userAttributes,
+        clientId,
+        clientSecret,
+        region
+      );
 
       return {
         success: true,
@@ -153,11 +178,25 @@ export const confirmRegistration = createAsyncThunk(
   'auth/confirmRegistration',
   async ({ idNumber, code }, { rejectWithValue }) => {
     try {
-      // Using Amplify's confirmSignUp function directly
-      await confirmSignUp({
-        username: idNumber, // Using ID Number as username
-        confirmationCode: code
+      // Get environment variables
+      const clientId = import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID;
+      const clientSecret = import.meta.env.VITE_COGNITO_CLIENT_SECRET;
+      const region = import.meta.env.VITE_COGNITO_REGION;
+
+      console.log('Using Cognito configuration for confirmation:', {
+        region,
+        clientId,
+        clientSecret: clientSecret ? '***' : 'not set'
       });
+
+      // Using our custom confirmation function
+      await cognitoConfirmSignUp(
+        idNumber, // Using ID Number as username
+        code,
+        clientId,
+        clientSecret,
+        region
+      );
 
       return {
         success: true,
@@ -175,10 +214,24 @@ export const resendVerificationCode = createAsyncThunk(
   'auth/resendVerificationCode',
   async (idNumber, { rejectWithValue }) => {
     try {
-      // Using Amplify's resendSignUpCode function directly
-      await signUp.resendSignUpCode({
-        username: idNumber // Using ID Number as username
+      // Get environment variables
+      const clientId = import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID;
+      const clientSecret = import.meta.env.VITE_COGNITO_CLIENT_SECRET;
+      const region = import.meta.env.VITE_COGNITO_REGION;
+
+      console.log('Using Cognito configuration for resending code:', {
+        region,
+        clientId,
+        clientSecret: clientSecret ? '***' : 'not set'
       });
+
+      // Using our custom resend confirmation code function
+      await cognitoResendConfirmationCode(
+        idNumber, // Using ID Number as username
+        clientId,
+        clientSecret,
+        region
+      );
 
       return {
         success: true,
@@ -303,14 +356,31 @@ export const forgotPassword = createAsyncThunk(
   'auth/forgotPassword',
   async (idNumber, { rejectWithValue }) => {
     try {
-      await resetPassword({
-        username: idNumber // Use ID Number as username
+      // Get environment variables
+      const clientId = import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID;
+      const clientSecret = import.meta.env.VITE_COGNITO_CLIENT_SECRET;
+      const region = import.meta.env.VITE_COGNITO_REGION;
+
+      console.log('Using Cognito configuration for forgot password:', {
+        region,
+        clientId,
+        clientSecret: clientSecret ? '***' : 'not set'
       });
+
+      // Using our custom forgot password function
+      await cognitoForgotPassword(
+        idNumber, // Using ID Number as username
+        clientId,
+        clientSecret,
+        region
+      );
+
       return {
         success: true,
         message: 'Password reset code has been sent to your email.'
       };
     } catch (error) {
+      console.error('Password reset request error:', error);
       return rejectWithValue(error.message || 'Password reset request failed');
     }
   }
@@ -321,16 +391,33 @@ export const confirmForgotPassword = createAsyncThunk(
   'auth/confirmForgotPassword',
   async ({ idNumber, code, newPassword }, { rejectWithValue }) => {
     try {
-      await confirmResetPassword({
-        username: idNumber, // Use ID Number as username
-        confirmationCode: code,
-        newPassword
+      // Get environment variables
+      const clientId = import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID;
+      const clientSecret = import.meta.env.VITE_COGNITO_CLIENT_SECRET;
+      const region = import.meta.env.VITE_COGNITO_REGION;
+
+      console.log('Using Cognito configuration for confirm forgot password:', {
+        region,
+        clientId,
+        clientSecret: clientSecret ? '***' : 'not set'
       });
+
+      // Using our custom confirm forgot password function
+      await cognitoConfirmForgotPassword(
+        idNumber, // Using ID Number as username
+        code,
+        newPassword,
+        clientId,
+        clientSecret,
+        region
+      );
+
       return {
         success: true,
         message: 'Password has been reset successfully. You can now log in with your new password.'
       };
     } catch (error) {
+      console.error('Password reset confirmation error:', error);
       return rejectWithValue(error.message || 'Password reset confirmation failed');
     }
   }
