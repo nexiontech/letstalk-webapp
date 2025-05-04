@@ -207,3 +207,101 @@ export async function cognitoResendConfirmationCode(email, clientId, clientSecre
     throw error;
   }
 }
+
+/**
+ * Custom function to handle Cognito forgot password with SECRET_HASH
+ * @param {string} email - The user's email (used as username)
+ * @param {string} clientId - The Cognito App Client ID
+ * @param {string} clientSecret - The Cognito App Client Secret
+ * @param {string} region - The AWS region
+ * @returns {Promise<Object>} - The forgot password response
+ */
+export async function cognitoForgotPassword(email, clientId, clientSecret, region) {
+  try {
+    // Calculate SECRET_HASH using email as username
+    const secretHash = await calculateSecretHash(email, clientId, clientSecret);
+
+    // Prepare the request data
+    const reqData = {
+      Username: email, // Use email as username
+      SecretHash: secretHash,
+      ClientId: clientId
+    };
+
+    // Prepare the headers
+    const headers = {
+      'X-Amz-Target': 'AWSCognitoIdentityProviderService.ForgotPassword',
+      'Content-Type': 'application/x-amz-json-1.1'
+    };
+
+    // Make the request to Cognito
+    const response = await fetch(`https://cognito-idp.${region}.amazonaws.com/`, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify(reqData)
+    });
+
+    // Parse the response
+    const jsonResponse = await response.json();
+
+    if (response.ok) {
+      return jsonResponse;
+    } else {
+      throw new Error(jsonResponse.message || jsonResponse.__type || 'Forgot password request failed');
+    }
+  } catch (error) {
+    console.error('Cognito forgot password error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Custom function to handle Cognito confirm forgot password with SECRET_HASH
+ * @param {string} email - The user's email (used as username)
+ * @param {string} confirmationCode - The confirmation code
+ * @param {string} newPassword - The new password
+ * @param {string} clientId - The Cognito App Client ID
+ * @param {string} clientSecret - The Cognito App Client Secret
+ * @param {string} region - The AWS region
+ * @returns {Promise<Object>} - The confirm forgot password response
+ */
+export async function cognitoConfirmForgotPassword(email, confirmationCode, newPassword, clientId, clientSecret, region) {
+  try {
+    // Calculate SECRET_HASH using email as username
+    const secretHash = await calculateSecretHash(email, clientId, clientSecret);
+
+    // Prepare the request data
+    const reqData = {
+      Username: email, // Use email as username
+      ConfirmationCode: confirmationCode,
+      Password: newPassword,
+      SecretHash: secretHash,
+      ClientId: clientId
+    };
+
+    // Prepare the headers
+    const headers = {
+      'X-Amz-Target': 'AWSCognitoIdentityProviderService.ConfirmForgotPassword',
+      'Content-Type': 'application/x-amz-json-1.1'
+    };
+
+    // Make the request to Cognito
+    const response = await fetch(`https://cognito-idp.${region}.amazonaws.com/`, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify(reqData)
+    });
+
+    // Parse the response
+    const jsonResponse = await response.json();
+
+    if (response.ok) {
+      return jsonResponse;
+    } else {
+      throw new Error(jsonResponse.message || jsonResponse.__type || 'Confirm forgot password failed');
+    }
+  } catch (error) {
+    console.error('Cognito confirm forgot password error:', error);
+    throw error;
+  }
+}
