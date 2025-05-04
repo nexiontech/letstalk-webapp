@@ -187,7 +187,7 @@
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
   max-height: 500px;
   overflow-y: auto;
 }
@@ -195,36 +195,41 @@
 .list-title {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 16px;
+  gap: 10px;
+  font-size: 18px;
   font-weight: 600;
   color: #333;
-  margin: 0 0 12px 0;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .list-title svg {
   color: #0E4649;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .issue-count {
   margin-left: auto;
   background-color: #f0f0f0;
   color: #666;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
-  padding: 2px 8px;
+  padding: 4px 10px;
   border-radius: 12px;
+  min-width: 28px;
+  text-align: center;
 }
 
 .issue-card {
   background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   cursor: pointer;
   transition: all 0.3s ease;
   border: 1px solid rgba(0, 0, 0, 0.05);
+  margin-bottom: 12px;
 }
 
 .issue-card:hover {
@@ -239,34 +244,35 @@
 }
 
 .issue-card-header {
-  padding: 12px;
+  padding: 14px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .issue-icon-container {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 20px;
   flex-shrink: 0;
 }
 
 .issue-basic-info {
   flex: 1;
   min-width: 0;
+  padding-right: 8px;
 }
 
 .issue-basic-info h3 {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   color: #333;
-  margin: 0 0 4px 0;
+  margin: 0 0 6px 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -275,15 +281,19 @@
 .issue-location {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 12px;
+  gap: 6px;
+  font-size: 13px;
   color: #666;
   margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .issue-location svg {
-  font-size: 10px;
+  font-size: 12px;
   color: #999;
+  flex-shrink: 0;
 }
 
 .issue-arrow {
@@ -298,33 +308,40 @@
 }
 
 .issue-card-footer {
-  padding: 8px 12px;
+  padding: 10px 12px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between;
   background-color: #f9f9f9;
-  font-size: 11px;
+  font-size: 12px;
   color: #666;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .issue-status {
-  padding: 2px 8px;
+  padding: 4px 10px;
   border-radius: 4px;
   color: white;
   font-weight: 600;
-  font-size: 10px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  min-width: 80px;
+  text-align: center;
 }
 
 .issue-time, .issue-eta {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  padding: 4px 0;
+  min-width: 120px;
 }
 
 .issue-time svg, .issue-eta svg {
-  font-size: 10px;
+  font-size: 12px;
+  width: 14px;
 }
 
 .no-issues {
