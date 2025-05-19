@@ -46,14 +46,20 @@ function LoginForm() {
         setLoginError(null);
 
         try {
-            // Call the login function from our auth context
-            const result = await login(formData.idNumber, formData.password);
+            // Determine document type based on input format
+            // This is a temporary workaround until Cognito is properly configured
+            const documentType = formData.idNumber.length < 13 ? 'passport' : 'idNumber';
+
+            // Call the login function from our auth context with document type
+            const result = await login(formData.idNumber, formData.password, documentType);
 
             if (result.success) {
                 // Login successful, will redirect via the useEffect above
             } else if (result.userConfirmationRequired) {
                 // User needs to verify their email
                 setUnverifiedUser(formData.idNumber);
+                // Store document type for verification
+                localStorage.setItem('temp_document_type', documentType);
                 setShowVerificationDialog(true);
             } else {
                 // Login failed
@@ -76,13 +82,22 @@ function LoginForm() {
         setLoginError(null);
 
         try {
-            const result = await dispatch(confirmRegistration({ idNumber: unverifiedUser, code: verificationCode }));
+            // Get the document type from localStorage
+            const documentType = localStorage.getItem('temp_document_type') || 'idNumber';
+
+            const result = await dispatch(confirmRegistration({
+                idNumber: unverifiedUser,
+                code: verificationCode,
+                documentType: documentType // Pass document type for proper padding
+            }));
 
             if (confirmRegistration.fulfilled.match(result)) {
                 setShowVerificationDialog(false);
                 setVerificationCode('');
+                // Clean up the temporary storage
+                localStorage.removeItem('temp_document_type');
                 // Try to log in automatically after verification
-                await login(formData.idNumber, formData.password);
+                await login(formData.idNumber, formData.password, documentType);
             } else {
                 setLoginError(result.payload || 'Verification failed. Please try again.');
             }

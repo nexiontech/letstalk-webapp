@@ -211,6 +211,57 @@ export const validatePassportNumber = (passportNumber) => {
 };
 
 /**
+ * Pads a passport number to meet the 13-character minimum length requirement for Cognito
+ * This is a temporary workaround until Cognito is properly configured to handle passport numbers
+ *
+ * @param {string} passportNumber - The original passport number
+ * @param {string} documentType - The document type ('passport' or 'idNumber')
+ * @returns {string} - The padded passport number or original ID number
+ */
+export const padIdentifierForCognito = (identifier, documentType) => {
+    // If it's an ID number, return as is (should already be 13 digits)
+    if (documentType === 'idNumber') {
+        return identifier;
+    }
+
+    // For passport numbers, pad with a prefix to reach 13 characters
+    // Use 'PPT' prefix to indicate it's a passport number, then pad with zeros
+    const PREFIX = 'PPT';
+    const paddedIdentifier = PREFIX + identifier.padStart(10, '0');
+
+    // Ensure we don't exceed 13 characters (should never happen with our validation)
+    return paddedIdentifier.slice(0, 13);
+};
+
+/**
+ * Extracts the original identifier from a potentially padded Cognito identifier
+ *
+ * @param {string} paddedIdentifier - The identifier as stored in Cognito
+ * @returns {Object} - Object containing the original identifier and document type
+ */
+export const extractOriginalIdentifier = (paddedIdentifier) => {
+    if (!paddedIdentifier) {
+        return { identifier: '', documentType: 'idNumber' };
+    }
+
+    // Check if this is a padded passport number
+    if (paddedIdentifier.startsWith('PPT')) {
+        // Remove the prefix and any leading zeros
+        const originalPassport = paddedIdentifier.substring(3).replace(/^0+/, '');
+        return {
+            identifier: originalPassport,
+            documentType: 'passport'
+        };
+    }
+
+    // If not a padded passport number, assume it's an ID number
+    return {
+        identifier: paddedIdentifier,
+        documentType: 'idNumber'
+    };
+};
+
+/**
  * Capitalizes the first letter of each word in a string
  * @param {string} str - The string to capitalize
  * @returns {string} - The capitalized string

@@ -15,11 +15,12 @@ import {
   cognitoConfirmForgotPassword
 } from '../utils/cognitoAuth';
 import { decodeJWT } from '../utils/jwtDecode';
+import { padIdentifierForCognito, extractOriginalIdentifier } from '../utils/authUtils';
 
 // Async thunk for login
 export const loginUser = createAsyncThunk(
   'auth/login',
-  async ({ idNumber, password }, { rejectWithValue }) => {
+  async ({ idNumber, password, documentType }, { rejectWithValue }) => {
     try {
       // First, check if there's already a signed-in user
       try {
@@ -42,9 +43,19 @@ export const loginUser = createAsyncThunk(
         clientSecret: clientSecret ? '***' : 'not set'
       });
 
+      // TEMPORARY WORKAROUND: Handle padded passport numbers for login
+      // Determine if we need to pad the identifier (for passport numbers)
+      // If documentType is not provided, try to detect from the format
+      const detectedDocType = documentType ||
+                             (idNumber.length < 13 ? 'passport' : 'idNumber');
+
+      const paddedIdentifier = padIdentifierForCognito(idNumber, detectedDocType);
+
+      console.log(`Login - Document type: ${detectedDocType}, Original: ${idNumber}, Padded: ${paddedIdentifier}`);
+
       // Now attempt to sign in using our custom function
       const signInResponse = await cognitoSignIn(
-        idNumber, // Using ID Number as username
+        paddedIdentifier, // Using padded identifier as username
         password,
         clientId,
         clientSecret,
@@ -153,16 +164,26 @@ export const registerUser = createAsyncThunk(
         identityPoolId: identityPoolId ? '***' : 'not set'
       });
 
+      // TEMPORARY WORKAROUND: Pad passport numbers to meet the 13-character minimum length requirement
+      // This will be removed when Cognito is properly configured for passport numbers
+      const documentType = userData.documentType || 'idNumber';
+      const paddedIdentifier = padIdentifierForCognito(userData.idNumber, documentType);
+
+      console.log(`Document type: ${documentType}, Original identifier: ${userData.idNumber}, Padded: ${paddedIdentifier}`);
+
       // Prepare user attributes
       const userAttributes = {
         email: userData.email,
         name: userData.name,
-        'custom:idNumber': userData.idNumber
+        'custom:idNumber': paddedIdentifier,
+        // Store the original document type and identifier for future reference
+        'custom:documentType': documentType,
+        'custom:originalIdentifier': userData.idNumber
       };
 
       // Using our custom sign up function with Identity Pool ID
       const signUpResponse = await cognitoSignUp(
-        userData.idNumber, // Using ID Number as username
+        paddedIdentifier, // Using padded identifier as username
         userData.password,
         userAttributes,
         clientId,
@@ -173,10 +194,12 @@ export const registerUser = createAsyncThunk(
 
       console.log('Registration successful with Identity Pool integration:', signUpResponse);
 
+      // Store the original identifier for verification (not the padded one)
       return {
         success: true,
         message: 'Registration successful. Please check your email for verification.',
-        identityPoolAssociation: signUpResponse.identityPoolAssociation
+        identityPoolAssociation: signUpResponse.identityPoolAssociation,
+        originalIdentifier: userData.idNumber
       };
     } catch (error) {
       console.error('Registration error:', error);
@@ -222,7 +245,7 @@ export const registerUser = createAsyncThunk(
 // Async thunk for confirming registration with verification code
 export const confirmRegistration = createAsyncThunk(
   'auth/confirmRegistration',
-  async ({ idNumber, code }, { rejectWithValue }) => {
+  async ({ idNumber, code, documentType }, { rejectWithValue }) => {
     try {
       // Get environment variables
       const clientId = import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID;
@@ -235,9 +258,19 @@ export const confirmRegistration = createAsyncThunk(
         clientSecret: clientSecret ? '***' : 'not set'
       });
 
+      // TEMPORARY WORKAROUND: Pad passport numbers for confirmation
+      // Determine if we need to pad the identifier (for passport numbers)
+      // If documentType is not provided, try to detect from the format
+      const detectedDocType = documentType ||
+                             (idNumber.length < 13 ? 'passport' : 'idNumber');
+
+      const paddedIdentifier = padIdentifierForCognito(idNumber, detectedDocType);
+
+      console.log(`Confirmation - Document type: ${detectedDocType}, Original: ${idNumber}, Padded: ${paddedIdentifier}`);
+
       // Using our custom confirmation function
       await cognitoConfirmSignUp(
-        idNumber, // Using ID Number as username
+        paddedIdentifier, // Using padded identifier as username
         code,
         clientId,
         clientSecret,
@@ -271,9 +304,16 @@ export const resendVerificationCode = createAsyncThunk(
         clientSecret: clientSecret ? '***' : 'not set'
       });
 
+      // TEMPORARY WORKAROUND: Handle padded passport numbers for resending verification code
+      // Determine if we need to pad the identifier (for passport numbers)
+      const detectedDocType = idNumber.length < 13 ? 'passport' : 'idNumber';
+      const paddedIdentifier = padIdentifierForCognito(idNumber, detectedDocType);
+
+      console.log(`Resend Code - Document type: ${detectedDocType}, Original: ${idNumber}, Padded: ${paddedIdentifier}`);
+
       // Using our custom resend confirmation code function
       await cognitoResendConfirmationCode(
-        idNumber, // Using ID Number as username
+        paddedIdentifier, // Using padded identifier as username
         clientId,
         clientSecret,
         region
@@ -419,9 +459,16 @@ export const forgotPassword = createAsyncThunk(
         clientSecret: clientSecret ? '***' : 'not set'
       });
 
+      // TEMPORARY WORKAROUND: Handle padded passport numbers for password reset
+      // Determine if we need to pad the identifier (for passport numbers)
+      const detectedDocType = idNumber.length < 13 ? 'passport' : 'idNumber';
+      const paddedIdentifier = padIdentifierForCognito(idNumber, detectedDocType);
+
+      console.log(`Forgot Password - Document type: ${detectedDocType}, Original: ${idNumber}, Padded: ${paddedIdentifier}`);
+
       // Using our custom forgot password function
       await cognitoForgotPassword(
-        idNumber, // Using ID Number as username
+        paddedIdentifier, // Using padded identifier as username
         clientId,
         clientSecret,
         region
@@ -441,7 +488,7 @@ export const forgotPassword = createAsyncThunk(
 // Async thunk for confirm forgot password
 export const confirmForgotPassword = createAsyncThunk(
   'auth/confirmForgotPassword',
-  async ({ idNumber, code, newPassword }, { rejectWithValue }) => {
+  async ({ idNumber, code, newPassword, documentType }, { rejectWithValue }) => {
     try {
       // Get environment variables
       const clientId = import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID;
@@ -454,9 +501,18 @@ export const confirmForgotPassword = createAsyncThunk(
         clientSecret: clientSecret ? '***' : 'not set'
       });
 
+      // TEMPORARY WORKAROUND: Handle padded passport numbers for password reset confirmation
+      // Determine if we need to pad the identifier (for passport numbers)
+      const detectedDocType = documentType ||
+                             (idNumber.length < 13 ? 'passport' : 'idNumber');
+
+      const paddedIdentifier = padIdentifierForCognito(idNumber, detectedDocType);
+
+      console.log(`Confirm Forgot Password - Document type: ${detectedDocType}, Original: ${idNumber}, Padded: ${paddedIdentifier}`);
+
       // Using our custom confirm forgot password function
       await cognitoConfirmForgotPassword(
-        idNumber, // Using ID Number as username
+        paddedIdentifier, // Using padded identifier as username
         code,
         newPassword,
         clientId,
