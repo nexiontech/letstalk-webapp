@@ -16,6 +16,7 @@ import {
 } from '../utils/cognitoAuth';
 import { decodeJWT } from '../utils/jwtDecode';
 import { padIdentifierForCognito, extractOriginalIdentifier } from '../utils/authUtils';
+import { getCognitoConfig, logCognitoConfig } from '../utils/envUtils';
 
 // Async thunk for login
 export const loginUser = createAsyncThunk(
@@ -32,16 +33,11 @@ export const loginUser = createAsyncThunk(
         console.log('No existing user to sign out or sign out failed:', signOutError);
       }
 
-      // Get environment variables
-      const clientId = import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID;
-      const clientSecret = import.meta.env.VITE_COGNITO_CLIENT_SECRET;
-      const region = import.meta.env.VITE_COGNITO_REGION;
+      // Get Cognito configuration from environment variables
+      const cognitoConfig = getCognitoConfig();
 
-      console.log('Using Cognito configuration:', {
-        region,
-        clientId,
-        clientSecret: clientSecret ? '***' : 'not set'
-      });
+      // Log configuration for debugging
+      logCognitoConfig('Login', cognitoConfig);
 
       // TEMPORARY WORKAROUND: Handle padded passport numbers for login
       // Determine if we need to pad the identifier (for passport numbers)
@@ -57,9 +53,9 @@ export const loginUser = createAsyncThunk(
       const signInResponse = await cognitoSignIn(
         paddedIdentifier, // Using padded identifier as username
         password,
-        clientId,
-        clientSecret,
-        region
+        cognitoConfig.userPoolWebClientId,
+        cognitoConfig.clientSecret,
+        cognitoConfig.region
       );
 
       console.log('Sign in response:', signInResponse);
@@ -151,18 +147,11 @@ export const registerUser = createAsyncThunk(
   'auth/register',
   async (userData, { rejectWithValue }) => {
     try {
-      // Get environment variables
-      const clientId = import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID;
-      const clientSecret = import.meta.env.VITE_COGNITO_CLIENT_SECRET;
-      const region = import.meta.env.VITE_COGNITO_REGION;
-      const identityPoolId = import.meta.env.VITE_COGNITO_IDENTITY_POOL_ID;
+      // Get Cognito configuration from environment variables
+      const cognitoConfig = getCognitoConfig();
 
-      console.log('Using Cognito configuration for registration:', {
-        region,
-        clientId,
-        clientSecret: clientSecret ? '***' : 'not set',
-        identityPoolId: identityPoolId ? '***' : 'not set'
-      });
+      // Log configuration for debugging
+      logCognitoConfig('Registration', cognitoConfig);
 
       // TEMPORARY WORKAROUND: Pad passport numbers to meet the 13-character minimum length requirement
       // This will be removed when Cognito is properly configured for passport numbers
@@ -186,10 +175,10 @@ export const registerUser = createAsyncThunk(
         paddedIdentifier, // Using padded identifier as username
         userData.password,
         userAttributes,
-        clientId,
-        clientSecret,
-        region,
-        identityPoolId // Pass the Identity Pool ID
+        cognitoConfig.userPoolWebClientId,
+        cognitoConfig.clientSecret,
+        cognitoConfig.region,
+        cognitoConfig.identityPoolId // Pass the Identity Pool ID
       );
 
       console.log('Registration successful with Identity Pool integration:', signUpResponse);
@@ -247,16 +236,11 @@ export const confirmRegistration = createAsyncThunk(
   'auth/confirmRegistration',
   async ({ idNumber, code, documentType }, { rejectWithValue }) => {
     try {
-      // Get environment variables
-      const clientId = import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID;
-      const clientSecret = import.meta.env.VITE_COGNITO_CLIENT_SECRET;
-      const region = import.meta.env.VITE_COGNITO_REGION;
+      // Get Cognito configuration from environment variables
+      const cognitoConfig = getCognitoConfig();
 
-      console.log('Using Cognito configuration for confirmation:', {
-        region,
-        clientId,
-        clientSecret: clientSecret ? '***' : 'not set'
-      });
+      // Log configuration for debugging
+      logCognitoConfig('Confirmation', cognitoConfig);
 
       // TEMPORARY WORKAROUND: Pad passport numbers for confirmation
       // Determine if we need to pad the identifier (for passport numbers)
@@ -272,9 +256,9 @@ export const confirmRegistration = createAsyncThunk(
       await cognitoConfirmSignUp(
         paddedIdentifier, // Using padded identifier as username
         code,
-        clientId,
-        clientSecret,
-        region
+        cognitoConfig.userPoolWebClientId,
+        cognitoConfig.clientSecret,
+        cognitoConfig.region
       );
 
       return {
@@ -293,16 +277,11 @@ export const resendVerificationCode = createAsyncThunk(
   'auth/resendVerificationCode',
   async (idNumber, { rejectWithValue }) => {
     try {
-      // Get environment variables
-      const clientId = import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID;
-      const clientSecret = import.meta.env.VITE_COGNITO_CLIENT_SECRET;
-      const region = import.meta.env.VITE_COGNITO_REGION;
+      // Get Cognito configuration from environment variables
+      const cognitoConfig = getCognitoConfig();
 
-      console.log('Using Cognito configuration for resending code:', {
-        region,
-        clientId,
-        clientSecret: clientSecret ? '***' : 'not set'
-      });
+      // Log configuration for debugging
+      logCognitoConfig('Resend Verification Code', cognitoConfig);
 
       // TEMPORARY WORKAROUND: Handle padded passport numbers for resending verification code
       // Determine if we need to pad the identifier (for passport numbers)
@@ -314,9 +293,9 @@ export const resendVerificationCode = createAsyncThunk(
       // Using our custom resend confirmation code function
       await cognitoResendConfirmationCode(
         paddedIdentifier, // Using padded identifier as username
-        clientId,
-        clientSecret,
-        region
+        cognitoConfig.userPoolWebClientId,
+        cognitoConfig.clientSecret,
+        cognitoConfig.region
       );
 
       return {
@@ -448,16 +427,11 @@ export const forgotPassword = createAsyncThunk(
   'auth/forgotPassword',
   async (idNumber, { rejectWithValue }) => {
     try {
-      // Get environment variables
-      const clientId = import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID;
-      const clientSecret = import.meta.env.VITE_COGNITO_CLIENT_SECRET;
-      const region = import.meta.env.VITE_COGNITO_REGION;
+      // Get Cognito configuration from environment variables
+      const cognitoConfig = getCognitoConfig();
 
-      console.log('Using Cognito configuration for forgot password:', {
-        region,
-        clientId,
-        clientSecret: clientSecret ? '***' : 'not set'
-      });
+      // Log configuration for debugging
+      logCognitoConfig('Forgot Password', cognitoConfig);
 
       // TEMPORARY WORKAROUND: Handle padded passport numbers for password reset
       // Determine if we need to pad the identifier (for passport numbers)
@@ -469,9 +443,9 @@ export const forgotPassword = createAsyncThunk(
       // Using our custom forgot password function
       await cognitoForgotPassword(
         paddedIdentifier, // Using padded identifier as username
-        clientId,
-        clientSecret,
-        region
+        cognitoConfig.userPoolWebClientId,
+        cognitoConfig.clientSecret,
+        cognitoConfig.region
       );
 
       return {
@@ -490,16 +464,11 @@ export const confirmForgotPassword = createAsyncThunk(
   'auth/confirmForgotPassword',
   async ({ idNumber, code, newPassword, documentType }, { rejectWithValue }) => {
     try {
-      // Get environment variables
-      const clientId = import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID;
-      const clientSecret = import.meta.env.VITE_COGNITO_CLIENT_SECRET;
-      const region = import.meta.env.VITE_COGNITO_REGION;
+      // Get Cognito configuration from environment variables
+      const cognitoConfig = getCognitoConfig();
 
-      console.log('Using Cognito configuration for confirm forgot password:', {
-        region,
-        clientId,
-        clientSecret: clientSecret ? '***' : 'not set'
-      });
+      // Log configuration for debugging
+      logCognitoConfig('Confirm Forgot Password', cognitoConfig);
 
       // TEMPORARY WORKAROUND: Handle padded passport numbers for password reset confirmation
       // Determine if we need to pad the identifier (for passport numbers)
@@ -515,9 +484,9 @@ export const confirmForgotPassword = createAsyncThunk(
         paddedIdentifier, // Using padded identifier as username
         code,
         newPassword,
-        clientId,
-        clientSecret,
-        region
+        cognitoConfig.userPoolWebClientId,
+        cognitoConfig.clientSecret,
+        cognitoConfig.region
       );
 
       return {
