@@ -40,7 +40,8 @@ Amplify.configure({
       },
       // Add custom auth hooks to handle SECRET_HASH for all operations
       handleSignUp: async (input) => {
-        const { username, password, options } = input;
+        const { username, options } = input;
+        // Note: password is extracted by AWS Amplify internally
         const secretHash = await calculateSecretHash(
           username,
           import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID,
@@ -56,7 +57,8 @@ Amplify.configure({
         };
       },
       handleSignIn: async (input) => {
-        const { username, password, options } = input;
+        const { username, options } = input;
+        // Note: password is extracted by AWS Amplify internally
         const secretHash = await calculateSecretHash(
           username,
           import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID,
@@ -72,7 +74,8 @@ Amplify.configure({
         };
       },
       handleConfirmSignUp: async (input) => {
-        const { username, confirmationCode, options } = input;
+        const { username, options } = input;
+        // Note: confirmationCode is extracted by AWS Amplify internally
         const secretHash = await calculateSecretHash(
           username,
           import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID,
@@ -120,7 +123,8 @@ Amplify.configure({
         };
       },
       handleConfirmResetPassword: async (input) => {
-        const { username, confirmationCode, newPassword, options } = input;
+        const { username, options } = input;
+        // Note: confirmationCode and newPassword are extracted by AWS Amplify internally
         const secretHash = await calculateSecretHash(
           username,
           import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID,

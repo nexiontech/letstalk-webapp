@@ -119,10 +119,14 @@ export const loginUser = createAsyncThunk(
             token: tokens.idToken.toString()
           };
         } catch (innerError) {
+          console.log('Error getting current user session:', innerError);
           // If we can't get the current user, force sign out and ask to try again
           try {
             await signOut({ global: true });
-          } catch {}
+          } catch (signOutError) {
+            console.log('Error during forced sign out:', signOutError);
+            // Continue with the flow even if sign out fails
+          }
           return rejectWithValue('Session conflict detected. Please try logging in again.');
         }
       }
@@ -346,11 +350,15 @@ export const checkAuthStatus = createAsyncThunk(
         // Clear any stale Amplify session
         try {
           await signOut({ global: true });
-        } catch {}
+        } catch (signOutError) {
+          console.log('Error during stale session cleanup:', signOutError);
+          // Continue with the flow even if sign out fails
+        }
 
         throw new Error('Session expired or invalid');
       }
     } catch (error) {
+      console.log('Authentication check failed:', error);
       // Clear any potentially corrupted auth data
       localStorage.removeItem('auth_user');
       localStorage.removeItem('auth_id_token');
