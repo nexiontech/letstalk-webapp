@@ -39,8 +39,7 @@ const DashboardPage = () => {
     weatherData,
     isLoading: isWeatherLoading,
     error: weatherError,
-    refreshWeather,
-    temperatureUnit
+    refreshWeather
   } = useWeather();
 
   // Update time every minute
@@ -157,7 +156,6 @@ const DashboardPage = () => {
           isLoading={isWeatherLoading}
           error={weatherError}
           onRefresh={refreshWeather}
-          temperatureUnit={temperatureUnit}
           className="dashboard-weather-widget"
         />
       </div>
