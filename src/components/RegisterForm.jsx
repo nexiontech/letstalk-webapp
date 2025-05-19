@@ -409,7 +409,7 @@ function RegisterForm() {
                         <input
                             type="tel"
                             name="phoneNumber"
-                            placeholder="Phone Number (+27 Format, Optional)"
+                            placeholder="Phone Number (+27 Format)"
                             value={formData.phoneNumber}
                             onChange={handleChange}
                             disabled={isSubmitting}
@@ -423,7 +423,6 @@ function RegisterForm() {
                     {validationErrors.phoneNumber && (
                         <div className="error-message">{validationErrors.phoneNumber}</div>
                     )}
-                    <div className="form-hint">Format: +27 XX XXX XXXX (will be automatically formatted)</div>
                 </div>
 
                 {/* Document Type Selection */}
