@@ -26,6 +26,7 @@ import {
     validateIdNumber,
     validatePassportNumber,
     validatePhoneNumber,
+    formatPhoneNumber,
     doPasswordsMatch,
     capitalizeWords
 } from '../utils/authUtils';
@@ -280,11 +281,11 @@ function RegisterForm() {
                 [name]: capitalizedValue
             }));
         } else if (name === 'phoneNumber') {
-            // Allow only digits, spaces, plus, and parentheses for phone numbers
-            const sanitizedValue = value.replace(/[^0-9\s\+\(\)\-]/g, '');
+            // Format the phone number to +27 format
+            const formattedValue = formatPhoneNumber(value);
             setFormData(prev => ({
                 ...prev,
-                [name]: sanitizedValue
+                [name]: formattedValue
             }));
         } else if (name === 'passportNumber') {
             // Allow only alphanumeric characters for passport numbers and convert to uppercase
@@ -408,7 +409,7 @@ function RegisterForm() {
                         <input
                             type="tel"
                             name="phoneNumber"
-                            placeholder="Phone Number (Optional)"
+                            placeholder="Phone Number (+27 Format, Optional)"
                             value={formData.phoneNumber}
                             onChange={handleChange}
                             disabled={isSubmitting}
@@ -422,7 +423,7 @@ function RegisterForm() {
                     {validationErrors.phoneNumber && (
                         <div className="error-message">{validationErrors.phoneNumber}</div>
                     )}
-                    <div className="form-hint">Format: +27 XX XXX XXXX or 0XX XXX XXXX</div>
+                    <div className="form-hint">Format: +27 XX XXX XXXX (will be automatically formatted)</div>
                 </div>
 
                 {/* Document Type Selection */}
