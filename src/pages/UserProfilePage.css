@@ -60,6 +60,14 @@
   margin-bottom: 10px !important;
   border-bottom: 2px solid #f0f0f0;
   padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-icon {
+  color: #0E4649;
+  font-size: 1.2rem;
 }
 
 .section-description {
@@ -76,11 +84,11 @@
   .profile-hero-title {
     font-size: 2rem !important;
   }
-  
+
   .profile-hero-subtitle {
     font-size: 1rem !important;
   }
-  
+
   .profile-paper {
     padding: 20px;
   }
@@ -90,11 +98,11 @@
   .profile-hero-section {
     padding: 30px 0;
   }
-  
+
   .profile-hero-title {
     font-size: 1.8rem !important;
   }
-  
+
   .section-title {
     font-size: 1.3rem !important;
   }

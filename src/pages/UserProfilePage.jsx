@@ -3,9 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { Container, Typography, Box, Paper, Alert, CircularProgress, Breadcrumbs } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faChevronRight, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faChevronRight, faUser, faIdCard } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../contexts/AuthContext';
 import UserProfileForm from '../components/UserProfileForm';
+import IdNumberInfo from '../components/IdNumberInfo';
 import './UserProfilePage.css';
 
 const UserProfilePage = () => {
@@ -89,16 +90,29 @@ const UserProfilePage = () => {
 
         <Paper elevation={3} className="profile-paper">
           <Typography variant="h2" className="section-title">
+            <FontAwesomeIcon icon={faIdCard} className="section-icon" />
+            ID Information
+          </Typography>
+          <Typography variant="body1" className="section-description">
+            Information extracted from your South African ID number
+          </Typography>
+
+          {user?.idNumber && <IdNumberInfo idNumber={user.idNumber} />}
+        </Paper>
+
+        <Paper elevation={3} className="profile-paper">
+          <Typography variant="h2" className="section-title">
+            <FontAwesomeIcon icon={faUser} className="section-icon" />
             Personal Information
           </Typography>
           <Typography variant="body1" className="section-description">
             Update your personal information and contact details
           </Typography>
 
-          <UserProfileForm 
-            user={user} 
-            onUpdateSuccess={handleUpdateSuccess} 
-            onUpdateError={handleUpdateError} 
+          <UserProfileForm
+            user={user}
+            onUpdateSuccess={handleUpdateSuccess}
+            onUpdateError={handleUpdateError}
           />
         </Paper>
       </Container>
