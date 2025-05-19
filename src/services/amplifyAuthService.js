@@ -474,6 +474,11 @@ const authSlice = createSlice({
     clearVerificationStatus: (state) => {
       state.verificationSuccess = false;
       state.verificationMessage = null;
+    },
+    updateUserProfile: (state, action) => {
+      state.user = action.payload;
+      // Update localStorage
+      localStorage.setItem('auth_user', JSON.stringify(action.payload));
     }
   },
   extraReducers: (builder) => {
@@ -610,7 +615,8 @@ export const {
   clearError,
   clearRegistrationStatus,
   clearPasswordResetStatus,
-  clearVerificationStatus
+  clearVerificationStatus,
+  updateUserProfile
 } = authSlice.actions;
 
 export default authSlice.reducer;

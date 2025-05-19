@@ -13,7 +13,9 @@ import {
   faMapMarkerAlt,
   faSearch,
   faBars,
-  faTimes
+  faTimes,
+  faUser,
+  faCog
 } from '@fortawesome/free-solid-svg-icons';
 import './DashboardLayout.css';
 
@@ -80,6 +82,11 @@ const DashboardLayout = ({ children }) => {
   // Footer navigation items
   const footerNavItems = [
     {
+      icon: faUser,
+      label: 'My Profile',
+      onClick: () => navigate('/profile')
+    },
+    {
       icon: faQuestionCircle,
       label: 'Help',
       onClick: () => {
@@ -115,7 +122,15 @@ const DashboardLayout = ({ children }) => {
           </div>
         </div>
 
-        <div className="user-profile-section">
+        <div
+          className="user-profile-section"
+          onClick={() => {
+            navigate('/profile');
+            if (mobileMenuOpen) setMobileMenuOpen(false);
+          }}
+          style={{ cursor: 'pointer' }}
+          title="View and edit your profile"
+        >
           <div className="user-avatar">
             {userInitial}
           </div>
@@ -127,6 +142,7 @@ const DashboardLayout = ({ children }) => {
               </div>
             )}
           </div>
+          <FontAwesomeIcon icon={faCog} className="profile-edit-icon" />
         </div>
 
         <div className="location-input-container">
