@@ -164,12 +164,15 @@
       display: flex;
       gap: 1rem;
       width: 100%;
+      align-items: flex-start; /* Align items at the top */
   }
 
   /* Half-width form groups for side-by-side fields */
   .half-width {
       flex: 1;
       min-width: 0; /* Prevent overflow */
+      display: flex;
+      flex-direction: column;
   }
 
   .input-with-icon {
