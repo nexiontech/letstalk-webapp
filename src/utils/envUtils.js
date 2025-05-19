@@ -1,20 +1,14 @@
 // src/utils/envUtils.js
 
 /**
- * Utility function to get environment variables from either Amplify environment variables or local .env file
- * This approach allows for development locally with .env and production with Amplify environment variables
- * 
+ * Utility function to get environment variables from Vite's import.meta.env
+ *
  * @param {string} key - The environment variable key to retrieve
  * @param {string} defaultValue - Default value to return if the key is not found
  * @returns {string} - The value of the environment variable or the default value
  */
 export const getEnvVariable = (key, defaultValue = '') => {
-  // Check if running in Amplify environment (process.env will have Amplify variables)
-  if (process.env[key]) {
-    return process.env[key];
-  }
-  
-  // Fallback to Vite's import.meta.env for local development
+  // In Vite, environment variables are always accessed via import.meta.env
   return import.meta.env[key] || defaultValue;
 };
 
