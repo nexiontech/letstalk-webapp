@@ -1,0 +1,101 @@
+/* src/pages/UserProfilePage.css */
+
+.profile-page {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.profile-hero-section {
+  background: linear-gradient(135deg, #0E4649 0%, #0A2F32 100%);
+  color: white;
+  padding: 40px 0;
+  margin-bottom: 30px;
+}
+
+.profile-hero-title {
+  font-size: 2.5rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 10px !important;
+}
+
+.profile-hero-subtitle {
+  font-size: 1.1rem !important;
+  opacity: 0.9;
+  margin-bottom: 20px !important;
+}
+
+.breadcrumbs {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.breadcrumb-link {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-link:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+.breadcrumb-icon {
+  margin-right: 6px;
+}
+
+.profile-container {
+  padding-bottom: 60px;
+}
+
+.profile-paper {
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.section-title {
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  color: #0E4649;
+  margin-bottom: 10px !important;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.section-description {
+  color: #666;
+  margin-bottom: 25px !important;
+}
+
+.profile-alert {
+  margin-bottom: 20px !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .profile-hero-title {
+    font-size: 2rem !important;
+  }
+  
+  .profile-hero-subtitle {
+    font-size: 1rem !important;
+  }
+  
+  .profile-paper {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-hero-section {
+    padding: 30px 0;
+  }
+  
+  .profile-hero-title {
+    font-size: 1.8rem !important;
+  }
+  
+  .section-title {
+    font-size: 1.3rem !important;
+  }
+}

@@ -88,6 +88,25 @@
   margin-top: 8px;
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
+  transition: background-color 0.3s;
+  position: relative;
+}
+
+.user-profile-section:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.profile-edit-icon {
+  position: absolute;
+  right: 12px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.3s, transform 0.3s;
+}
+
+.user-profile-section:hover .profile-edit-icon {
+  color: rgba(255, 255, 255, 0.9);
+  transform: rotate(30deg);
 }
 
 .user-avatar {
