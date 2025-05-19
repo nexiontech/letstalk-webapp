@@ -1,6 +1,6 @@
 /*src/components/NavigationBar.jsx*/
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -15,10 +15,10 @@ function NavigationBar() {
   const navigate = useNavigate();
   const { t } = useTranslation(currentLanguage);
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     await logout();
     navigate('/');
-  };
+  }, [logout, navigate]);
   useEffect(() => {
     const hamburger = document.querySelector(".hamburger");
     const navMenu = document.querySelector(".nav-menu");
@@ -56,7 +56,7 @@ function NavigationBar() {
       hamburger.removeEventListener("click", mobileMenu);
       navLink.forEach(n => n.removeEventListener("click", closeMenu));
     };
-  }, [handleLogout, navigate]);
+  }, [handleLogout]);
 
   return (
     <header className="header">

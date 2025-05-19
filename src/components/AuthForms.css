@@ -47,9 +47,10 @@
   }
 
   .auth-form-container {
-      max-width: 420px;
+      max-width: 900px; /* Significantly increased from 650px for wider form */
+      width: 85%; /* Percentage width for better responsiveness */
       margin: 3rem auto;
-      padding: 2.5rem;
+      padding: 2.5rem 3rem; /* Increased horizontal padding for better spacing */
       border-radius: 16px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.03);
       background: linear-gradient(145deg, var(--color-white) 0%, var(--color-off-white) 100%);
@@ -151,11 +152,42 @@
   .form-group {
       position: relative;
       transition: all 0.3s ease;
+      width: 100%;
+      margin-bottom: 1.5rem; /* Increased spacing between form groups for better layout */
   }
 
-  /* Form group spacing */
-  .form-group + .form-group {
-      margin-top: 0.5rem;
+  /* Special handling for form groups in the form row */
+  .form-row .form-group {
+      margin-bottom: 0; /* Remove bottom margin as the row handles spacing */
+  }
+
+  /* Form row for side-by-side fields */
+  .form-row {
+      display: flex;
+      gap: 2rem; /* Increased gap for better spacing in wider container */
+      width: 100%;
+      align-items: stretch; /* Stretch items to match heights */
+  }
+
+  /* Half-width form groups for side-by-side fields */
+  .half-width {
+      flex: 1;
+      min-width: 0; /* Prevent overflow */
+      display: flex;
+      flex-direction: column;
+      position: relative; /* For absolute positioning of error messages */
+  }
+
+  /* Ensure input containers have the same height */
+  .half-width .input-with-icon {
+      height: 100%;
+  }
+
+  /* Make error messages take up space even when not visible */
+  .half-width::after {
+      content: '';
+      display: block;
+      min-height: 24px; /* Height for error message space */
   }
 
   .input-with-icon {
@@ -164,7 +196,32 @@
       align-items: center;
   }
 
-  /* Icon styles removed */
+  /* Icon styles */
+  .input-icon {
+      position: absolute;
+      left: 1rem;
+      color: var(--color-primary);
+      font-size: 1rem;
+      z-index: 1;
+  }
+
+  .input-with-icon input {
+      padding-left: 2.5rem !important; /* Make room for the icon */
+  }
+
+  /* Info icon for tooltips */
+  .info-icon {
+      position: absolute;
+      right: 1rem;
+      color: var(--color-secondary);
+      cursor: help;
+      transition: all 0.3s ease;
+  }
+
+  .info-icon:hover {
+      color: var(--color-secondary-dark);
+      transform: scale(1.1);
+  }
 
   .form-group input {
       width: 100%;
@@ -178,6 +235,12 @@
       caret-color: var(--color-primary);
       box-sizing: border-box;
       font-weight: 500;
+      height: 3.5rem; /* Fixed height for all inputs */
+  }
+
+  /* Ensure all form-row inputs have the same height */
+  .form-row .form-group input {
+      height: 3.5rem;
   }
 
   .password-toggle {
@@ -252,11 +315,22 @@
       align-items: center;
       gap: 0.4rem;
       animation: slideIn 0.3s ease-out;
+      position: absolute;
+      top: 100%; /* Position below the input */
+      left: 0;
+      width: 100%;
+      height: 24px; /* Fixed height for error messages */
   }
 
   .error-message::before {
       content: '⚠️';
       font-size: 0.9rem;
+  }
+
+  /* Adjust positioning for error messages in regular form groups */
+  .form-group .error-message {
+      position: static;
+      height: auto;
   }
 
   .form-options {
@@ -825,4 +899,93 @@
       pointer-events: none;
       z-index: 0;
       border-radius: 16px;
+  }
+
+  /* Media queries for responsive design */
+  @media (max-width: 1600px) {
+      .auth-form-container {
+          max-width: 850px;
+      }
+  }
+
+  @media (max-width: 1200px) {
+      .auth-form-container {
+          max-width: 750px;
+          padding: 2.5rem;
+      }
+  }
+
+  @media (max-width: 992px) {
+      .auth-form-container {
+          max-width: 650px;
+          width: 90%;
+      }
+  }
+
+  @media (max-width: 768px) {
+      .auth-form-container {
+          max-width: 550px;
+          margin: 2rem auto;
+          padding: 2rem;
+          width: 95%;
+      }
+
+      .auth-form-container h1 {
+          font-size: 1.8rem;
+      }
+
+      .subtitle {
+          font-size: 0.9rem;
+      }
+
+      .form-group input {
+          padding: 0.9rem 1rem;
+      }
+
+      .submit-button {
+          width: 100%;
+      }
+  }
+
+  @media (max-width: 480px) {
+      .auth-form-container {
+          margin: 1rem auto;
+          padding: 1.5rem;
+          border-radius: 12px;
+          width: 100%;
+      }
+
+      .auth-form-container h1 {
+          font-size: 1.6rem;
+      }
+
+      .subtitle {
+          font-size: 0.85rem;
+          margin-bottom: 1.5rem;
+      }
+
+      .form-group input {
+          padding: 0.8rem 1rem;
+          font-size: 0.95rem;
+      }
+
+      .form-options {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
+      }
+
+      .forgot-password {
+          align-self: flex-end;
+      }
+
+      /* Adjust form row to stack on very small screens */
+      .form-row {
+          flex-direction: column;
+          gap: 1.25rem;
+      }
+
+      .half-width {
+          width: 100%;
+      }
   }
