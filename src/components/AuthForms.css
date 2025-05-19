@@ -152,11 +152,12 @@
       position: relative;
       transition: all 0.3s ease;
       width: 100%;
+      margin-bottom: 1.25rem; /* Consistent spacing between form groups */
   }
 
-  /* Form group spacing */
-  .form-group + .form-group {
-      margin-top: 0.5rem;
+  /* Special handling for form groups in the form row */
+  .form-row .form-group {
+      margin-bottom: 0; /* Remove bottom margin as the row handles spacing */
   }
 
   /* Form row for side-by-side fields */
@@ -164,7 +165,7 @@
       display: flex;
       gap: 1rem;
       width: 100%;
-      align-items: flex-start; /* Align items at the top */
+      align-items: stretch; /* Stretch items to match heights */
   }
 
   /* Half-width form groups for side-by-side fields */
@@ -173,6 +174,19 @@
       min-width: 0; /* Prevent overflow */
       display: flex;
       flex-direction: column;
+      position: relative; /* For absolute positioning of error messages */
+  }
+
+  /* Ensure input containers have the same height */
+  .half-width .input-with-icon {
+      height: 100%;
+  }
+
+  /* Make error messages take up space even when not visible */
+  .half-width::after {
+      content: '';
+      display: block;
+      min-height: 24px; /* Height for error message space */
   }
 
   .input-with-icon {
@@ -220,6 +234,12 @@
       caret-color: var(--color-primary);
       box-sizing: border-box;
       font-weight: 500;
+      height: 3.5rem; /* Fixed height for all inputs */
+  }
+
+  /* Ensure all form-row inputs have the same height */
+  .form-row .form-group input {
+      height: 3.5rem;
   }
 
   .password-toggle {
@@ -294,11 +314,22 @@
       align-items: center;
       gap: 0.4rem;
       animation: slideIn 0.3s ease-out;
+      position: absolute;
+      top: 100%; /* Position below the input */
+      left: 0;
+      width: 100%;
+      height: 24px; /* Fixed height for error messages */
   }
 
   .error-message::before {
       content: '⚠️';
       font-size: 0.9rem;
+  }
+
+  /* Adjust positioning for error messages in regular form groups */
+  .form-group .error-message {
+      position: static;
+      height: auto;
   }
 
   .form-options {
