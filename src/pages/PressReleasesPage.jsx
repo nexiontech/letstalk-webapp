@@ -22,7 +22,7 @@ const PressReleasesPage = () => {
   const newsReleases = [
     {
       id: 1,
-      title: "Water Infrastructure Upgrade Project Announced",
+      title: "Water Infrastructure Upgrade Project Deployed",
       summary: "The municipality has approved a R50 million project to upgrade water infrastructure in Alexandra and surrounding areas.",
       date: "June 15, 2023",
       category: "Water Services",
