@@ -3,21 +3,37 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Alert, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
+import {
+    Alert,
+    CircularProgress,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button,
+    TextField,
+    FormControl,
+    FormLabel,
+    RadioGroup,
+    FormControlLabel,
+    Radio
+} from '@mui/material';
 import { confirmRegistration, resendVerificationCode } from '../services/amplifyAuthService';
 import { useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash, faLock, faIdCard } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faLock, faIdCard, faPassport } from '@fortawesome/free-solid-svg-icons';
+import { validateIdNumber, validatePassportNumber } from '../utils/authUtils';
 import './AuthForms.css';
 
 function LoginForm() {
     const [formData, setFormData] = useState({
-        idNumber: '',
+        identifier: '',
         password: '',
         rememberMe: false,
+        documentType: 'idNumber', // 'idNumber' or 'passport'
     });
     const [showPassword, setShowPassword] = useState(false);
-    const [idNumberError, setIdNumberError] = useState('');
+    const [identifierError, setIdentifierError] = useState('');
     const [loginError, setLoginError] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showVerificationDialog, setShowVerificationDialog] = useState(false);
@@ -46,20 +62,33 @@ function LoginForm() {
         setLoginError(null);
 
         try {
-            // Determine document type based on input format
-            // This is a temporary workaround until Cognito is properly configured
-            const documentType = formData.idNumber.length < 13 ? 'passport' : 'idNumber';
+            // Validate identifier based on document type
+            if (formData.documentType === 'idNumber') {
+                if (!validateIdNumber(formData.identifier)) {
+                    setLoginError('Please enter a valid 13-digit South African ID number');
+                    setIsSubmitting(false);
+                    return;
+                }
+            } else {
+                // Validate passport number
+                const passportValidation = validatePassportNumber(formData.identifier);
+                if (!passportValidation.isValid) {
+                    setLoginError(passportValidation.error);
+                    setIsSubmitting(false);
+                    return;
+                }
+            }
 
             // Call the login function from our auth context with document type
-            const result = await login(formData.idNumber, formData.password, documentType);
+            const result = await login(formData.identifier, formData.password, formData.documentType);
 
             if (result.success) {
                 // Login successful, will redirect via the useEffect above
             } else if (result.userConfirmationRequired) {
                 // User needs to verify their email
-                setUnverifiedUser(formData.idNumber);
+                setUnverifiedUser(formData.identifier);
                 // Store document type for verification
-                localStorage.setItem('temp_document_type', documentType);
+                localStorage.setItem('temp_document_type', formData.documentType);
                 setShowVerificationDialog(true);
             } else {
                 // Login failed
@@ -97,7 +126,7 @@ function LoginForm() {
                 // Clean up the temporary storage
                 localStorage.removeItem('temp_document_type');
                 // Try to log in automatically after verification
-                await login(formData.idNumber, formData.password, documentType);
+                await login(formData.identifier, formData.password, documentType);
             } else {
                 setLoginError(result.payload || 'Verification failed. Please try again.');
             }
@@ -132,25 +161,49 @@ function LoginForm() {
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
 
-        if (name === 'idNumber') {
-            // Only allow digits and limit to 13 characters
-            const sanitizedValue = value.replace(/[^0-9]/g, '').slice(0, 13);
+        if (name === 'identifier') {
+            // Handle different validation for ID vs passport
+            if (formData.documentType === 'idNumber') {
+                // Only allow digits and limit to 13 characters for ID
+                const sanitizedValue = value.replace(/[^0-9]/g, '').slice(0, 13);
+                setFormData((prev) => ({
+                    ...prev,
+                    [name]: sanitizedValue,
+                }));
+
+                // Clear any previous error when user is typing
+                setLoginError(null);
+            } else {
+                // Allow alphanumeric for passport and convert to uppercase
+                const sanitizedValue = value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 12);
+                setFormData((prev) => ({
+                    ...prev,
+                    [name]: sanitizedValue,
+                }));
+
+                // Clear any previous error when user is typing
+                setLoginError(null);
+            }
+        } else if (name === 'documentType') {
+            // When changing document type, clear the identifier field
             setFormData((prev) => ({
                 ...prev,
-                [name]: sanitizedValue,
+                [name]: value,
+                identifier: '', // Reset identifier when switching document types
             }));
 
-            // Validate ID number length
-            if (sanitizedValue.length > 0 && sanitizedValue.length !== 13) {
-                setIdNumberError('ID Number must be exactly 13 digits');
-            } else {
-                setIdNumberError('');
-            }
+            // Clear any previous error
+            setLoginError(null);
         } else {
             setFormData((prev) => ({
                 ...prev,
                 [name]: type === 'checkbox' ? checked : value,
             }));
+
+            // Clear any previous error when user is typing
+            if (name === 'password') {
+                setLoginError(null);
+            }
         }
     };
 
@@ -171,29 +224,61 @@ function LoginForm() {
             )}
 
             <form onSubmit={handleSubmit} className="auth-form">
+                {/* Document Type Selection */}
+                <div className="form-group">
+                    <FormControl component="fieldset">
+                        <FormLabel component="legend" style={{ marginBottom: '8px' }}>Identification Type</FormLabel>
+                        <RadioGroup
+                            row
+                            name="documentType"
+                            value={formData.documentType}
+                            onChange={handleChange}
+                        >
+                            <FormControlLabel
+                                value="idNumber"
+                                control={<Radio />}
+                                label="South African ID"
+                                disabled={isSubmitting}
+                            />
+                            <FormControlLabel
+                                value="passport"
+                                control={<Radio />}
+                                label="Passport"
+                                disabled={isSubmitting}
+                            />
+                        </RadioGroup>
+                    </FormControl>
+                </div>
+
+                {/* Conditional ID Number or Passport field */}
                 <div className="form-group">
                     <div className="input-with-icon">
+                        <FontAwesomeIcon
+                            icon={formData.documentType === 'idNumber' ? faIdCard : faPassport}
+                            className="input-icon"
+                        />
                         <input
                             type="text"
-                            name="idNumber"
-                            placeholder="Enter your ID Number"
-                            value={formData.idNumber}
+                            name="identifier"
+                            placeholder={formData.documentType === 'idNumber'
+                                ? "Enter your ID Number"
+                                : "Enter your Passport Number"}
+                            value={formData.identifier}
                             onChange={handleChange}
                             disabled={isSubmitting}
                             required
-                            pattern="[0-9]{13}"
-                            title="ID Number must be exactly 13 digits"
                         />
                     </div>
-                    {idNumberError ? (
-                        <div className="error-message">{idNumberError}</div>
-                    ) : (
-                        <div className="form-hint">South African ID Number (13 digits)</div>
-                    )}
+                    <div className="form-hint">
+                        {formData.documentType === 'idNumber'
+                            ? 'South African ID Number (13 digits)'
+                            : 'Passport Number (6-12 alphanumeric characters)'}
+                    </div>
                 </div>
 
                 <div className="form-group">
                     <div className="input-with-icon">
+                        <FontAwesomeIcon icon={faLock} className="input-icon" />
                         <input
                             type={showPassword ? "text" : "password"}
                             name="password"
