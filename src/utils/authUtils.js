@@ -135,18 +135,55 @@ export const validatePhoneNumber = (phoneNumber) => {
     // Remove spaces, dashes, and parentheses
     const cleanedNumber = phoneNumber.replace(/[\s\-()]/g, '');
 
-    // Check if it's a valid South African number
-    // Format can be: +27XXXXXXXXX or 0XXXXXXXXX (10 digits after the prefix)
-    const saPhoneRegex = /^(\+27|0)[1-9][0-9]{8}$/;
+    // Check if it's a valid South African number in +27 format
+    // Only allow +27 format (not 0 prefix)
+    const saPhoneRegex = /^\+27[1-9][0-9]{8}$/;
 
     if (!saPhoneRegex.test(cleanedNumber)) {
         return {
             isValid: false,
-            error: 'Please enter a valid South African phone number (e.g., +27 XX XXX XXXX or 0XX XXX XXXX)'
+            error: 'Please enter a valid South African phone number in +27 format (e.g., +27 XX XXX XXXX)'
         };
     }
 
     return { isValid: true };
+};
+
+/**
+ * Formats a phone number to the +27 format
+ * @param {string} phoneNumber - The phone number to format
+ * @returns {string} - The formatted phone number
+ */
+export const formatPhoneNumber = (phoneNumber) => {
+    if (!phoneNumber) return '';
+
+    // Remove all non-digit characters except the plus sign
+    let digits = phoneNumber.replace(/[^\d+]/g, '');
+
+    // If the number starts with 0, replace it with +27
+    if (digits.startsWith('0')) {
+        digits = '+27' + digits.substring(1);
+    }
+
+    // If the number doesn't have a country code, add +27
+    if (!digits.startsWith('+')) {
+        // Check if we need to remove a leading 0
+        if (digits.startsWith('27')) {
+            digits = '+' + digits;
+        } else {
+            digits = '+27' + digits;
+        }
+    }
+
+    // Format the number with spaces: +27 XX XXX XXXX
+    if (digits.startsWith('+27') && digits.length >= 12) {
+        return digits.substring(0, 3) + ' ' +
+               digits.substring(3, 5) + ' ' +
+               digits.substring(5, 8) + ' ' +
+               digits.substring(8, 12);
+    }
+
+    return digits;
 };
 
 /**
