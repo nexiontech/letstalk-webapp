@@ -47,7 +47,8 @@
   }
 
   .auth-form-container {
-      max-width: 420px;
+      max-width: 650px; /* Increased from 420px for wider form */
+      width: 90%; /* Use percentage width for better responsiveness */
       margin: 3rem auto;
       padding: 2.5rem;
       border-radius: 16px;
@@ -898,4 +899,85 @@
       pointer-events: none;
       z-index: 0;
       border-radius: 16px;
+  }
+
+  /* Media queries for responsive design */
+  @media (max-width: 1200px) {
+      .auth-form-container {
+          max-width: 600px;
+      }
+  }
+
+  @media (max-width: 992px) {
+      .auth-form-container {
+          max-width: 550px;
+      }
+  }
+
+  @media (max-width: 768px) {
+      .auth-form-container {
+          max-width: 500px;
+          margin: 2rem auto;
+          padding: 2rem;
+          width: 95%;
+      }
+
+      .auth-form-container h1 {
+          font-size: 1.8rem;
+      }
+
+      .subtitle {
+          font-size: 0.9rem;
+      }
+
+      .form-group input {
+          padding: 0.9rem 1rem;
+      }
+
+      .submit-button {
+          width: 100%;
+      }
+  }
+
+  @media (max-width: 480px) {
+      .auth-form-container {
+          margin: 1rem auto;
+          padding: 1.5rem;
+          border-radius: 12px;
+          width: 100%;
+      }
+
+      .auth-form-container h1 {
+          font-size: 1.6rem;
+      }
+
+      .subtitle {
+          font-size: 0.85rem;
+          margin-bottom: 1.5rem;
+      }
+
+      .form-group input {
+          padding: 0.8rem 1rem;
+          font-size: 0.95rem;
+      }
+
+      .form-options {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
+      }
+
+      .forgot-password {
+          align-self: flex-end;
+      }
+
+      /* Adjust form row to stack on very small screens */
+      .form-row {
+          flex-direction: column;
+          gap: 1.25rem;
+      }
+
+      .half-width {
+          width: 100%;
+      }
   }
