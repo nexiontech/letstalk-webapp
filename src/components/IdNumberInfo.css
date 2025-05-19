@@ -1,0 +1,81 @@
+/* src/components/IdNumberInfo.css */
+
+.id-number-info {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.id-number-info.error {
+  background-color: #fff8f8;
+  border-color: #ffcccc;
+}
+
+.id-number-info.loading {
+  background-color: #f8f9fa;
+  border-color: #e9ecef;
+  text-align: center;
+  padding: 30px;
+  color: #6c757d;
+}
+
+.id-info-section h3 {
+  font-size: 1.2rem;
+  color: #0E4649;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.id-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.id-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.id-info-label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.id-info-value {
+  font-size: 1.1rem;
+  color: #212529;
+}
+
+.id-number-error {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+.id-info-note {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px dashed #e9ecef;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.id-info-note p {
+  margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .id-info-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .id-info-item {
+    margin-bottom: 10px;
+  }
+}
