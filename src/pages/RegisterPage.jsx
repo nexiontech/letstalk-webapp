@@ -5,7 +5,7 @@ import Container from '@mui/material/Container'; // Import Container
 
 function RegisterPage() {
     return (
-        <Container component="main" maxWidth="xs"> {/* Use Container */}
+        <Container component="main" maxWidth={false} sx={{ maxWidth: '100%' }}> {/* Full width container */}
             <RegisterForm />
         </Container>
     );

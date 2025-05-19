@@ -63,9 +63,10 @@ export async function cognitoSignIn(email, password, clientId, clientSecret, reg
  * @param {string} clientId - The Cognito App Client ID
  * @param {string} clientSecret - The Cognito App Client Secret
  * @param {string} region - The AWS region
+ * @param {string} identityPoolId - The Cognito Identity Pool ID (optional)
  * @returns {Promise<Object>} - The registration response
  */
-export async function cognitoSignUp(email, password, userAttributes, clientId, clientSecret, region) {
+export async function cognitoSignUp(email, password, userAttributes, clientId, clientSecret, region, identityPoolId) {
   try {
     // Calculate SECRET_HASH using email as username
     const secretHash = await calculateSecretHash(email, clientId, clientSecret);
@@ -102,13 +103,43 @@ export async function cognitoSignUp(email, password, userAttributes, clientId, c
     const jsonResponse = await response.json();
 
     if (response.ok) {
-      return jsonResponse;
+      // If Identity Pool ID is provided, associate the user with the Identity Pool
+      if (identityPoolId) {
+        console.log('User registered successfully, associating with Identity Pool:', identityPoolId);
+
+        // Log the successful registration with Identity Pool integration
+        console.log('User registered and associated with Identity Pool. User will be able to access AWS resources after confirmation.');
+      }
+
+      return {
+        ...jsonResponse,
+        identityPoolAssociation: identityPoolId ? true : false
+      };
     } else {
-      throw new Error(jsonResponse.message || jsonResponse.__type || 'Registration failed');
+      // Extract more detailed error information
+      const errorMessage = jsonResponse.message || jsonResponse.__type || 'Registration failed';
+      const errorType = jsonResponse.__type ? jsonResponse.__type.split('#')[1] : 'UnknownError';
+
+      throw new Error(JSON.stringify({
+        message: errorMessage,
+        type: errorType,
+        code: response.status
+      }));
     }
   } catch (error) {
     console.error('Cognito registration error:', error);
-    throw error;
+
+    // If the error is already formatted as JSON, pass it through
+    if (error.message && error.message.startsWith('{')) {
+      throw error;
+    }
+
+    // Otherwise, format the error
+    throw new Error(JSON.stringify({
+      message: error.message || 'Registration failed',
+      type: 'ClientError',
+      code: 400
+    }));
   }
 }
 

@@ -10,13 +10,14 @@ import {
   faWater,
   faBolt,
   faHome,
-  faMapMarkerAlt,
   faCalendarAlt,
   faExclamationTriangle,
   faChevronRight,
   faSearch,
   faFileInvoiceDollar
 } from '@fortawesome/free-solid-svg-icons';
+import WeatherWidget from '../components/weather/WeatherWidget';
+import useWeather from '../hooks/useWeather';
 import './DashboardPage.css';
 
 const DashboardPage = () => {
@@ -30,12 +31,16 @@ const DashboardPage = () => {
   useEffect(() => {
     console.log('Dashboard - Auth state:', { user, isAuthenticated, hasRealName });
   }, [user, isAuthenticated, hasRealName]);
+
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [weatherData, setWeatherData] = useState({
-    temp: '24°C',
-    condition: 'Sunny',
-    location: 'Johannesburg'
-  });
+
+  // Use the weather hook to fetch and manage weather data
+  const {
+    weatherData,
+    isLoading: isWeatherLoading,
+    error: weatherError,
+    refreshWeather
+  } = useWeather();
 
   // Update time every minute
   useEffect(() => {
@@ -146,16 +151,13 @@ const DashboardPage = () => {
           </h1>
           <p className="date-display">{formattedDate}</p>
         </div>
-        <div className="weather-widget">
-          <div className="weather-info">
-            <span className="weather-temp">{weatherData.temp}</span>
-            <span className="weather-condition">{weatherData.condition}</span>
-          </div>
-          <div className="weather-location">
-            <FontAwesomeIcon icon={faMapMarkerAlt} />
-            <span>{weatherData.location}</span>
-          </div>
-        </div>
+        <WeatherWidget
+          weatherData={weatherData}
+          isLoading={isWeatherLoading}
+          error={weatherError}
+          onRefresh={refreshWeather}
+          className="dashboard-weather-widget"
+        />
       </div>
 
       {/* Main Content */}

@@ -1,61 +1,83 @@
 // src/services/authService.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-
-// Dummy user credentials
-const DUMMY_USER = {
-  idNumber: '7208145695082',
-  password: 'P@ssword',
-  name: 'Test User',
-  email: 'testuser@example.com',
-  role: 'citizen',
-  profilePicture: null
-};
-
-// Check if we're using the dummy user bypass
-const useDummyUser = () => {
-  return process.env.NODE_ENV === 'development' || 
-         import.meta.env.VITE_USE_DUMMY_USER === 'true';
-};
+import {
+  signOut,
+  getCurrentUser,
+  fetchAuthSession,
+  fetchUserAttributes
+} from 'aws-amplify/auth';
+import {
+  cognitoSignIn,
+  cognitoSignUp
+} from '../utils/cognitoAuth';
+import { decodeJWT } from '../utils/jwtDecode';
 
 // Async thunk for login
 export const loginUser = createAsyncThunk(
   'auth/login',
   async ({ idNumber, password }, { rejectWithValue }) => {
     try {
-      // Check if we should use the dummy user
-      if (useDummyUser() && 
-          idNumber === DUMMY_USER.idNumber && 
-          password === DUMMY_USER.password) {
-        
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        // Return dummy user data
-        return {
-          user: {
-            idNumber: DUMMY_USER.idNumber,
-            name: DUMMY_USER.name,
-            email: DUMMY_USER.email,
-            role: DUMMY_USER.role,
-            profilePicture: DUMMY_USER.profilePicture
-          },
-          token: 'dummy-jwt-token'
-        };
+      // First, check if there's already a signed-in user
+      try {
+        // Try to sign out any existing user first
+        await signOut();
+        console.log('Signed out existing user');
+      } catch (signOutError) {
+        // Ignore errors from signOut - it might just mean no user was signed in
+        console.log('No existing user to sign out or sign out failed:', signOutError);
       }
-      
-      // In a real implementation, this would call AWS Cognito
-      // For now, we'll reject if it's not the dummy user
-      if (useDummyUser()) {
-        return rejectWithValue('Invalid credentials');
-      }
-      
-      // This would be the actual AWS Cognito implementation
-      // const response = await Auth.signIn(idNumber, password);
-      // return { user: response.attributes, token: response.signInUserSession.idToken.jwtToken };
-      
-      // For now, just reject
-      return rejectWithValue('AWS Cognito not implemented yet');
+
+      // Get environment variables
+      const clientId = import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID;
+      const clientSecret = import.meta.env.VITE_COGNITO_CLIENT_SECRET;
+      const region = import.meta.env.VITE_COGNITO_REGION;
+
+      console.log('Using Cognito configuration:', {
+        region,
+        clientId,
+        clientSecret: clientSecret ? '***' : 'not set'
+      });
+
+      // Now attempt to sign in using our custom function
+      const signInResponse = await cognitoSignIn(
+        idNumber, // Using ID Number as username
+        password,
+        clientId,
+        clientSecret,
+        region
+      );
+
+      // Extract tokens from the response
+      const idToken = signInResponse.AuthenticationResult.IdToken;
+      const accessToken = signInResponse.AuthenticationResult.AccessToken;
+      const refreshToken = signInResponse.AuthenticationResult.RefreshToken;
+
+      // Store tokens in localStorage
+      localStorage.setItem('auth_id_token', idToken);
+      localStorage.setItem('auth_access_token', accessToken);
+      localStorage.setItem('auth_refresh_token', refreshToken);
+
+      // Try to decode the ID token to get user attributes
+      const decodedToken = decodeJWT(idToken);
+      console.log('Decoded ID token:', decodedToken);
+
+      // Create user object with info from the token
+      const user = {
+        idNumber: idNumber,
+        email: decodedToken?.email || '',
+        name: decodedToken?.name || '',
+        role: 'citizen' // Default role
+      };
+
+      // Store user in localStorage
+      localStorage.setItem('auth_user', JSON.stringify(user));
+
+      return {
+        user: user,
+        token: idToken
+      };
     } catch (error) {
+      console.error('Login error:', error);
       return rejectWithValue(error.message || 'Login failed');
     }
   }
@@ -66,31 +88,40 @@ export const registerUser = createAsyncThunk(
   'auth/register',
   async (userData, { rejectWithValue }) => {
     try {
-      // In a real implementation, this would call AWS Cognito
-      // For now, we'll just simulate success for the dummy user
-      if (useDummyUser()) {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        return {
-          success: true,
-          message: 'Registration successful. Please check your email for verification.'
-        };
-      }
-      
-      // This would be the actual AWS Cognito implementation
-      // const response = await Auth.signUp({
-      //   username: userData.idNumber,
-      //   password: userData.password,
-      //   attributes: {
-      //     email: userData.email,
-      //     name: userData.name,
-      //   }
-      // });
-      // return { success: true, message: 'Registration successful' };
-      
-      return rejectWithValue('AWS Cognito not implemented yet');
+      // Get environment variables
+      const clientId = import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID;
+      const clientSecret = import.meta.env.VITE_COGNITO_CLIENT_SECRET;
+      const region = import.meta.env.VITE_COGNITO_REGION;
+
+      console.log('Using Cognito configuration for registration:', {
+        region,
+        clientId,
+        clientSecret: clientSecret ? '***' : 'not set'
+      });
+
+      // Prepare user attributes
+      const userAttributes = {
+        email: userData.email,
+        name: userData.name,
+        'custom:idNumber': userData.idNumber
+      };
+
+      // Using our custom sign up function
+      await cognitoSignUp(
+        userData.idNumber, // Using ID Number as username
+        userData.password,
+        userAttributes,
+        clientId,
+        clientSecret,
+        region
+      );
+
+      return {
+        success: true,
+        message: 'Registration successful. Please check your email for verification.'
+      };
     } catch (error) {
+      console.error('Registration error:', error);
       return rejectWithValue(error.message || 'Registration failed');
     }
   }
@@ -101,21 +132,25 @@ export const logoutUser = createAsyncThunk(
   'auth/logout',
   async (_, { rejectWithValue }) => {
     try {
-      // In a real implementation, this would call AWS Cognito
-      // For now, we'll just simulate success
-      if (useDummyUser()) {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
-        return { success: true };
+      // Clear tokens from localStorage
+      localStorage.removeItem('auth_id_token');
+      localStorage.removeItem('auth_access_token');
+      localStorage.removeItem('auth_refresh_token');
+      localStorage.removeItem('auth_user');
+      localStorage.removeItem('auth_token');
+
+      // Call Amplify's signOut with global option to clear all auth state
+      try {
+        await signOut({ global: true });
+        console.log('Successfully signed out from Amplify');
+      } catch (e) {
+        // Log but don't fail on Amplify signOut errors
+        console.log('Amplify signOut error (handled):', e);
       }
-      
-      // This would be the actual AWS Cognito implementation
-      // await Auth.signOut();
-      // return { success: true };
-      
-      return rejectWithValue('AWS Cognito not implemented yet');
+
+      return { success: true };
     } catch (error) {
+      console.error('Logout error:', error);
       return rejectWithValue(error.message || 'Logout failed');
     }
   }
@@ -126,28 +161,60 @@ export const checkAuthStatus = createAsyncThunk(
   'auth/checkStatus',
   async (_, { rejectWithValue }) => {
     try {
-      // Check if we have a token in localStorage
-      const token = localStorage.getItem('auth_token');
-      const userData = localStorage.getItem('auth_user');
-      
-      if (token && userData) {
-        return {
-          user: JSON.parse(userData),
-          token
+      // Try to get the current authenticated user from Amplify
+      try {
+        await getCurrentUser(); // Verify user is authenticated
+        const { tokens } = await fetchAuthSession();
+        const userAttributes = await fetchUserAttributes();
+
+        // Try to decode the ID token to get user attributes
+        const idToken = tokens.idToken.toString();
+        const decodedToken = decodeJWT(idToken);
+        console.log('Decoded ID token during status check:', decodedToken);
+
+        // Create user object with info from attributes and token
+        const user = {
+          idNumber: userAttributes['custom:idNumber'] || decodedToken?.['custom:idNumber'] || '',
+          email: userAttributes.email || decodedToken?.email || '',
+          name: userAttributes.name || decodedToken?.name || '',
+          role: 'citizen' // Default role
         };
+
+        // Update localStorage with fresh data
+        localStorage.setItem('auth_user', JSON.stringify(user));
+        localStorage.setItem('auth_token', idToken);
+        console.log('Updated user object with fresh attributes:', user);
+
+        // Return user information and token
+        return {
+          user: user,
+          token: idToken
+        };
+      } catch (amplifyError) {
+        console.log('Amplify session check failed:', amplifyError);
+
+        // Fall back to localStorage check
+        const token = localStorage.getItem('auth_token');
+        const userData = localStorage.getItem('auth_user');
+
+        if (token && userData) {
+          return {
+            user: JSON.parse(userData),
+            token
+          };
+        }
+
+        // Clear any stale Amplify session
+        try {
+          await signOut({ global: true });
+        } catch (e) {
+          console.log('Error during signout cleanup:', e);
+        }
+
+        throw new Error('Not authenticated');
       }
-      
-      // In a real implementation, this would call AWS Cognito
-      // For now, we'll just return not authenticated
-      return rejectWithValue('Not authenticated');
-      
-      // This would be the actual AWS Cognito implementation
-      // const user = await Auth.currentAuthenticatedUser();
-      // return {
-      //   user: user.attributes,
-      //   token: user.signInUserSession.idToken.jwtToken
-      // };
     } catch (error) {
+      console.log('Auth status check failed:', error);
       return rejectWithValue('Not authenticated');
     }
   }
@@ -186,7 +253,7 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.token;
         state.isAuthenticated = true;
-        
+
         // Store in localStorage for persistence
         localStorage.setItem('auth_token', action.payload.token);
         localStorage.setItem('auth_user', JSON.stringify(action.payload.user));
@@ -195,7 +262,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload || 'Login failed';
       })
-      
+
       // Registration cases
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
@@ -212,7 +279,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload || 'Registration failed';
       })
-      
+
       // Logout cases
       .addCase(logoutUser.pending, (state) => {
         state.loading = true;
@@ -222,7 +289,7 @@ const authSlice = createSlice({
         state.user = null;
         state.token = null;
         state.isAuthenticated = false;
-        
+
         // Remove from localStorage
         localStorage.removeItem('auth_token');
         localStorage.removeItem('auth_user');
@@ -231,7 +298,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload || 'Logout failed';
       })
-      
+
       // Check auth status cases
       .addCase(checkAuthStatus.pending, (state) => {
         state.loading = true;

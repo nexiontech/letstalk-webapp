@@ -2,18 +2,57 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Alert, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
+import {
+    Alert,
+    CircularProgress,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button,
+    TextField,
+    Radio,
+    RadioGroup,
+    FormControlLabel,
+    FormControl,
+    FormLabel,
+    Tooltip,
+    Box
+} from '@mui/material';
 import { registerUser, confirmRegistration, resendVerificationCode, clearRegistrationStatus, clearError } from '../services/amplifyAuthService';
-import { validateEmail, validatePassword, validateIdNumber, doPasswordsMatch } from '../utils/authUtils';
+import {
+    validateEmail,
+    validatePassword,
+    validateIdNumber,
+    validatePassportNumber,
+    validatePhoneNumber,
+    formatPhoneNumber,
+    doPasswordsMatch,
+    capitalizeWords
+} from '../utils/authUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash, faLock, faIdCard, faUser, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import {
+    faEye,
+    faEyeSlash,
+    faLock,
+    faIdCard,
+    faUser,
+    faEnvelope,
+    faPhone,
+    faPassport,
+    faInfoCircle
+} from '@fortawesome/free-solid-svg-icons';
 import './AuthForms.css';
 
 function RegisterForm() {
     const [formData, setFormData] = useState({
-        idNumber: '',
-        name: '',
+        firstName: '',
+        lastName: '',
         email: '',
+        phoneNumber: '',
+        documentType: 'idNumber', // 'idNumber' or 'passport'
+        idNumber: '',
+        passportNumber: '',
         password: '',
         confirmPassword: ''
     });
@@ -24,6 +63,7 @@ function RegisterForm() {
     const [showVerificationDialog, setShowVerificationDialog] = useState(false);
     const [verificationCode, setVerificationCode] = useState('');
     const [unverifiedUser, setUnverifiedUser] = useState(null);
+    const [resendSuccess, setResendSuccess] = useState(false);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -57,19 +97,50 @@ function RegisterForm() {
     const validateForm = () => {
         const errors = {};
 
-        // Validate ID Number
-        if (!validateIdNumber(formData.idNumber)) {
-            errors.idNumber = 'Please enter a valid 13-digit South African ID number';
+        // Validate First Name
+        if (!formData.firstName.trim()) {
+            errors.firstName = 'First name is required';
+        } else if (formData.firstName.trim().length < 2) {
+            errors.firstName = 'First name must be at least 2 characters';
         }
 
-        // Validate Name
-        if (!formData.name.trim()) {
-            errors.name = 'Name is required';
+        // Validate Last Name
+        if (!formData.lastName.trim()) {
+            errors.lastName = 'Last name is required';
+        } else if (formData.lastName.trim().length < 2) {
+            errors.lastName = 'Last name must be at least 2 characters';
         }
 
         // Validate Email
-        if (!validateEmail(formData.email)) {
+        if (!formData.email) {
+            errors.email = 'Email is required';
+        } else if (!validateEmail(formData.email)) {
             errors.email = 'Please enter a valid email address';
+        }
+
+        // Validate Phone Number (optional)
+        const phoneValidation = validatePhoneNumber(formData.phoneNumber);
+        if (!phoneValidation.isValid) {
+            errors.phoneNumber = phoneValidation.error;
+        }
+
+        // Validate ID Number or Passport Number based on document type
+        if (formData.documentType === 'idNumber') {
+            if (!formData.idNumber) {
+                errors.idNumber = 'ID Number is required';
+            } else if (formData.idNumber.length !== 13) {
+                errors.idNumber = 'ID Number must be exactly 13 digits';
+            } else if (!/^\d+$/.test(formData.idNumber)) {
+                errors.idNumber = 'ID Number must contain only digits';
+            } else if (!validateIdNumber(formData.idNumber)) {
+                errors.idNumber = 'Please enter a valid South African ID number';
+            }
+        } else {
+            // Validate Passport Number
+            const passportValidation = validatePassportNumber(formData.passportNumber);
+            if (!passportValidation.isValid) {
+                errors.passportNumber = passportValidation.error;
+            }
         }
 
         // Validate Password
@@ -98,17 +169,48 @@ function RegisterForm() {
         setIsSubmitting(true);
 
         try {
+            // Combine first and last name for Cognito
+            const fullName = `${formData.firstName} ${formData.lastName}`.trim();
+
+            // Determine which identifier to use (ID number or passport)
+            const identifier = formData.documentType === 'idNumber'
+                ? formData.idNumber
+                : formData.passportNumber;
+
             const resultAction = await dispatch(registerUser({
-                idNumber: formData.idNumber,
-                name: formData.name,
+                idNumber: identifier, // Use the selected identifier as username
+                name: fullName,
                 email: formData.email,
-                password: formData.password
+                password: formData.password,
+                // Include document type for the passport number padding workaround
+                documentType: formData.documentType
             }));
 
             if (registerUser.fulfilled.match(resultAction)) {
+                // Log the identity pool association status
+                if (resultAction.payload.identityPoolAssociation) {
+                    console.log('User successfully associated with Identity Pool');
+                }
+
                 // Registration successful, show verification dialog
-                setUnverifiedUser(formData.idNumber);
+                // Use the original identifier (not the padded one) for verification UI
+                setUnverifiedUser(identifier);
+                // Store document type for verification
+                localStorage.setItem('temp_document_type', formData.documentType);
                 setShowVerificationDialog(true);
+
+                // Clear the form data for security but keep the identifier for verification
+                setFormData({
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    phoneNumber: '',
+                    documentType: formData.documentType,
+                    idNumber: formData.documentType === 'idNumber' ? formData.idNumber : '',
+                    passportNumber: formData.documentType === 'passport' ? formData.passportNumber : '',
+                    password: '',
+                    confirmPassword: ''
+                });
             }
         } catch (error) {
             console.error('Registration error:', error);
@@ -127,10 +229,17 @@ function RegisterForm() {
         setValidationErrors({});
 
         try {
+            // Get the document type from localStorage
+            const documentType = localStorage.getItem('temp_document_type') || 'idNumber';
+
             await dispatch(confirmRegistration({
                 idNumber: unverifiedUser,
-                code: verificationCode
+                code: verificationCode,
+                documentType: documentType // Pass document type for proper padding
             }));
+
+            // Clean up the temporary storage
+            localStorage.removeItem('temp_document_type');
         } catch (error) {
             console.error('Verification error:', error);
         } finally {
@@ -145,8 +254,17 @@ function RegisterForm() {
 
         try {
             // Use ID Number for resending verification code
-            await dispatch(resendVerificationCode(unverifiedUser));
-            alert('Verification code has been resent to your email.');
+            const resultAction = await dispatch(resendVerificationCode(unverifiedUser));
+
+            if (resendVerificationCode.fulfilled.match(resultAction)) {
+                // Show success message in the dialog instead of an alert
+                setResendSuccess(true);
+
+                // Hide the success message after 5 seconds
+                setTimeout(() => {
+                    setResendSuccess(false);
+                }, 5000);
+            }
         } catch (error) {
             console.error('Resend code error:', error);
         } finally {
@@ -164,6 +282,41 @@ function RegisterForm() {
             setFormData(prev => ({
                 ...prev,
                 [name]: sanitizedValue
+            }));
+        } else if (name === 'firstName' || name === 'lastName') {
+            // Auto-capitalize first letter of names
+            const capitalizedValue = capitalizeWords(value);
+            setFormData(prev => ({
+                ...prev,
+                [name]: capitalizedValue
+            }));
+        } else if (name === 'phoneNumber') {
+            // Format the phone number to +27 format
+            const formattedValue = formatPhoneNumber(value);
+            setFormData(prev => ({
+                ...prev,
+                [name]: formattedValue
+            }));
+        } else if (name === 'passportNumber') {
+            // Allow only alphanumeric characters for passport numbers and convert to uppercase
+            const sanitizedValue = value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 12);
+            setFormData(prev => ({
+                ...prev,
+                [name]: sanitizedValue
+            }));
+        } else if (name === 'documentType') {
+            // When changing document type, clear any validation errors for the other document type
+            const newErrors = { ...validationErrors };
+            if (value === 'idNumber') {
+                delete newErrors.passportNumber;
+            } else {
+                delete newErrors.idNumber;
+            }
+            setValidationErrors(newErrors);
+
+            setFormData(prev => ({
+                ...prev,
+                [name]: value
             }));
         } else {
             setFormData(prev => ({
@@ -201,45 +354,49 @@ function RegisterForm() {
             )}
 
             <form onSubmit={handleSubmit} className="auth-form">
-                <div className="form-group">
-                    <div className="input-with-icon">
-                        <input
-                            type="text"
-                            name="idNumber"
-                            placeholder="ID Number"
-                            value={formData.idNumber}
-                            onChange={handleChange}
-                            disabled={isSubmitting}
-                            required
-                            pattern="[0-9]{13}"
-                            title="ID Number must be exactly 13 digits"
-                        />
+                {/* First Name and Last Name fields (side by side) */}
+                <div className="form-row">
+                    <div className="form-group half-width">
+                        <div className="input-with-icon">
+                            <FontAwesomeIcon icon={faUser} className="input-icon" />
+                            <input
+                                type="text"
+                                name="firstName"
+                                placeholder="First Name"
+                                value={formData.firstName}
+                                onChange={handleChange}
+                                disabled={isSubmitting}
+                                required
+                            />
+                        </div>
+                        {validationErrors.firstName && (
+                            <div className="error-message">{validationErrors.firstName}</div>
+                        )}
                     </div>
-                    {validationErrors.idNumber && (
-                        <div className="error-message">{validationErrors.idNumber}</div>
-                    )}
-                    <div className="form-hint">South African ID Number (13 digits)</div>
+
+                    <div className="form-group half-width">
+                        <div className="input-with-icon">
+                            <FontAwesomeIcon icon={faUser} className="input-icon" />
+                            <input
+                                type="text"
+                                name="lastName"
+                                placeholder="Last Name"
+                                value={formData.lastName}
+                                onChange={handleChange}
+                                disabled={isSubmitting}
+                                required
+                            />
+                        </div>
+                        {validationErrors.lastName && (
+                            <div className="error-message">{validationErrors.lastName}</div>
+                        )}
+                    </div>
                 </div>
 
+                {/* Email field */}
                 <div className="form-group">
                     <div className="input-with-icon">
-                        <input
-                            type="text"
-                            name="name"
-                            placeholder="Name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            disabled={isSubmitting}
-                            required
-                        />
-                    </div>
-                    {validationErrors.name && (
-                        <div className="error-message">{validationErrors.name}</div>
-                    )}
-                </div>
-
-                <div className="form-group">
-                    <div className="input-with-icon">
+                        <FontAwesomeIcon icon={faEnvelope} className="input-icon" />
                         <input
                             type="email"
                             name="email"
@@ -255,8 +412,102 @@ function RegisterForm() {
                     )}
                 </div>
 
+                {/* Phone Number field (optional) */}
                 <div className="form-group">
                     <div className="input-with-icon">
+                        <FontAwesomeIcon icon={faPhone} className="input-icon" />
+                        <input
+                            type="tel"
+                            name="phoneNumber"
+                            placeholder="Phone Number (+27 Format)"
+                            value={formData.phoneNumber}
+                            onChange={handleChange}
+                            disabled={isSubmitting}
+                        />
+                        <Tooltip title="Phone verification coming soon" placement="top">
+                            <span className="info-icon">
+                                <FontAwesomeIcon icon={faInfoCircle} />
+                            </span>
+                        </Tooltip>
+                    </div>
+                    {validationErrors.phoneNumber && (
+                        <div className="error-message">{validationErrors.phoneNumber}</div>
+                    )}
+                </div>
+
+                {/* Document Type Selection */}
+                <div className="form-group">
+                    <FormControl component="fieldset">
+                        <FormLabel component="legend" style={{ marginBottom: '8px' }}>Identification Type</FormLabel>
+                        <RadioGroup
+                            row
+                            name="documentType"
+                            value={formData.documentType}
+                            onChange={handleChange}
+                        >
+                            <FormControlLabel
+                                value="idNumber"
+                                control={<Radio />}
+                                label="South African ID"
+                                disabled={isSubmitting}
+                            />
+                            <FormControlLabel
+                                value="passport"
+                                control={<Radio />}
+                                label="Passport"
+                                disabled={isSubmitting}
+                            />
+                        </RadioGroup>
+                    </FormControl>
+                </div>
+
+                {/* Conditional ID Number or Passport field */}
+                {formData.documentType === 'idNumber' ? (
+                    <div className="form-group">
+                        <div className="input-with-icon">
+                            <FontAwesomeIcon icon={faIdCard} className="input-icon" />
+                            <input
+                                type="text"
+                                name="idNumber"
+                                placeholder="ID Number"
+                                value={formData.idNumber}
+                                onChange={handleChange}
+                                disabled={isSubmitting}
+                                required
+                                pattern="[0-9]{13}"
+                                title="ID Number must be exactly 13 digits"
+                            />
+                        </div>
+                        {validationErrors.idNumber && (
+                            <div className="error-message">{validationErrors.idNumber}</div>
+                        )}
+                        <div className="form-hint">South African ID Number (13 digits)</div>
+                    </div>
+                ) : (
+                    <div className="form-group">
+                        <div className="input-with-icon">
+                            <FontAwesomeIcon icon={faPassport} className="input-icon" />
+                            <input
+                                type="text"
+                                name="passportNumber"
+                                placeholder="Passport Number"
+                                value={formData.passportNumber}
+                                onChange={handleChange}
+                                disabled={isSubmitting}
+                                required
+                            />
+                        </div>
+                        {validationErrors.passportNumber && (
+                            <div className="error-message">{validationErrors.passportNumber}</div>
+                        )}
+                        <div className="form-hint">Enter your passport number (6-12 characters)</div>
+                    </div>
+                )}
+
+                {/* Password field */}
+                <div className="form-group">
+                    <div className="input-with-icon">
+                        <FontAwesomeIcon icon={faLock} className="input-icon" />
                         <input
                             type={showPassword ? "text" : "password"}
                             name="password"
@@ -283,8 +534,10 @@ function RegisterForm() {
                     <div className="form-hint">Minimum 8 characters with letters, numbers & symbols</div>
                 </div>
 
+                {/* Confirm Password field */}
                 <div className="form-group">
                     <div className="input-with-icon">
+                        <FontAwesomeIcon icon={faLock} className="input-icon" />
                         <input
                             type={showConfirmPassword ? "text" : "password"}
                             name="confirmPassword"
@@ -417,6 +670,20 @@ function RegisterForm() {
                             }}
                         >
                             {error}
+                        </Alert>
+                    )}
+
+                    {resendSuccess && (
+                        <Alert
+                            severity="info"
+                            className="auth-alert"
+                            style={{
+                                marginTop: '15px',
+                                borderRadius: '12px',
+                                animation: 'fadeIn 0.5s ease-out'
+                            }}
+                        >
+                            Verification code has been resent to your email.
                         </Alert>
                     )}
 

@@ -30,9 +30,15 @@ export const AuthProvider = ({ children }) => {
   }, [dispatch]);
 
   // Login function
-  const login = async (idNumber, password) => {
+  const login = async (idNumber, password, documentType) => {
     try {
-      const resultAction = await dispatch(loginUser({ idNumber, password }));
+      // Pass document type for the passport number padding workaround
+      const resultAction = await dispatch(loginUser({
+        idNumber,
+        password,
+        documentType // Include document type for proper padding
+      }));
+
       if (loginUser.fulfilled.match(resultAction)) {
         return { success: true };
       } else {
@@ -105,12 +111,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Confirm forgot password function
-  const confirmPasswordReset = async (idNumber, code, newPassword) => {
+  const confirmPasswordReset = async (idNumber, code, newPassword, documentType) => {
     try {
       const resultAction = await dispatch(confirmForgotPassword({
         idNumber,
         code,
-        newPassword
+        newPassword,
+        documentType // Pass document type for proper padding
       }));
       if (confirmForgotPassword.fulfilled.match(resultAction)) {
         return {

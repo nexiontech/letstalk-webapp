@@ -22,6 +22,7 @@ import FAQPage from './pages/FAQPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsOfServicePage from './pages/TermsOfServicePage';
 import CookiePolicyPage from './pages/CookiePolicyPage';
+import UserProfilePage from './pages/UserProfilePage';
 import DashboardLayout from './layouts/DashboardLayout';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -48,7 +49,6 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function AppContent() {
-    const { isAuthenticated } = useAuth();
     const location = useLocation();
     // State to control initial minimized state of the chatbot
     const [isChatbotInitiallyMinimized, setIsChatbotInitiallyMinimized] = useState(true);
@@ -76,7 +76,8 @@ function AppContent() {
         '/report-issue',
         '/services',
         '/utilities',
-        '/CommunityHub'
+        '/CommunityHub',
+        '/profile'
     ].includes(location.pathname);
 
     return (
@@ -147,6 +148,11 @@ function AppContent() {
                     } />
                     <Route path="/utilities" element={
                         <Navigate to="/services" replace />
+                    } />
+                    <Route path="/profile" element={
+                        <ProtectedRoute>
+                            <UserProfilePage />
+                        </ProtectedRoute>
                     } />
 
                     <Route path="*" element={<NotFoundPage />} />
