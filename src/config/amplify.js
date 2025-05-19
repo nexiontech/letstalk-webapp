@@ -7,7 +7,8 @@ console.log('Amplify Configuration:', {
   region: import.meta.env.VITE_COGNITO_REGION,
   userPoolId: import.meta.env.VITE_COGNITO_USER_POOL_ID,
   userPoolWebClientId: import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID,
-  domain: import.meta.env.VITE_COGNITO_DOMAIN
+  domain: import.meta.env.VITE_COGNITO_DOMAIN,
+  identityPoolId: import.meta.env.VITE_COGNITO_IDENTITY_POOL_ID
 });
 
 // Configure Amplify for AWS Amplify v6
@@ -17,6 +18,7 @@ Amplify.configure({
       userPoolId: import.meta.env.VITE_COGNITO_USER_POOL_ID,
       userPoolClientId: import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID,
       clientSecret: import.meta.env.VITE_COGNITO_CLIENT_SECRET, // Add client secret
+      identityPoolId: import.meta.env.VITE_COGNITO_IDENTITY_POOL_ID, // Add identity pool ID
       loginWith: {
         username: true,  // Using ID Number as username
         email: false     // Not using email as username
