@@ -24,7 +24,7 @@ The Let's Talk platform aims to bridge the gap between citizens and government s
 
 ## Features (Planned)
 
-*   User Authentication & Profile Management (via AWS Cognito)
+*   User Authentication & Profile Management (via AWS Cognito Identity Pool)
 *   Heatmap visualization of service delivery (Geofencing)
 *   Reporting and tracking of new service issues & receiving notifications
 *   Online payments for utilities (Electricity, Water, Rates)
@@ -91,10 +91,13 @@ Follow these steps to get the project running locally:
         # API Configuration
         VITE_API_BASE_URL=http://localhost:3000/api
 
-        # AWS Cognito Configuration (when implemented)
+        # AWS Cognito Configuration
         VITE_COGNITO_REGION=us-east-1
         VITE_COGNITO_USER_POOL_ID=your-user-pool-id
         VITE_COGNITO_USER_POOL_WEB_CLIENT_ID=your-client-id
+        VITE_COGNITO_IDENTITY_POOL_ID=your-identity-pool-id
+        VITE_COGNITO_CLIENT_SECRET=your-client-secret
+        VITE_COGNITO_DOMAIN=your-cognito-domain
 
         # Feature Flags
         VITE_ENABLE_THUSONG_AI=false
@@ -222,20 +225,46 @@ letstalk-webapp/
 
 ### Branch Strategy
 
-- **production**: Main production branch, contains stable code
+#### Long-lived Branches
+- **production** (or **main**): Main production branch, contains stable code
 - **develop**: Development branch for integrating features
-- **feature/feature-name**: Feature branches for new development
-- **fix/bug-name**: Bug fix branches
+
+#### Short-lived Branches
+Create these branches only when needed for specific changes, then merge and delete them:
+
+- **feature/ABC-123-feature-description**: For new features
+  - Example: `feature/LT-45-add-payment-gateway`
+- **fix/ABC-123-bug-description**: For bug fixes
+  - Example: `fix/LT-67-login-form-validation`
+- **refactor/ABC-123-component-name**: For code improvements without changing functionality
+  - Example: `refactor/LT-89-optimize-auth-service`
+- **docs/ABC-123-documentation-type**: For documentation changes
+  - Example: `docs/LT-12-update-installation-guide`
+- **test/ABC-123-test-description**: For adding or updating tests
+  - Example: `test/LT-34-add-payment-service-tests`
+- **chore/ABC-123-task-description**: For maintenance tasks
+  - Example: `chore/LT-56-update-dependencies`
+
+#### Branch Naming Guidelines
+1. Always use the appropriate prefix based on the type of change
+2. Include the ticket/issue number when applicable (e.g., LT-123)
+3. Use kebab-case (hyphen-separated words) for readability
+4. Keep descriptions concise but descriptive
 
 ### Contributing
 
 Contributions are welcome! Please follow these guidelines:
 
-1.  Create a new branch for your feature or bug fix:
+1.  Create a new branch from `develop` following the branch naming guidelines:
     ```bash
-    git checkout -b feature/your-feature-name
-    # or
-    git checkout -b fix/your-bug-fix
+    # For a new feature with ticket LT-123
+    git checkout -b feature/LT-123-descriptive-feature-name
+
+    # For a bug fix with ticket LT-456
+    git checkout -b fix/LT-456-descriptive-bug-fix
+
+    # For code refactoring
+    git checkout -b refactor/LT-789-component-to-refactor
     ```
 
 2.  Make your changes and ensure code quality:
@@ -257,7 +286,7 @@ Contributions are welcome! Please follow these guidelines:
 
 5.  Push your branch to the repository:
     ```bash
-    git push origin feature/your-feature-name
+    git push origin feature/LT-123-descriptive-feature-name
     ```
 
 6.  Create a Pull Request against the `develop` branch.
@@ -328,6 +357,7 @@ The application supports multiple languages through a custom translation system:
 3. **Environment Variables**
    - Make sure your `.env.local` file contains all required variables
    - Remember that environment variables must be prefixed with `VITE_`
+   - For authentication to work properly, ensure you have the correct Cognito Identity Pool ID configured
 
 4. **Build Errors**
    - Check for ESLint errors: `npm run lint`
