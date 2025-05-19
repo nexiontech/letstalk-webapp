@@ -1,24 +1,22 @@
 // src/config/amplify.js
 import { Amplify } from 'aws-amplify';
 import { calculateSecretHash } from '../utils/secretHash';
+import { getCognitoConfig, logCognitoConfig } from '../utils/envUtils';
 
-// Log environment variables for debugging
-console.log('Amplify Configuration:', {
-  region: import.meta.env.VITE_COGNITO_REGION,
-  userPoolId: import.meta.env.VITE_COGNITO_USER_POOL_ID,
-  userPoolWebClientId: import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID,
-  domain: import.meta.env.VITE_COGNITO_DOMAIN,
-  identityPoolId: import.meta.env.VITE_COGNITO_IDENTITY_POOL_ID
-});
+// Get Cognito configuration from environment variables
+const cognitoConfig = getCognitoConfig();
+
+// Log configuration for debugging
+logCognitoConfig('Amplify Initialization', cognitoConfig);
 
 // Configure Amplify for AWS Amplify v6
 Amplify.configure({
   Auth: {
     Cognito: {
-      userPoolId: import.meta.env.VITE_COGNITO_USER_POOL_ID,
-      userPoolClientId: import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID,
-      clientSecret: import.meta.env.VITE_COGNITO_CLIENT_SECRET, // Add client secret
-      identityPoolId: import.meta.env.VITE_COGNITO_IDENTITY_POOL_ID, // Add identity pool ID
+      userPoolId: cognitoConfig.userPoolId,
+      userPoolClientId: cognitoConfig.userPoolWebClientId,
+      clientSecret: cognitoConfig.clientSecret, // Add client secret
+      identityPoolId: cognitoConfig.identityPoolId, // Add identity pool ID
       loginWith: {
         username: true,  // Using ID Number as username
         email: false     // Not using email as username
@@ -44,8 +42,8 @@ Amplify.configure({
         // Note: password is extracted by AWS Amplify internally
         const secretHash = await calculateSecretHash(
           username,
-          import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID,
-          import.meta.env.VITE_COGNITO_CLIENT_SECRET
+          cognitoConfig.userPoolWebClientId,
+          cognitoConfig.clientSecret
         );
 
         return {
@@ -61,8 +59,8 @@ Amplify.configure({
         // Note: password is extracted by AWS Amplify internally
         const secretHash = await calculateSecretHash(
           username,
-          import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID,
-          import.meta.env.VITE_COGNITO_CLIENT_SECRET
+          cognitoConfig.userPoolWebClientId,
+          cognitoConfig.clientSecret
         );
 
         return {
@@ -78,8 +76,8 @@ Amplify.configure({
         // Note: confirmationCode is extracted by AWS Amplify internally
         const secretHash = await calculateSecretHash(
           username,
-          import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID,
-          import.meta.env.VITE_COGNITO_CLIENT_SECRET
+          cognitoConfig.userPoolWebClientId,
+          cognitoConfig.clientSecret
         );
 
         return {
@@ -94,8 +92,8 @@ Amplify.configure({
         const { username, options } = input;
         const secretHash = await calculateSecretHash(
           username,
-          import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID,
-          import.meta.env.VITE_COGNITO_CLIENT_SECRET
+          cognitoConfig.userPoolWebClientId,
+          cognitoConfig.clientSecret
         );
 
         return {
@@ -110,8 +108,8 @@ Amplify.configure({
         const { username, options } = input;
         const secretHash = await calculateSecretHash(
           username,
-          import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID,
-          import.meta.env.VITE_COGNITO_CLIENT_SECRET
+          cognitoConfig.userPoolWebClientId,
+          cognitoConfig.clientSecret
         );
 
         return {
@@ -127,8 +125,8 @@ Amplify.configure({
         // Note: confirmationCode and newPassword are extracted by AWS Amplify internally
         const secretHash = await calculateSecretHash(
           username,
-          import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID,
-          import.meta.env.VITE_COGNITO_CLIENT_SECRET
+          cognitoConfig.userPoolWebClientId,
+          cognitoConfig.clientSecret
         );
 
         return {
