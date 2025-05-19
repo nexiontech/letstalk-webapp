@@ -24,6 +24,7 @@ function RegisterForm() {
     const [showVerificationDialog, setShowVerificationDialog] = useState(false);
     const [verificationCode, setVerificationCode] = useState('');
     const [unverifiedUser, setUnverifiedUser] = useState(null);
+    const [resendSuccess, setResendSuccess] = useState(false);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -57,22 +58,32 @@ function RegisterForm() {
     const validateForm = () => {
         const errors = {};
 
-        // Validate ID Number
-        if (!validateIdNumber(formData.idNumber)) {
-            errors.idNumber = 'Please enter a valid 13-digit South African ID number';
+        // Validate ID Number with more detailed feedback
+        if (!formData.idNumber) {
+            errors.idNumber = 'ID Number is required';
+        } else if (formData.idNumber.length !== 13) {
+            errors.idNumber = 'ID Number must be exactly 13 digits';
+        } else if (!/^\d+$/.test(formData.idNumber)) {
+            errors.idNumber = 'ID Number must contain only digits';
+        } else if (!validateIdNumber(formData.idNumber)) {
+            errors.idNumber = 'Please enter a valid South African ID number';
         }
 
         // Validate Name
         if (!formData.name.trim()) {
             errors.name = 'Name is required';
+        } else if (formData.name.trim().length < 2) {
+            errors.name = 'Name must be at least 2 characters';
         }
 
-        // Validate Email
-        if (!validateEmail(formData.email)) {
+        // Validate Email with more detailed feedback
+        if (!formData.email) {
+            errors.email = 'Email is required';
+        } else if (!validateEmail(formData.email)) {
             errors.email = 'Please enter a valid email address';
         }
 
-        // Validate Password
+        // Validate Password with more detailed feedback
         const passwordValidation = validatePassword(formData.password);
         if (!passwordValidation.isValid) {
             errors.password = passwordValidation.errors[0];
@@ -106,9 +117,23 @@ function RegisterForm() {
             }));
 
             if (registerUser.fulfilled.match(resultAction)) {
+                // Log the identity pool association status
+                if (resultAction.payload.identityPoolAssociation) {
+                    console.log('User successfully associated with Identity Pool');
+                }
+
                 // Registration successful, show verification dialog
                 setUnverifiedUser(formData.idNumber);
                 setShowVerificationDialog(true);
+
+                // Clear the form data for security
+                setFormData({
+                    idNumber: formData.idNumber, // Keep ID number for verification
+                    name: '',
+                    email: '',
+                    password: '',
+                    confirmPassword: ''
+                });
             }
         } catch (error) {
             console.error('Registration error:', error);
@@ -145,8 +170,17 @@ function RegisterForm() {
 
         try {
             // Use ID Number for resending verification code
-            await dispatch(resendVerificationCode(unverifiedUser));
-            alert('Verification code has been resent to your email.');
+            const resultAction = await dispatch(resendVerificationCode(unverifiedUser));
+
+            if (resendVerificationCode.fulfilled.match(resultAction)) {
+                // Show success message in the dialog instead of an alert
+                setResendSuccess(true);
+
+                // Hide the success message after 5 seconds
+                setTimeout(() => {
+                    setResendSuccess(false);
+                }, 5000);
+            }
         } catch (error) {
             console.error('Resend code error:', error);
         } finally {
@@ -417,6 +451,20 @@ function RegisterForm() {
                             }}
                         >
                             {error}
+                        </Alert>
+                    )}
+
+                    {resendSuccess && (
+                        <Alert
+                            severity="info"
+                            className="auth-alert"
+                            style={{
+                                marginTop: '15px',
+                                borderRadius: '12px',
+                                animation: 'fadeIn 0.5s ease-out'
+                            }}
+                        >
+                            Verification code has been resent to your email.
                         </Alert>
                     )}
 

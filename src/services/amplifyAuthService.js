@@ -144,11 +144,13 @@ export const registerUser = createAsyncThunk(
       const clientId = import.meta.env.VITE_COGNITO_USER_POOL_WEB_CLIENT_ID;
       const clientSecret = import.meta.env.VITE_COGNITO_CLIENT_SECRET;
       const region = import.meta.env.VITE_COGNITO_REGION;
+      const identityPoolId = import.meta.env.VITE_COGNITO_IDENTITY_POOL_ID;
 
       console.log('Using Cognito configuration for registration:', {
         region,
         clientId,
-        clientSecret: clientSecret ? '***' : 'not set'
+        clientSecret: clientSecret ? '***' : 'not set',
+        identityPoolId: identityPoolId ? '***' : 'not set'
       });
 
       // Prepare user attributes
@@ -158,23 +160,52 @@ export const registerUser = createAsyncThunk(
         'custom:idNumber': userData.idNumber
       };
 
-      // Using our custom sign up function
-      await cognitoSignUp(
+      // Using our custom sign up function with Identity Pool ID
+      const signUpResponse = await cognitoSignUp(
         userData.idNumber, // Using ID Number as username
         userData.password,
         userAttributes,
         clientId,
         clientSecret,
-        region
+        region,
+        identityPoolId // Pass the Identity Pool ID
       );
+
+      console.log('Registration successful with Identity Pool integration:', signUpResponse);
 
       return {
         success: true,
-        message: 'Registration successful. Please check your email for verification.'
+        message: 'Registration successful. Please check your email for verification.',
+        identityPoolAssociation: signUpResponse.identityPoolAssociation
       };
     } catch (error) {
       console.error('Registration error:', error);
-      // Handle specific error cases
+
+      // Try to parse the error message if it's in JSON format
+      try {
+        if (error.message && error.message.startsWith('{')) {
+          const parsedError = JSON.parse(error.message);
+
+          // Handle specific error types
+          if (parsedError.type === 'UsernameExistsException') {
+            return rejectWithValue('An account with this ID Number already exists.');
+          } else if (parsedError.type === 'InvalidParameterException' && parsedError.message.includes('password')) {
+            return rejectWithValue('Password does not meet requirements. It must be at least 8 characters long and contain uppercase, lowercase, numbers, and special characters.');
+          } else if (parsedError.type === 'InvalidParameterException' && parsedError.message.includes('email')) {
+            return rejectWithValue('Please provide a valid email address.');
+          } else if (parsedError.type === 'InvalidParameterException' && parsedError.message.includes('idNumber')) {
+            return rejectWithValue('Please provide a valid South African ID number.');
+          }
+
+          // Return the parsed error message if no specific case matches
+          return rejectWithValue(parsedError.message || 'Registration failed');
+        }
+      } catch (parseError) {
+        // If parsing fails, fall back to the original error handling
+        console.error('Error parsing error message:', parseError);
+      }
+
+      // Fall back to original error handling for non-JSON errors
       if (error.message && error.message.includes('UsernameExistsException')) {
         return rejectWithValue('An account with this ID Number already exists.');
       } else if (error.message && error.message.includes('InvalidParameterException') && error.message.includes('password')) {
@@ -182,6 +213,7 @@ export const registerUser = createAsyncThunk(
       } else if (error.message && error.message.includes('InvalidParameterException') && error.message.includes('email')) {
         return rejectWithValue('Please provide a valid email address.');
       }
+
       return rejectWithValue(error.message || 'Registration failed');
     }
   }
