@@ -182,7 +182,7 @@ function RegisterForm() {
                 name: fullName,
                 email: formData.email,
                 password: formData.password,
-                // Include document type for reference, but don't store in Cognito yet
+                // Include document type for the passport number padding workaround
                 documentType: formData.documentType
             }));
 
@@ -193,7 +193,10 @@ function RegisterForm() {
                 }
 
                 // Registration successful, show verification dialog
+                // Use the original identifier (not the padded one) for verification UI
                 setUnverifiedUser(identifier);
+                // Store document type for verification
+                localStorage.setItem('temp_document_type', formData.documentType);
                 setShowVerificationDialog(true);
 
                 // Clear the form data for security but keep the identifier for verification
@@ -226,10 +229,17 @@ function RegisterForm() {
         setValidationErrors({});
 
         try {
+            // Get the document type from localStorage
+            const documentType = localStorage.getItem('temp_document_type') || 'idNumber';
+
             await dispatch(confirmRegistration({
                 idNumber: unverifiedUser,
-                code: verificationCode
+                code: verificationCode,
+                documentType: documentType // Pass document type for proper padding
             }));
+
+            // Clean up the temporary storage
+            localStorage.removeItem('temp_document_type');
         } catch (error) {
             console.error('Verification error:', error);
         } finally {
