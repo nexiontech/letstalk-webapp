@@ -151,11 +151,25 @@
   .form-group {
       position: relative;
       transition: all 0.3s ease;
+      width: 100%;
   }
 
   /* Form group spacing */
   .form-group + .form-group {
       margin-top: 0.5rem;
+  }
+
+  /* Form row for side-by-side fields */
+  .form-row {
+      display: flex;
+      gap: 1rem;
+      width: 100%;
+  }
+
+  /* Half-width form groups for side-by-side fields */
+  .half-width {
+      flex: 1;
+      min-width: 0; /* Prevent overflow */
   }
 
   .input-with-icon {
@@ -164,7 +178,32 @@
       align-items: center;
   }
 
-  /* Icon styles removed */
+  /* Icon styles */
+  .input-icon {
+      position: absolute;
+      left: 1rem;
+      color: var(--color-primary);
+      font-size: 1rem;
+      z-index: 1;
+  }
+
+  .input-with-icon input {
+      padding-left: 2.5rem !important; /* Make room for the icon */
+  }
+
+  /* Info icon for tooltips */
+  .info-icon {
+      position: absolute;
+      right: 1rem;
+      color: var(--color-secondary);
+      cursor: help;
+      transition: all 0.3s ease;
+  }
+
+  .info-icon:hover {
+      color: var(--color-secondary-dark);
+      transform: scale(1.1);
+  }
 
   .form-group input {
       width: 100%;

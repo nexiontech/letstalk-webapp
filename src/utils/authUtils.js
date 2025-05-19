@@ -122,6 +122,73 @@ export const validateOTP = (otp) => {
 };
 
 /**
+ * Validates a South African phone number
+ * @param {string} phoneNumber
+ * @returns {Object} - Validation result with isValid flag and error message
+ */
+export const validatePhoneNumber = (phoneNumber) => {
+    // Allow empty phone number since it's optional
+    if (!phoneNumber) {
+        return { isValid: true };
+    }
+
+    // Remove spaces, dashes, and parentheses
+    const cleanedNumber = phoneNumber.replace(/[\s\-()]/g, '');
+
+    // Check if it's a valid South African number
+    // Format can be: +27XXXXXXXXX or 0XXXXXXXXX (10 digits after the prefix)
+    const saPhoneRegex = /^(\+27|0)[1-9][0-9]{8}$/;
+
+    if (!saPhoneRegex.test(cleanedNumber)) {
+        return {
+            isValid: false,
+            error: 'Please enter a valid South African phone number (e.g., +27 XX XXX XXXX or 0XX XXX XXXX)'
+        };
+    }
+
+    return { isValid: true };
+};
+
+/**
+ * Validates a passport number
+ * @param {string} passportNumber
+ * @returns {Object} - Validation result with isValid flag and error message
+ */
+export const validatePassportNumber = (passportNumber) => {
+    if (!passportNumber) {
+        return { isValid: false, error: 'Passport number is required' };
+    }
+
+    // Passport numbers are typically 8-9 characters, alphanumeric
+    // This is a general validation, specific country formats may vary
+    const passportRegex = /^[A-Z0-9]{6,12}$/i;
+
+    if (!passportRegex.test(passportNumber)) {
+        return {
+            isValid: false,
+            error: 'Please enter a valid passport number (6-12 alphanumeric characters)'
+        };
+    }
+
+    return { isValid: true };
+};
+
+/**
+ * Capitalizes the first letter of each word in a string
+ * @param {string} str - The string to capitalize
+ * @returns {string} - The capitalized string
+ */
+export const capitalizeWords = (str) => {
+    if (!str) return '';
+
+    return str
+        .toLowerCase()
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+};
+
+/**
  * Formats a user object from Cognito
  * @param {object} cognitoUser - The user object from Cognito
  * @param {boolean} hasIdentityPoolAccess - Whether the user has Identity Pool access
