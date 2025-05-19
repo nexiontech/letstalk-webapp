@@ -1,9 +1,9 @@
 /*src/components/ForgotPasswordForm.jsx*/
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Alert, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
+import { Alert, CircularProgress } from '@mui/material';
 import { validateIdNumber } from '../utils/authUtils';
 import './AuthForms.css';
 
@@ -47,7 +47,8 @@ function ForgotPasswordForm() {
             } else {
                 setError(result.error || 'Failed to request password reset. Please try again.');
             }
-        } catch (err) {
+        } catch (error) {
+            console.error('Password reset request error:', error);
             setError('An unexpected error occurred. Please try again.');
         } finally {
             setIsSubmitting(false);
@@ -90,7 +91,8 @@ function ForgotPasswordForm() {
             } else {
                 setError(result.error || 'Failed to reset password. Please try again.');
             }
-        } catch (err) {
+        } catch (error) {
+            console.error('Password reset confirmation error:', error);
             setError('An unexpected error occurred. Please try again.');
         } finally {
             setIsSubmitting(false);

@@ -48,7 +48,6 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function AppContent() {
-    const { isAuthenticated } = useAuth();
     const location = useLocation();
     // State to control initial minimized state of the chatbot
     const [isChatbotInitiallyMinimized, setIsChatbotInitiallyMinimized] = useState(true);
