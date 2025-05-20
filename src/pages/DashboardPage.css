@@ -40,6 +40,8 @@
 /* Weather widget styling is now in WeatherWidget.css */
 .dashboard-weather-widget {
   min-width: 220px;
+  position: relative;
+  z-index: 10; /* Ensure the weather widget and its modal appear above other elements */
 }
 
 /* Dashboard Content */
