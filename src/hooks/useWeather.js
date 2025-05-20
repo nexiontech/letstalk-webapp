@@ -34,7 +34,7 @@ const useWeather = ({ autoFetch = true, temperatureUnit = 'C' } = {}) => {
 
   /**
    * Fetch weather data for a specific location or the current location
-   * @param {Object} customLocation - Optional custom location coordinates
+   * @param {Object} customLocation - Optional custom location coordinates with name
    */
   const fetchWeatherData = async (customLocation) => {
     setIsLoading(true);
@@ -43,11 +43,16 @@ const useWeather = ({ autoFetch = true, temperatureUnit = 'C' } = {}) => {
     try {
       // Get the user's location or use custom location if provided
       let userLocation;
+      let locationName = null;
 
       if (customLocation) {
         // Use the provided custom location
         userLocation = customLocation;
-        console.log('Using custom location:', userLocation);
+        // If the custom location has a name property, save it
+        if (customLocation.name) {
+          locationName = customLocation.name;
+        }
+        console.log('Using custom location:', userLocation, 'with name:', locationName);
       } else {
         try {
           // Try to get the user's current location
@@ -56,6 +61,7 @@ const useWeather = ({ autoFetch = true, temperatureUnit = 'C' } = {}) => {
           console.warn('Could not get user location:', locationError.message);
           // Fall back to default location
           userLocation = locationService.getDefaultLocation();
+          locationName = 'Johannesburg'; // Default location name
         }
       }
 
@@ -67,6 +73,11 @@ const useWeather = ({ autoFetch = true, temperatureUnit = 'C' } = {}) => {
         userLocation.latitude,
         userLocation.longitude
       );
+
+      // If we have a custom location name, override the one from the API
+      if (locationName) {
+        data.current.location = locationName;
+      }
 
       setWeatherData(data);
     } catch (err) {
