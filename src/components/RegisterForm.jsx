@@ -440,34 +440,65 @@ function RegisterForm() {
                             name="documentType"
                             value={formData.documentType}
                             onChange={handleChange}
+                            style={{ width: '100%', display: 'flex', justifyContent: 'flex-start', gap: '20px' }}
                         >
                             <FormControlLabel
                                 value="idNumber"
                                 control={<Radio />}
                                 label="South African ID"
                                 disabled={isSubmitting}
+                                style={{
+                                    flexShrink: 0,
+                                    whiteSpace: 'nowrap',
+                                    marginRight: '20px',
+                                    height: '40px' // Match height with passport option
+                                }}
                             />
-                            <FormControlLabel
-                                value="passport"
-                                control={<Radio />}
-                                label={
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        Passport
-                                        <span style={{
-                                            marginLeft: '8px',
-                                            fontSize: '0.7rem',
-                                            padding: '2px 6px',
-                                            backgroundColor: 'var(--color-secondary-light)',
-                                            color: 'var(--color-secondary-dark)',
-                                            borderRadius: '10px',
-                                            fontWeight: 'bold'
-                                        }}>
-                                            Coming Soon
-                                        </span>
-                                    </div>
-                                }
-                                disabled={true} // Always disabled
-                            />
+                            {/* Custom passport option with fake radio button */}
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginLeft: '0px',
+                                opacity: 0.6,
+                                whiteSpace: 'nowrap',
+                                flexShrink: 0,
+                                height: '40px' // Match height of the FormControlLabel
+                            }}>
+                                {/* Fake radio button circle */}
+                                <div style={{
+                                    width: '20px',
+                                    height: '20px',
+                                    borderRadius: '50%',
+                                    border: '2px solid #bdbdbd',
+                                    marginRight: '9px',
+                                    marginLeft: '12px', // Adjusted to match MUI's padding
+                                    boxSizing: 'border-box',
+                                    display: 'inline-block',
+                                    flexShrink: 0
+                                }}></div>
+                                <span style={{
+                                    display: 'inline-block',
+                                    marginRight: '8px',
+                                    fontSize: '1rem', // Match MUI's font size
+                                    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif', // Match MUI's font
+                                    lineHeight: '1.5' // Match MUI's line height
+                                }}>Passport</span>
+                                <span style={{
+                                    fontSize: '0.7rem',
+                                    padding: '2px 6px',
+                                    backgroundColor: 'var(--color-secondary-light)',
+                                    color: 'var(--color-secondary-dark)',
+                                    borderRadius: '10px',
+                                    fontWeight: 'bold',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    height: '18px',
+                                    whiteSpace: 'nowrap',
+                                    flexShrink: 0
+                                }}>
+                                    Coming Soon
+                                </span>
+                            </div>
                         </RadioGroup>
                     </FormControl>
                 </div>
