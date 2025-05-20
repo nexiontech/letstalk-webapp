@@ -17,22 +17,46 @@ const useWeather = ({ autoFetch = true, temperatureUnit = 'C' } = {}) => {
   const [error, setError] = useState(null);
   const [unit, setUnit] = useState(temperatureUnit);
 
+
+
   /**
-   * Fetch weather data for the current location
+   * Refresh the weather data or change the temperature unit
+   * @param {string} newUnit - Optional new temperature unit
+   * @param {Object} customLocation - Optional custom location coordinates
    */
-  const fetchWeatherData = async () => {
+  const refreshWeather = (newUnit, customLocation) => {
+    if (newUnit && newUnit !== unit) {
+      setUnit(newUnit);
+    } else {
+      fetchWeatherData(customLocation);
+    }
+  };
+
+  /**
+   * Fetch weather data for a specific location or the current location
+   * @param {Object} customLocation - Optional custom location coordinates
+   */
+  const fetchWeatherData = async (customLocation) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      // Get the user's location
+      // Get the user's location or use custom location if provided
       let userLocation;
-      try {
-        userLocation = await locationService.getCurrentPosition();
-      } catch (locationError) {
-        console.warn('Could not get user location:', locationError.message);
-        // Fall back to default location
-        userLocation = locationService.getDefaultLocation();
+
+      if (customLocation) {
+        // Use the provided custom location
+        userLocation = customLocation;
+        console.log('Using custom location:', userLocation);
+      } else {
+        try {
+          // Try to get the user's current location
+          userLocation = await locationService.getCurrentPosition();
+        } catch (locationError) {
+          console.warn('Could not get user location:', locationError.message);
+          // Fall back to default location
+          userLocation = locationService.getDefaultLocation();
+        }
       }
 
       // Save the location
@@ -50,18 +74,6 @@ const useWeather = ({ autoFetch = true, temperatureUnit = 'C' } = {}) => {
       setError(err.message || 'Failed to fetch weather data');
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  /**
-   * Refresh the weather data or change the temperature unit
-   * @param {string} newUnit - Optional new temperature unit
-   */
-  const refreshWeather = (newUnit) => {
-    if (newUnit && newUnit !== unit) {
-      setUnit(newUnit);
-    } else {
-      fetchWeatherData();
     }
   };
 
