@@ -172,18 +172,16 @@ function RegisterForm() {
             // Combine first and last name for Cognito
             const fullName = `${formData.firstName} ${formData.lastName}`.trim();
 
-            // Determine which identifier to use (ID number or passport)
-            const identifier = formData.documentType === 'idNumber'
-                ? formData.idNumber
-                : formData.passportNumber;
+            // Only allow South African ID numbers for now
+            // Passport registration is disabled with "Coming Soon" message
+            const identifier = formData.idNumber;
 
             const resultAction = await dispatch(registerUser({
-                idNumber: identifier, // Use the selected identifier as username
+                idNumber: identifier, // Use South African ID number as username
                 name: fullName,
                 email: formData.email,
-                password: formData.password,
-                // Include document type for the passport number padding workaround
-                documentType: formData.documentType
+                password: formData.password
+                // No document type needed since we only support ID numbers now
             }));
 
             if (registerUser.fulfilled.match(resultAction)) {
@@ -305,18 +303,16 @@ function RegisterForm() {
                 [name]: sanitizedValue
             }));
         } else if (name === 'documentType') {
-            // When changing document type, clear any validation errors for the other document type
+            // Passport option is disabled, so always use ID Number
+            // This is a safeguard in case someone tries to select passport programmatically
             const newErrors = { ...validationErrors };
-            if (value === 'idNumber') {
-                delete newErrors.passportNumber;
-            } else {
-                delete newErrors.idNumber;
-            }
+            delete newErrors.passportNumber;
             setValidationErrors(newErrors);
 
+            // Always set to idNumber regardless of the selected value
             setFormData(prev => ({
                 ...prev,
-                [name]: value
+                [name]: 'idNumber'
             }));
         } else {
             setFormData(prev => ({
@@ -444,19 +440,65 @@ function RegisterForm() {
                             name="documentType"
                             value={formData.documentType}
                             onChange={handleChange}
+                            style={{ width: '100%', display: 'flex', justifyContent: 'flex-start', gap: '20px' }}
                         >
                             <FormControlLabel
                                 value="idNumber"
                                 control={<Radio />}
                                 label="South African ID"
                                 disabled={isSubmitting}
+                                style={{
+                                    flexShrink: 0,
+                                    whiteSpace: 'nowrap',
+                                    marginRight: '20px',
+                                    height: '40px' // Match height with passport option
+                                }}
                             />
-                            <FormControlLabel
-                                value="passport"
-                                control={<Radio />}
-                                label="Passport"
-                                disabled={isSubmitting}
-                            />
+                            {/* Custom passport option with fake radio button */}
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginLeft: '0px',
+                                opacity: 0.6,
+                                whiteSpace: 'nowrap',
+                                flexShrink: 0,
+                                height: '40px' // Match height of the FormControlLabel
+                            }}>
+                                {/* Fake radio button circle */}
+                                <div style={{
+                                    width: '20px',
+                                    height: '20px',
+                                    borderRadius: '50%',
+                                    border: '2px solid #bdbdbd',
+                                    marginRight: '9px',
+                                    marginLeft: '12px', // Adjusted to match MUI's padding
+                                    boxSizing: 'border-box',
+                                    display: 'inline-block',
+                                    flexShrink: 0
+                                }}></div>
+                                <span style={{
+                                    display: 'inline-block',
+                                    marginRight: '8px',
+                                    fontSize: '1rem', // Match MUI's font size
+                                    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif', // Match MUI's font
+                                    lineHeight: '1.5' // Match MUI's line height
+                                }}>Passport</span>
+                                <span style={{
+                                    fontSize: '0.7rem',
+                                    padding: '2px 6px',
+                                    backgroundColor: 'var(--color-secondary-light)',
+                                    color: 'var(--color-secondary-dark)',
+                                    borderRadius: '10px',
+                                    fontWeight: 'bold',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    height: '18px',
+                                    whiteSpace: 'nowrap',
+                                    flexShrink: 0
+                                }}>
+                                    Coming Soon
+                                </span>
+                            </div>
                         </RadioGroup>
                     </FormControl>
                 </div>
@@ -583,16 +625,19 @@ function RegisterForm() {
             <Dialog
                 open={showVerificationDialog}
                 onClose={() => !isSubmitting && setShowVerificationDialog(false)}
-                PaperProps={{
-                    style: {
-                        borderRadius: '16px',
-                        padding: '10px',
-                        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.05)',
-                        maxWidth: '450px',
-                        width: '100%',
-                        background: 'linear-gradient(145deg, #ffffff, #f8f9fa)',
-                        border: '1px solid rgba(14, 70, 73, 0.05)',
-                        overflow: 'hidden'
+                slotProps={{
+                    paper: {
+                        elevation: 3, // Using a valid elevation value (0-16)
+                        sx: {
+                            borderRadius: '16px',
+                            padding: '10px',
+                            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.05)',
+                            maxWidth: '450px',
+                            width: '100%',
+                            background: 'linear-gradient(145deg, #ffffff, #f8f9fa)',
+                            border: '1px solid rgba(14, 70, 73, 0.05)',
+                            overflow: 'hidden'
+                        }
                     }
                 }}
             >
@@ -638,16 +683,19 @@ function RegisterForm() {
                         disabled={isSubmitting}
                         error={!!validationErrors.verificationCode}
                         helperText={validationErrors.verificationCode}
-                        InputProps={{
-                            style: {
-                                borderRadius: '12px',
-                                padding: '5px 15px',
-                                fontSize: '1.1rem',
-                                letterSpacing: '2px'
+                        slotProps={{
+                            input: {
+                                sx: {
+                                    borderRadius: '12px',
+                                    padding: '5px 15px',
+                                    fontSize: '1.1rem',
+                                    letterSpacing: '2px'
+                                }
                             }
                         }}
                         sx={{
                             '& .MuiOutlinedInput-root': {
+                                borderRadius: '12px',
                                 '&:hover fieldset': {
                                     borderColor: 'var(--color-primary-light)',
                                 },

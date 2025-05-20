@@ -30,20 +30,14 @@ function ForgotPasswordForm() {
     const handleRequestReset = async (e) => {
         e.preventDefault();
 
-        // Validate identifier based on document type
-        if (documentType === 'idNumber') {
-            if (!validateIdNumber(identifier)) {
-                setError('Please enter a valid 13-digit South African ID number');
-                return;
-            }
-        } else {
-            // Validate passport number
-            const passportValidation = validatePassportNumber(identifier);
-            if (!passportValidation.isValid) {
-                setError(passportValidation.error);
-                return;
-            }
+        // Always validate as South African ID since passport option is disabled
+        if (!validateIdNumber(identifier)) {
+            setError('Please enter a valid 13-digit South African ID number');
+            return;
         }
+
+        // Force document type to be idNumber
+        setDocumentType('idNumber');
 
         setIsSubmitting(true);
         setError(null);
@@ -151,20 +145,66 @@ function ForgotPasswordForm() {
                                     row
                                     name="documentType"
                                     value={documentType}
-                                    onChange={(e) => setDocumentType(e.target.value)}
+                                    onChange={(e) => setDocumentType('idNumber')} // Always set to idNumber
+                                    style={{ width: '100%', display: 'flex', justifyContent: 'flex-start', gap: '20px' }}
                                 >
                                     <FormControlLabel
                                         value="idNumber"
                                         control={<Radio />}
                                         label="South African ID"
                                         disabled={isSubmitting}
+                                        style={{
+                                            flexShrink: 0,
+                                            whiteSpace: 'nowrap',
+                                            marginRight: '20px',
+                                            height: '40px' // Match height with passport option
+                                        }}
                                     />
-                                    <FormControlLabel
-                                        value="passport"
-                                        control={<Radio />}
-                                        label="Passport"
-                                        disabled={isSubmitting}
-                                    />
+                                    {/* Custom passport option with fake radio button */}
+                                    <div style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        marginLeft: '0px',
+                                        opacity: 0.6,
+                                        whiteSpace: 'nowrap',
+                                        flexShrink: 0,
+                                        height: '40px' // Match height of the FormControlLabel
+                                    }}>
+                                        {/* Fake radio button circle */}
+                                        <div style={{
+                                            width: '20px',
+                                            height: '20px',
+                                            borderRadius: '50%',
+                                            border: '2px solid #bdbdbd',
+                                            marginRight: '9px',
+                                            marginLeft: '12px', // Adjusted to match MUI's padding
+                                            boxSizing: 'border-box',
+                                            display: 'inline-block',
+                                            flexShrink: 0
+                                        }}></div>
+                                        <span style={{
+                                            display: 'inline-block',
+                                            marginRight: '8px',
+                                            fontSize: '1rem', // Match MUI's font size
+                                            fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif', // Match MUI's font
+                                            lineHeight: '1.5' // Match MUI's line height
+                                        }}>Passport</span>
+                                        <span style={{
+                                            fontSize: '0.7rem',
+                                            padding: '2px 6px',
+                                            backgroundColor: 'var(--color-secondary-light)',
+                                            color: 'var(--color-secondary-dark)',
+                                            borderRadius: '10px',
+                                            fontWeight: 'bold',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            height: '18px',
+                                            whiteSpace: 'nowrap',
+                                            flexShrink: 0
+                                        }}>
+                                            Coming Soon
+                                        </span>
+                                    </div>
                                 </RadioGroup>
                             </FormControl>
                         </div>
@@ -175,25 +215,16 @@ function ForgotPasswordForm() {
                                 type="text"
                                 value={identifier}
                                 onChange={(e) => {
-                                    // Handle different validation for ID vs passport
-                                    if (documentType === 'idNumber') {
-                                        // Only allow digits and limit to 13 characters for ID
-                                        const sanitizedValue = e.target.value.replace(/[^0-9]/g, '').slice(0, 13);
-                                        setIdentifier(sanitizedValue);
-                                    } else {
-                                        // Allow alphanumeric for passport and convert to uppercase
-                                        const sanitizedValue = e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 12);
-                                        setIdentifier(sanitizedValue);
-                                    }
+                                    // Only allow digits and limit to 13 characters for South African ID
+                                    const sanitizedValue = e.target.value.replace(/[^0-9]/g, '').slice(0, 13);
+                                    setIdentifier(sanitizedValue);
                                 }}
-                                placeholder={documentType === 'idNumber' ? "ID Number" : "Passport Number"}
+                                placeholder="ID Number"
                                 disabled={isSubmitting}
                                 required
                             />
                             <div className="form-hint">
-                                {documentType === 'idNumber'
-                                    ? 'South African ID Number (13 digits)'
-                                    : 'Passport Number (6-12 alphanumeric characters)'}
+                                South African ID Number (13 digits)
                             </div>
                         </div>
 
