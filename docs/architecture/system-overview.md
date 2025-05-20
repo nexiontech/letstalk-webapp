@@ -91,6 +91,7 @@ Reusable components used throughout the application:
 - `Footer.jsx`: Page footer
 - `UserProfileForm.jsx`: Form for editing user profile
 - `IdNumberInfo.jsx`: Display of ID number information
+- `WeatherWidget.jsx`: Dashboard weather display with location selection
 
 #### Services
 
