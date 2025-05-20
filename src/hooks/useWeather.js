@@ -17,22 +17,52 @@ const useWeather = ({ autoFetch = true, temperatureUnit = 'C' } = {}) => {
   const [error, setError] = useState(null);
   const [unit, setUnit] = useState(temperatureUnit);
 
+
+
   /**
-   * Fetch weather data for the current location
+   * Refresh the weather data or change the temperature unit
+   * @param {string} newUnit - Optional new temperature unit
+   * @param {Object} customLocation - Optional custom location coordinates
    */
-  const fetchWeatherData = async () => {
+  const refreshWeather = (newUnit, customLocation) => {
+    if (newUnit && newUnit !== unit) {
+      setUnit(newUnit);
+    } else {
+      fetchWeatherData(customLocation);
+    }
+  };
+
+  /**
+   * Fetch weather data for a specific location or the current location
+   * @param {Object} customLocation - Optional custom location coordinates with name
+   */
+  const fetchWeatherData = async (customLocation) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      // Get the user's location
+      // Get the user's location or use custom location if provided
       let userLocation;
-      try {
-        userLocation = await locationService.getCurrentPosition();
-      } catch (locationError) {
-        console.warn('Could not get user location:', locationError.message);
-        // Fall back to default location
-        userLocation = locationService.getDefaultLocation();
+      let locationName = null;
+
+      if (customLocation) {
+        // Use the provided custom location
+        userLocation = customLocation;
+        // If the custom location has a name property, save it
+        if (customLocation.name) {
+          locationName = customLocation.name;
+        }
+        console.log('Using custom location:', userLocation, 'with name:', locationName);
+      } else {
+        try {
+          // Try to get the user's current location
+          userLocation = await locationService.getCurrentPosition();
+        } catch (locationError) {
+          console.warn('Could not get user location:', locationError.message);
+          // Fall back to default location
+          userLocation = locationService.getDefaultLocation();
+          locationName = 'Johannesburg'; // Default location name
+        }
       }
 
       // Save the location
@@ -44,24 +74,17 @@ const useWeather = ({ autoFetch = true, temperatureUnit = 'C' } = {}) => {
         userLocation.longitude
       );
 
+      // If we have a custom location name, override the one from the API
+      if (locationName) {
+        data.current.location = locationName;
+      }
+
       setWeatherData(data);
     } catch (err) {
       console.error('Error fetching weather data:', err);
       setError(err.message || 'Failed to fetch weather data');
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  /**
-   * Refresh the weather data or change the temperature unit
-   * @param {string} newUnit - Optional new temperature unit
-   */
-  const refreshWeather = (newUnit) => {
-    if (newUnit && newUnit !== unit) {
-      setUnit(newUnit);
-    } else {
-      fetchWeatherData();
     }
   };
 
