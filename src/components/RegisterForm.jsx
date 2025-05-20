@@ -172,18 +172,16 @@ function RegisterForm() {
             // Combine first and last name for Cognito
             const fullName = `${formData.firstName} ${formData.lastName}`.trim();
 
-            // Determine which identifier to use (ID number or passport)
-            const identifier = formData.documentType === 'idNumber'
-                ? formData.idNumber
-                : formData.passportNumber;
+            // Only allow South African ID numbers for now
+            // Passport registration is disabled with "Coming Soon" message
+            const identifier = formData.idNumber;
 
             const resultAction = await dispatch(registerUser({
-                idNumber: identifier, // Use the selected identifier as username
+                idNumber: identifier, // Use South African ID number as username
                 name: fullName,
                 email: formData.email,
-                password: formData.password,
-                // Include document type for the passport number padding workaround
-                documentType: formData.documentType
+                password: formData.password
+                // No document type needed since we only support ID numbers now
             }));
 
             if (registerUser.fulfilled.match(resultAction)) {
@@ -305,18 +303,16 @@ function RegisterForm() {
                 [name]: sanitizedValue
             }));
         } else if (name === 'documentType') {
-            // When changing document type, clear any validation errors for the other document type
+            // Passport option is disabled, so always use ID Number
+            // This is a safeguard in case someone tries to select passport programmatically
             const newErrors = { ...validationErrors };
-            if (value === 'idNumber') {
-                delete newErrors.passportNumber;
-            } else {
-                delete newErrors.idNumber;
-            }
+            delete newErrors.passportNumber;
             setValidationErrors(newErrors);
 
+            // Always set to idNumber regardless of the selected value
             setFormData(prev => ({
                 ...prev,
-                [name]: value
+                [name]: 'idNumber'
             }));
         } else {
             setFormData(prev => ({
@@ -454,8 +450,23 @@ function RegisterForm() {
                             <FormControlLabel
                                 value="passport"
                                 control={<Radio />}
-                                label="Passport"
-                                disabled={isSubmitting}
+                                label={
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        Passport
+                                        <span style={{
+                                            marginLeft: '8px',
+                                            fontSize: '0.7rem',
+                                            padding: '2px 6px',
+                                            backgroundColor: 'var(--color-secondary-light)',
+                                            color: 'var(--color-secondary-dark)',
+                                            borderRadius: '10px',
+                                            fontWeight: 'bold'
+                                        }}>
+                                            Coming Soon
+                                        </span>
+                                    </div>
+                                }
+                                disabled={true} // Always disabled
                             />
                         </RadioGroup>
                     </FormControl>

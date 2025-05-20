@@ -153,21 +153,19 @@ export const registerUser = createAsyncThunk(
       // Log configuration for debugging
       logCognitoConfig('Registration', cognitoConfig);
 
-      // TEMPORARY WORKAROUND: Pad passport numbers to meet the 13-character minimum length requirement
-      // This will be removed when Cognito is properly configured for passport numbers
-      const documentType = userData.documentType || 'idNumber';
-      const paddedIdentifier = padIdentifierForCognito(userData.idNumber, documentType);
+      // We now only support South African ID numbers
+      // Passport support is disabled with "Coming Soon" message
+      const paddedIdentifier = userData.idNumber; // No padding needed for ID numbers
 
-      console.log(`Document type: ${documentType}, Original identifier: ${userData.idNumber}, Padded: ${paddedIdentifier}`);
+      console.log(`Using South African ID number: ${userData.idNumber}`);
 
       // Prepare user attributes
       const userAttributes = {
         email: userData.email,
         name: userData.name,
-        'custom:idNumber': paddedIdentifier,
-        // Store the document type for future reference
-        'custom:documentType': documentType
-        // Note: We're not storing 'custom:originalIdentifier' as it's not configured in Cognito
+        'custom:idNumber': paddedIdentifier
+        // Note: We're not storing 'custom:documentType' or 'custom:originalIdentifier'
+        // as they're not configured in the Cognito User Pool schema
       };
 
       // Using our custom sign up function with Identity Pool ID
