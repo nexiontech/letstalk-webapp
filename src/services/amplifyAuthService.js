@@ -165,9 +165,9 @@ export const registerUser = createAsyncThunk(
         email: userData.email,
         name: userData.name,
         'custom:idNumber': paddedIdentifier,
-        // Store the original document type and identifier for future reference
-        'custom:documentType': documentType,
-        'custom:originalIdentifier': userData.idNumber
+        // Store the document type for future reference
+        'custom:documentType': documentType
+        // Note: We're not storing 'custom:originalIdentifier' as it's not configured in Cognito
       };
 
       // Using our custom sign up function with Identity Pool ID
@@ -207,6 +207,10 @@ export const registerUser = createAsyncThunk(
             return rejectWithValue('Please provide a valid email address.');
           } else if (parsedError.type === 'InvalidParameterException' && parsedError.message.includes('idNumber')) {
             return rejectWithValue('Please provide a valid South African ID number.');
+          } else if (parsedError.message && parsedError.message.includes('Attributes did not conform to the schema')) {
+            // Handle schema validation errors
+            console.error('Schema validation error:', parsedError.message);
+            return rejectWithValue('Registration failed due to invalid attributes. Please contact support.');
           }
 
           // Return the parsed error message if no specific case matches
@@ -224,6 +228,10 @@ export const registerUser = createAsyncThunk(
         return rejectWithValue('Password does not meet requirements. It must be at least 8 characters long and contain uppercase, lowercase, numbers, and special characters.');
       } else if (error.message && error.message.includes('InvalidParameterException') && error.message.includes('email')) {
         return rejectWithValue('Please provide a valid email address.');
+      } else if (error.message && error.message.includes('Attributes did not conform to the schema')) {
+        // Handle schema validation errors
+        console.error('Schema validation error:', error.message);
+        return rejectWithValue('Registration failed due to invalid attributes. Please contact support.');
       }
 
       return rejectWithValue(error.message || 'Registration failed');
