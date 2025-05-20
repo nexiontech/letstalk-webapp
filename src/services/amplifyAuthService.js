@@ -153,21 +153,19 @@ export const registerUser = createAsyncThunk(
       // Log configuration for debugging
       logCognitoConfig('Registration', cognitoConfig);
 
-      // TEMPORARY WORKAROUND: Pad passport numbers to meet the 13-character minimum length requirement
-      // This will be removed when Cognito is properly configured for passport numbers
-      const documentType = userData.documentType || 'idNumber';
-      const paddedIdentifier = padIdentifierForCognito(userData.idNumber, documentType);
+      // We now only support South African ID numbers
+      // Passport support is disabled with "Coming Soon" message
+      const paddedIdentifier = userData.idNumber; // No padding needed for ID numbers
 
-      console.log(`Document type: ${documentType}, Original identifier: ${userData.idNumber}, Padded: ${paddedIdentifier}`);
+      console.log(`Using South African ID number: ${userData.idNumber}`);
 
       // Prepare user attributes
       const userAttributes = {
         email: userData.email,
         name: userData.name,
-        'custom:idNumber': paddedIdentifier,
-        // Store the original document type and identifier for future reference
-        'custom:documentType': documentType,
-        'custom:originalIdentifier': userData.idNumber
+        'custom:idNumber': paddedIdentifier
+        // Note: We're not storing 'custom:documentType' or 'custom:originalIdentifier'
+        // as they're not configured in the Cognito User Pool schema
       };
 
       // Using our custom sign up function with Identity Pool ID
@@ -207,6 +205,10 @@ export const registerUser = createAsyncThunk(
             return rejectWithValue('Please provide a valid email address.');
           } else if (parsedError.type === 'InvalidParameterException' && parsedError.message.includes('idNumber')) {
             return rejectWithValue('Please provide a valid South African ID number.');
+          } else if (parsedError.message && parsedError.message.includes('Attributes did not conform to the schema')) {
+            // Handle schema validation errors
+            console.error('Schema validation error:', parsedError.message);
+            return rejectWithValue('Registration failed due to invalid attributes. Please contact support.');
           }
 
           // Return the parsed error message if no specific case matches
@@ -224,6 +226,10 @@ export const registerUser = createAsyncThunk(
         return rejectWithValue('Password does not meet requirements. It must be at least 8 characters long and contain uppercase, lowercase, numbers, and special characters.');
       } else if (error.message && error.message.includes('InvalidParameterException') && error.message.includes('email')) {
         return rejectWithValue('Please provide a valid email address.');
+      } else if (error.message && error.message.includes('Attributes did not conform to the schema')) {
+        // Handle schema validation errors
+        console.error('Schema validation error:', error.message);
+        return rejectWithValue('Registration failed due to invalid attributes. Please contact support.');
       }
 
       return rejectWithValue(error.message || 'Registration failed');

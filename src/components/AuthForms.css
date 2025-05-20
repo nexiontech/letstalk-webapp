@@ -870,6 +870,63 @@
       animation: input-highlight 2s infinite;
   }
 
+  /* Material UI Radio Button Styles */
+  .MuiFormControlLabel-root {
+      margin-left: 0;
+      margin-right: 16px;
+  }
+
+  .MuiFormControlLabel-label {
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+  }
+
+  /* Remove extra circles/borders from radio buttons */
+  .MuiRadio-root {
+      padding: 9px;
+  }
+
+  .MuiRadio-root.Mui-disabled {
+      color: #bdbdbd !important;
+  }
+
+  /* Fix for disabled radio button appearance */
+  .MuiRadio-root.Mui-disabled .MuiSvgIcon-root {
+      fill: #bdbdbd !important;
+      opacity: 0.6 !important;
+  }
+
+  /* Remove any extra borders or outlines */
+  .MuiRadio-root.Mui-disabled {
+      outline: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      background: transparent !important;
+  }
+
+  /* Hide SVG elements in disabled radio buttons */
+  .MuiRadio-root.Mui-disabled .MuiSvgIcon-root {
+      display: none !important;
+  }
+
+  /* Additional selector to ensure the circles are hidden */
+  .MuiRadio-root.Mui-disabled svg {
+      visibility: hidden !important;
+      opacity: 0 !important;
+  }
+
+  /* Remove padding from disabled FormControlLabel */
+  .MuiFormControlLabel-root.Mui-disabled {
+      margin-left: 0 !important;
+      padding-left: 0 !important;
+  }
+
+  /* Remove any spacing from the control element */
+  .MuiFormControlLabel-root.Mui-disabled .MuiFormControlLabel-control {
+      display: none !important;
+  }
+
   /* Enhance buttons with gradient hover effect */
   .submit-button {
       background-size: 200% auto;
@@ -987,5 +1044,20 @@
 
       .half-width {
           width: 100%;
+      }
+
+      /* Ensure radio buttons and labels display properly */
+      .MuiFormControlLabel-root {
+          margin-right: 0;
+          margin-bottom: 8px;
+          display: flex;
+          align-items: flex-start;
+      }
+
+      /* Ensure "Coming Soon" label stays on the same line */
+      .MuiFormControlLabel-label {
+          display: inline-flex !important;
+          white-space: nowrap !important;
+          flex-wrap: nowrap !important;
       }
   }
