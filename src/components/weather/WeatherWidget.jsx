@@ -138,7 +138,11 @@ const WeatherWidget = ({
 
     // Call onRefresh with the new location if provided
     if (onRefresh && location) {
-      onRefresh(null, { latitude: location.latitude, longitude: location.longitude });
+      // Pass the complete location object including the name
+      onRefresh(null, location);
+    } else if (onRefresh) {
+      // If location is null (use current location), just pass null
+      onRefresh(null, null);
     }
   };
 
