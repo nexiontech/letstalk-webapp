@@ -34,6 +34,7 @@ This documentation is organized into the following sections:
 - Service issue reporting and tracking
 - Utility payment and management
 - Community engagement features
+- [Weather Widget](/docs/features/weather-widget.md) - Dashboard weather display with location selection
 
 ### [Setup](/docs/setup/)
 - Environment setup instructions
