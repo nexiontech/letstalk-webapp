@@ -107,6 +107,25 @@
   padding: 4px;
 }
 
+.location-search {
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.location-search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.location-search-input:focus {
+  border-color: var(--color-primary);
+}
+
 .location-options {
   display: flex;
   flex-direction: column;
@@ -122,10 +141,24 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
   font-size: 14px;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+}
+
+.location-name {
+  color: var(--color-text);
 }
 
 .location-option:hover {
   background-color: #f5f5f5;
+}
+
+.no-results {
+  padding: 16px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
 }
 
 .location-modal-footer {
@@ -146,6 +179,11 @@
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.2s ease;
+}
+
+.use-current-location span {
+  color: var(--color-primary-dark);
+  font-weight: 500;
 }
 
 .use-current-location:hover {
