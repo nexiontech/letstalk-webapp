@@ -185,10 +185,13 @@ function LoginForm() {
                 setLoginError(null);
             }
         } else if (name === 'documentType') {
-            // When changing document type, clear the identifier field
+            // Passport option is disabled with "Coming Soon" message
+            // This is a safeguard in case someone tries to select passport programmatically
+
+            // Always set to idNumber regardless of the selected value
             setFormData((prev) => ({
                 ...prev,
-                [name]: value,
+                [name]: 'idNumber',
                 identifier: '', // Reset identifier when switching document types
             }));
 
@@ -233,19 +236,65 @@ function LoginForm() {
                             name="documentType"
                             value={formData.documentType}
                             onChange={handleChange}
+                            style={{ width: '100%', display: 'flex', justifyContent: 'flex-start', gap: '20px' }}
                         >
                             <FormControlLabel
                                 value="idNumber"
                                 control={<Radio />}
                                 label="South African ID"
                                 disabled={isSubmitting}
+                                style={{
+                                    flexShrink: 0,
+                                    whiteSpace: 'nowrap',
+                                    marginRight: '20px',
+                                    height: '40px' // Match height with passport option
+                                }}
                             />
-                            <FormControlLabel
-                                value="passport"
-                                control={<Radio />}
-                                label="Passport"
-                                disabled={isSubmitting}
-                            />
+                            {/* Custom passport option with fake radio button */}
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginLeft: '0px',
+                                opacity: 0.6,
+                                whiteSpace: 'nowrap',
+                                flexShrink: 0,
+                                height: '40px' // Match height of the FormControlLabel
+                            }}>
+                                {/* Fake radio button circle */}
+                                <div style={{
+                                    width: '20px',
+                                    height: '20px',
+                                    borderRadius: '50%',
+                                    border: '2px solid #bdbdbd',
+                                    marginRight: '9px',
+                                    marginLeft: '12px', // Adjusted to match MUI's padding
+                                    boxSizing: 'border-box',
+                                    display: 'inline-block',
+                                    flexShrink: 0
+                                }}></div>
+                                <span style={{
+                                    display: 'inline-block',
+                                    marginRight: '8px',
+                                    fontSize: '1rem', // Match MUI's font size
+                                    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif', // Match MUI's font
+                                    lineHeight: '1.5' // Match MUI's line height
+                                }}>Passport</span>
+                                <span style={{
+                                    fontSize: '0.7rem',
+                                    padding: '2px 6px',
+                                    backgroundColor: 'var(--color-secondary-light)',
+                                    color: 'var(--color-secondary-dark)',
+                                    borderRadius: '10px',
+                                    fontWeight: 'bold',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    height: '18px',
+                                    whiteSpace: 'nowrap',
+                                    flexShrink: 0
+                                }}>
+                                    Coming Soon
+                                </span>
+                            </div>
                         </RadioGroup>
                     </FormControl>
                 </div>
@@ -343,16 +392,18 @@ function LoginForm() {
             <Dialog
                 open={showVerificationDialog}
                 onClose={() => setShowVerificationDialog(false)}
-                PaperProps={{
-                    style: {
-                        borderRadius: '16px',
-                        padding: '10px',
-                        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.05)',
-                        maxWidth: '450px',
-                        width: '100%',
-                        background: 'linear-gradient(145deg, #ffffff, #f8f9fa)',
-                        border: '1px solid rgba(14, 70, 73, 0.05)',
-                        overflow: 'hidden'
+                slotProps={{
+                    paper: {
+                        sx: {
+                            borderRadius: '16px',
+                            padding: '10px',
+                            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.05)',
+                            maxWidth: '450px',
+                            width: '100%',
+                            background: 'linear-gradient(145deg, #ffffff, #f8f9fa)',
+                            border: '1px solid rgba(14, 70, 73, 0.05)',
+                            overflow: 'hidden'
+                        }
                     }
                 }}
             >
@@ -396,12 +447,14 @@ function LoginForm() {
                         value={verificationCode}
                         onChange={(e) => setVerificationCode(e.target.value)}
                         disabled={isSubmitting}
-                        InputProps={{
-                            style: {
-                                borderRadius: '12px',
-                                padding: '5px 15px',
-                                fontSize: '1.1rem',
-                                letterSpacing: '2px'
+                        slotProps={{
+                            input: {
+                                sx: {
+                                    borderRadius: '12px',
+                                    padding: '5px 15px',
+                                    fontSize: '1.1rem',
+                                    letterSpacing: '2px'
+                                }
                             }
                         }}
                         sx={{
