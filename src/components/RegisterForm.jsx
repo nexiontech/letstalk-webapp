@@ -594,16 +594,19 @@ function RegisterForm() {
             <Dialog
                 open={showVerificationDialog}
                 onClose={() => !isSubmitting && setShowVerificationDialog(false)}
-                PaperProps={{
-                    style: {
-                        borderRadius: '16px',
-                        padding: '10px',
-                        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.05)',
-                        maxWidth: '450px',
-                        width: '100%',
-                        background: 'linear-gradient(145deg, #ffffff, #f8f9fa)',
-                        border: '1px solid rgba(14, 70, 73, 0.05)',
-                        overflow: 'hidden'
+                slotProps={{
+                    paper: {
+                        elevation: 3, // Using a valid elevation value (0-16)
+                        sx: {
+                            borderRadius: '16px',
+                            padding: '10px',
+                            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.05)',
+                            maxWidth: '450px',
+                            width: '100%',
+                            background: 'linear-gradient(145deg, #ffffff, #f8f9fa)',
+                            border: '1px solid rgba(14, 70, 73, 0.05)',
+                            overflow: 'hidden'
+                        }
                     }
                 }}
             >
@@ -649,16 +652,19 @@ function RegisterForm() {
                         disabled={isSubmitting}
                         error={!!validationErrors.verificationCode}
                         helperText={validationErrors.verificationCode}
-                        InputProps={{
-                            style: {
-                                borderRadius: '12px',
-                                padding: '5px 15px',
-                                fontSize: '1.1rem',
-                                letterSpacing: '2px'
+                        slotProps={{
+                            input: {
+                                sx: {
+                                    borderRadius: '12px',
+                                    padding: '5px 15px',
+                                    fontSize: '1.1rem',
+                                    letterSpacing: '2px'
+                                }
                             }
                         }}
                         sx={{
                             '& .MuiOutlinedInput-root': {
+                                borderRadius: '12px',
                                 '&:hover fieldset': {
                                     borderColor: 'var(--color-primary-light)',
                                 },
