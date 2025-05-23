@@ -78,20 +78,51 @@ Follow these steps to get the project running locally:
     cd letstalk-webapp
     ```
 
-2.  **Install dependencies:**
+2.  **Checkout the develop branch:**
+    ```bash
+    git checkout develop
+    ```
+
+3.  **Install dependencies:**
     ```bash
     npm install
     ```
 
-3.  **Environment Variables:**
+4.  **Set up LocalStack for AWS service emulation:**
+
+    Prerequisites:
+    - Docker and Docker Compose installed
+    - AWS CLI installed and configured
+
+    Start LocalStack:
+    ```bash
+    docker-compose up -d
+    ```
+
+    Initialize LocalStack services:
+    ```bash
+    ./init-localstack.sh
+    ```
+
+    Populate mock data (optional):
+    ```bash
+    node scripts/populate-mock-data.js
+    ```
+
+5.  **Environment Variables:**
     *   Create a `.env.local` file in the project root (this file is gitignored).
     *   Add variables prefixed with `VITE_` as needed.
     *   Required environment variables:
         ```
         # API Configuration
-        VITE_API_BASE_URL=http://localhost:3000/api
+        VITE_API_BASE_URL=http://localhost:4566/restapis/your-api-id/dev/_user_request_
 
-        # AWS Cognito Configuration
+        # AWS LocalStack Configuration
+        VITE_AWS_REGION=us-east-1
+        VITE_AWS_ENDPOINT=http://localhost:4566
+        VITE_USE_LOCALSTACK=true
+
+        # AWS Cognito Configuration (for real Cognito)
         VITE_COGNITO_REGION=us-east-1
         VITE_COGNITO_USER_POOL_ID=your-user-pool-id
         VITE_COGNITO_USER_POOL_WEB_CLIENT_ID=your-client-id
@@ -103,15 +134,23 @@ Follow these steps to get the project running locally:
         VITE_ENABLE_THUSONG_AI=false
         VITE_ENABLE_PAYMENTS=false
         ```
-    *   Note: For development, you can use mock values or local endpoints.
+    *   Note: For development with LocalStack, you can use mock values for Cognito configuration.
 
-4.  **Run the development server:**
+6.  **Run the development server:**
     ```bash
     npm run dev
     ```
 
-5.  **Open the application:**
+7.  **Open the application:**
     *   Navigate to `http://localhost:5173` (or the port specified in the terminal output) in your web browser.
+
+8.  **Verify LocalStack services:**
+    *   Check that the application can connect to LocalStack services:
+        ```bash
+        aws --endpoint-url=http://localhost:4566 dynamodb list-tables
+        aws --endpoint-url=http://localhost:4566 s3 ls
+        aws --endpoint-url=http://localhost:4566 apigateway get-rest-apis
+        ```
 
 ## Available Scripts
 
@@ -121,6 +160,11 @@ In the project directory, you can run the following scripts:
 *   `npm run build`: Builds the app for production to the `dist` folder.
 *   `npm run lint`: Lints the code using ESLint to check for code quality and style issues.
 *   `npm run preview`: Serves the production build locally to preview before deployment.
+*   `npm run localstack:start`: Starts the LocalStack Docker container.
+*   `npm run localstack:stop`: Stops the LocalStack Docker container.
+*   `npm run localstack:init`: Initializes the LocalStack services (creates DynamoDB tables, S3 buckets, Lambda functions, etc.).
+*   `npm run localstack:verify`: Verifies that the LocalStack services are running correctly.
+*   `npm run dev:local`: Starts the LocalStack container, initializes services, and runs the development server.
 
 ## Testing
 
@@ -225,25 +269,50 @@ letstalk-webapp/
 
 ### Branch Strategy
 
+We follow a modified GitFlow branching strategy with the following branches:
+
 #### Long-lived Branches
-- **production** (or **main**): Main production branch, contains stable code
-- **develop**: Development branch for integrating features
+- **production**: Main stable branch containing production-ready code
+  - Direct commits are prohibited
+  - Changes are merged via pull requests from the `develop` branch
+  - Each merge to production triggers a deployment to the production environment
+
+- **develop**: Integration branch for features and fixes
+  - All feature work must be merged here first
+  - Changes are merged via pull requests from feature branches
+  - Each merge to develop triggers a deployment to the staging environment
 
 #### Short-lived Branches
 Create these branches only when needed for specific changes, then merge and delete them:
 
-- **feature/ABC-123-feature-description**: For new features
+- **feature/LT-XXX-descriptive-name**: For new features or enhancements
+  - Created from: `develop`
+  - Merged to: `develop`
   - Example: `feature/LT-45-add-payment-gateway`
-- **fix/ABC-123-bug-description**: For bug fixes
+  - Example: `feature/aws-localstack` - For hybrid development with LocalStack
+  - Example: `feature/aws-cloud-deployment` - For AWS deployment configuration
+
+- **fix/LT-XXX-descriptive-name**: For bug fixes
+  - Created from: `develop` (or `production` for hotfixes)
+  - Merged to: `develop` (and `production` for hotfixes)
   - Example: `fix/LT-67-login-form-validation`
-- **refactor/ABC-123-component-name**: For code improvements without changing functionality
+
+- **refactor/LT-XXX-descriptive-name**: For code refactoring without changing functionality
+  - Created from: `develop`
+  - Merged to: `develop`
   - Example: `refactor/LT-89-optimize-auth-service`
-- **docs/ABC-123-documentation-type**: For documentation changes
+
+- **docs/LT-XXX-descriptive-name**: For documentation changes
+  - Created from: `develop`
+  - Merged to: `develop`
   - Example: `docs/LT-12-update-installation-guide`
-- **test/ABC-123-test-description**: For adding or updating tests
+
+- **test/LT-XXX-descriptive-name**: For adding or modifying tests
+  - Created from: `develop`
+  - Merged to: `develop`
   - Example: `test/LT-34-add-payment-service-tests`
-- **chore/ABC-123-task-description**: For maintenance tasks
-  - Example: `chore/LT-56-update-dependencies`
+
+For a visual representation of our branching strategy, see [Branching Strategy Diagram](docs/workflows/branching-strategy.md).
 
 #### Branch Naming Guidelines
 1. Always use the appropriate prefix based on the type of change
@@ -251,11 +320,31 @@ Create these branches only when needed for specific changes, then merge and dele
 3. Use kebab-case (hyphen-separated words) for readability
 4. Keep descriptions concise but descriptive
 
+### CI/CD Pipeline
+
+Our CI/CD pipeline automates the process of building, testing, and deploying the application:
+
+1. Code is committed to feature branches
+2. Pull requests are created to merge changes into the `develop` branch
+3. Automated tests are run on all pull requests
+4. Code is reviewed by team members
+5. Approved changes are merged into the `develop` branch
+6. Changes in the `develop` branch are deployed to the staging environment
+7. Changes in the `production` branch are deployed to the production environment
+
+For more details, see [CI/CD Pipeline Documentation](docs/workflows/cicd-pipeline.md).
+
 ### Contributing
 
 Contributions are welcome! Please follow these guidelines:
 
-1.  Create a new branch from `develop` following the branch naming guidelines:
+1.  Ensure you're on the latest `develop` branch:
+    ```bash
+    git checkout develop
+    git pull origin develop
+    ```
+
+2.  Create a new branch from `develop` following the branch naming guidelines:
     ```bash
     # For a new feature with ticket LT-123
     git checkout -b feature/LT-123-descriptive-feature-name
@@ -267,37 +356,64 @@ Contributions are welcome! Please follow these guidelines:
     git checkout -b refactor/LT-789-component-to-refactor
     ```
 
-2.  Make your changes and ensure code quality:
+3.  Make your changes and ensure code quality:
     ```bash
     npm run lint
     ```
 
-3.  Run tests to ensure your changes don't break existing functionality:
+4.  Run tests to ensure your changes don't break existing functionality:
     ```bash
     npm test
     ```
 
-4.  Commit your changes with descriptive messages following conventional commits:
+5.  Commit your changes with descriptive messages following conventional commits:
     ```bash
     git commit -m "feat: add new feature"
     # or
     git commit -m "fix: resolve issue with login form"
     ```
 
-5.  Push your branch to the repository:
+6.  Push your branch to the repository:
     ```bash
     git push origin feature/LT-123-descriptive-feature-name
     ```
 
-6.  Create a Pull Request against the `develop` branch.
-7.  Ensure your PR passes any configured CI checks.
-8.  Request a code review from a team member.
+7.  Create a Pull Request against the `develop` branch using the appropriate PR template:
+    - For features: Add `?template=feature.md` to the PR URL
+    - For bug fixes: Add `?template=bugfix.md` to the PR URL
+    - For documentation: Add `?template=documentation.md` to the PR URL
+
+8.  Ensure your PR passes all automated tests and CI checks.
+
+9.  Request a code review from at least one team member.
+
+10. Address any feedback from reviewers.
+
+11. Once approved, your changes will be merged into the `develop` branch and deployed to the staging environment.
+
+12. For production releases, a PR will be created from `develop` to `production` after thorough testing in the staging environment.
 
 ## Deployment
 
+Our deployment process is automated through our CI/CD pipeline. However, you can also build and deploy manually if needed.
+
+### Environments
+
+We have three deployment environments:
+
+1. **Development**: Local development environment using LocalStack for AWS service emulation
+2. **Staging**: AWS environment for testing with real AWS services but test data
+3. **Production**: AWS environment for production with real AWS services and production data
+
+### Automated Deployment
+
+Our CI/CD pipeline automatically deploys:
+- To the staging environment when changes are merged to the `develop` branch
+- To the production environment when changes are merged to the `production` branch (after approval)
+
 ### Building for Production
 
-To build the application for production:
+To build the application for production manually:
 
 ```bash
 npm run build
@@ -313,22 +429,37 @@ To preview the production build locally:
 npm run preview
 ```
 
-### Deployment Options
+### Manual Deployment Options
 
 1. **AWS Amplify** (Recommended)
    - Connect your GitHub repository to AWS Amplify
    - Configure build settings to use `npm run build`
    - Set up environment variables in the Amplify console
+   - Configure branch-specific settings:
+     - `develop` branch deploys to staging environment
+     - `production` branch deploys to production environment
 
 2. **Netlify/Vercel**
    - Connect your GitHub repository
    - Configure build command: `npm run build`
    - Set output directory: `dist`
    - Configure environment variables
+   - Set up branch-specific deployment settings
 
 3. **Manual Deployment**
    - Build the application: `npm run build`
    - Deploy the contents of the `dist` directory to your web server
+
+### Rollback Procedure
+
+If a deployment fails or causes issues in production:
+
+1. Identify the issue
+2. Trigger a rollback to the previous stable version
+3. Create a fix branch from `develop` to address the issue
+4. Follow the normal deployment process to deploy the fix
+
+For more details, see the [CI/CD Pipeline Documentation](docs/workflows/cicd-pipeline.md).
 
 ## Internationalization
 
