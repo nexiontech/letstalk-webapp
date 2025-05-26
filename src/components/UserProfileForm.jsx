@@ -11,7 +11,7 @@ const UserProfileForm = ({ user, onUpdateSuccess, onUpdateError }) => {
     email: '',
     idNumber: '',
     phoneNumber: '',
-    address: ''
+    address: '',
   });
 
   const [validationErrors, setValidationErrors] = useState({});
@@ -26,23 +26,23 @@ const UserProfileForm = ({ user, onUpdateSuccess, onUpdateError }) => {
         email: user.email || '',
         idNumber: user.idNumber || '',
         phoneNumber: user.phoneNumber || '',
-        address: user.address || ''
+        address: user.address || '',
       });
     }
   }, [user]);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value } = e.target;
     setFormData(prevData => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
 
     // Clear validation error when field is edited
     if (validationErrors[name]) {
       setValidationErrors(prevErrors => ({
         ...prevErrors,
-        [name]: null
+        [name]: null,
       }));
     }
   };
@@ -65,7 +65,10 @@ const UserProfileForm = ({ user, onUpdateSuccess, onUpdateError }) => {
     // ID Number is read-only, no validation needed
 
     // Validate phone number if provided
-    if (formData.phoneNumber && !/^\+?[0-9]{10,15}$/.test(formData.phoneNumber)) {
+    if (
+      formData.phoneNumber &&
+      !/^\+?[0-9]{10,15}$/.test(formData.phoneNumber)
+    ) {
       errors.phoneNumber = 'Please enter a valid phone number';
     }
 
@@ -73,7 +76,7 @@ const UserProfileForm = ({ user, onUpdateSuccess, onUpdateError }) => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -86,14 +89,17 @@ const UserProfileForm = ({ user, onUpdateSuccess, onUpdateError }) => {
       // Only update attributes that have changed
       const attributesToUpdate = {};
       if (formData.name !== user.name) attributesToUpdate.name = formData.name;
-      if (formData.email !== user.email) attributesToUpdate.email = formData.email;
-      if (formData.phoneNumber !== user.phoneNumber) attributesToUpdate.phoneNumber = formData.phoneNumber;
-      if (formData.address !== user.address) attributesToUpdate.address = formData.address;
+      if (formData.email !== user.email)
+        attributesToUpdate.email = formData.email;
+      if (formData.phoneNumber !== user.phoneNumber)
+        attributesToUpdate.phoneNumber = formData.phoneNumber;
+      if (formData.address !== user.address)
+        attributesToUpdate.address = formData.address;
 
       // Only make the API call if there are attributes to update
       if (Object.keys(attributesToUpdate).length > 0) {
         const result = await updateUserAttributes(attributesToUpdate);
-        
+
         if (result.success) {
           onUpdateSuccess('Profile updated successfully');
           setIsEditing(false);
@@ -104,7 +110,7 @@ const UserProfileForm = ({ user, onUpdateSuccess, onUpdateError }) => {
         // No changes were made
         setIsEditing(false);
       }
-    } catch (error) {
+    } catch {
       onUpdateError('An unexpected error occurred. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -119,7 +125,7 @@ const UserProfileForm = ({ user, onUpdateSuccess, onUpdateError }) => {
         email: user.email || '',
         idNumber: user.idNumber || '',
         phoneNumber: user.phoneNumber || '',
-        address: user.address || ''
+        address: user.address || '',
       });
     }
     setValidationErrors({});
@@ -204,18 +210,18 @@ const UserProfileForm = ({ user, onUpdateSuccess, onUpdateError }) => {
 
         <div className="form-actions">
           {!isEditing ? (
-            <button 
-              type="button" 
-              className="edit-button" 
+            <button
+              type="button"
+              className="edit-button"
               onClick={() => setIsEditing(true)}
             >
               Edit Profile
             </button>
           ) : (
             <>
-              <button 
-                type="submit" 
-                className="save-button" 
+              <button
+                type="submit"
+                className="save-button"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
@@ -227,9 +233,9 @@ const UserProfileForm = ({ user, onUpdateSuccess, onUpdateError }) => {
                   'Save Changes'
                 )}
               </button>
-              <button 
-                type="button" 
-                className="cancel-button" 
+              <button
+                type="button"
+                className="cancel-button"
                 onClick={handleCancel}
                 disabled={isSubmitting}
               >

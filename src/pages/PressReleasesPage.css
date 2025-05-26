@@ -28,7 +28,7 @@
 .press-title-section h1 {
   font-size: 2rem;
   font-weight: 700;
-  color: #0E4649;
+  color: #0e4649;
   margin: 0 0 0.5rem 0;
   position: relative;
   display: inline-block;
@@ -41,7 +41,7 @@
   left: 0;
   width: 40px;
   height: 3px;
-  background-color: #FFB61D;
+  background-color: #ffb61d;
   border-radius: 2px;
 }
 
@@ -82,7 +82,7 @@
 
 .press-search input:focus {
   outline: none;
-  border-color: #0E4649;
+  border-color: #0e4649;
   box-shadow: 0 0 0 3px rgba(14, 70, 73, 0.1);
   width: 280px;
 }
@@ -115,9 +115,9 @@
 }
 
 .press-tab.active {
-  background-color: #0E4649;
+  background-color: #0e4649;
   color: white;
-  border-color: #0E4649;
+  border-color: #0e4649;
   box-shadow: 0 2px 6px rgba(14, 70, 73, 0.2);
 }
 
@@ -161,12 +161,12 @@
 .filter-header h3 {
   font-size: 16px;
   font-weight: 600;
-  color: #0E4649;
+  color: #0e4649;
   margin: 0;
 }
 
 .filter-header svg {
-  color: #0E4649;
+  color: #0e4649;
   font-size: 14px;
 }
 
@@ -193,7 +193,7 @@
 }
 
 .filter-btn.active {
-  background-color: #0E4649;
+  background-color: #0e4649;
   color: white;
   box-shadow: 0 2px 6px rgba(14, 70, 73, 0.2);
 }
@@ -217,7 +217,7 @@
 }
 
 .list-title svg {
-  color: #0E4649;
+  color: #0e4649;
   font-size: 14px;
 }
 
@@ -261,7 +261,7 @@
 }
 
 .press-card.selected {
-  border-color: #0E4649;
+  border-color: #0e4649;
   box-shadow: 0 0 0 2px rgba(14, 70, 73, 0.2);
 }
 
@@ -341,7 +341,7 @@
 }
 
 .press-card:hover .press-card-arrow {
-  color: #0E4649;
+  color: #0e4649;
   transform: translateX(2px);
 }
 
@@ -390,12 +390,12 @@
     transform: scale(0.95);
     box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
   }
-  
+
   70% {
     transform: scale(1);
     box-shadow: 0 0 0 6px rgba(231, 76, 60, 0);
   }
-  
+
   100% {
     transform: scale(0.95);
     box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
@@ -407,7 +407,7 @@
   align-items: center;
   gap: 4px;
   font-size: 12px;
-  color: #0E4649;
+  color: #0e4649;
   font-weight: 600;
   margin-bottom: 4px;
 }
@@ -486,7 +486,7 @@
   align-items: center;
   gap: 6px;
   background-color: rgba(14, 70, 73, 0.1);
-  color: #0E4649;
+  color: #0e4649;
   font-size: 12px;
   font-weight: 600;
   padding: 4px 10px;
@@ -652,7 +652,7 @@
 
 .scheduled-icon {
   font-size: 48px;
-  color: #0E4649;
+  color: #0e4649;
 }
 
 .scheduled-info h3 {
@@ -674,7 +674,7 @@
   gap: 8px;
   padding: 8px 16px;
   border-radius: 6px;
-  background-color: #FFB61D;
+  background-color: #ffb61d;
   color: #333;
   font-size: 14px;
   font-weight: 500;
@@ -708,7 +708,7 @@
   top: 0;
   bottom: 0;
   width: 3px;
-  background-color: #FFB61D;
+  background-color: #ffb61d;
   border-radius: 3px;
 }
 
@@ -723,16 +723,16 @@
   .press-content {
     flex-direction: column;
   }
-  
+
   .press-sidebar {
     width: 100%;
     max-height: 400px;
   }
-  
+
   .press-main {
     height: 600px;
   }
-  
+
   .press-list {
     max-height: 300px;
   }
@@ -742,49 +742,49 @@
   .press-container {
     padding: 1rem;
   }
-  
+
   .press-header {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .press-actions {
     width: 100%;
   }
-  
+
   .press-search {
     width: 100%;
   }
-  
+
   .press-search input {
     width: 100%;
   }
-  
+
   .press-search input:focus {
     width: 100%;
   }
-  
+
   .press-tabs {
     width: 100%;
   }
-  
+
   .press-tab {
     flex: 1;
     justify-content: center;
   }
-  
+
   .press-detail-header h2 {
     font-size: 1.5rem;
   }
-  
+
   .video-container {
     height: 300px;
   }
-  
+
   .press-filters {
     justify-content: space-between;
   }
-  
+
   .filter-btn {
     flex: 1;
     text-align: center;
@@ -797,33 +797,33 @@
   .press-detail {
     padding: 1rem;
   }
-  
+
   .press-detail-image {
     height: 200px;
   }
-  
+
   .video-container {
     height: 200px;
   }
-  
+
   .scheduled-info {
     flex-direction: column;
     text-align: center;
     gap: 12px;
   }
-  
+
   .press-detail-actions {
     justify-content: center;
   }
-  
+
   .press-tab span {
     display: none;
   }
-  
+
   .press-tab {
     justify-content: center;
   }
-  
+
   .press-tab svg {
     margin: 0;
   }

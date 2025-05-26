@@ -25,10 +25,16 @@ class WeatherService {
       url.searchParams.append('timezone', 'auto');
 
       // Add current weather parameters
-      url.searchParams.append('current', 'temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m,precipitation_probability');
+      url.searchParams.append(
+        'current',
+        'temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m,precipitation_probability'
+      );
 
       // Add hourly forecast parameters for the next 24 hours
-      url.searchParams.append('hourly', 'temperature_2m,weather_code,precipitation_probability');
+      url.searchParams.append(
+        'hourly',
+        'temperature_2m,weather_code,precipitation_probability'
+      );
       url.searchParams.append('forecast_hours', '24');
 
       // Make the API request
@@ -57,7 +63,9 @@ class WeatherService {
     }
 
     // Get the weather condition based on the weather code
-    const weatherCondition = this.getWeatherCondition(data.current.weather_code);
+    const weatherCondition = this.getWeatherCondition(
+      data.current.weather_code
+    );
 
     return {
       current: {
@@ -67,18 +75,20 @@ class WeatherService {
         humidity: data.current.relative_humidity_2m,
         windSpeed: Math.round(data.current.wind_speed_10m),
         precipitationProbability: data.current.precipitation_probability,
-        location: data.timezone.split('/').pop().replace('_', ' ') // Extract location from timezone
+        location: data.timezone.split('/').pop().replace('_', ' '), // Extract location from timezone
       },
-      hourly: data.hourly ? {
-        time: data.hourly.time,
-        temperature: data.hourly.temperature_2m,
-        weatherCode: data.hourly.weather_code,
-        precipitationProbability: data.hourly.precipitation_probability
-      } : null,
+      hourly: data.hourly
+        ? {
+            time: data.hourly.time,
+            temperature: data.hourly.temperature_2m,
+            weatherCode: data.hourly.weather_code,
+            precipitationProbability: data.hourly.precipitation_probability,
+          }
+        : null,
       units: {
         temperature: data.current_units?.temperature_2m || '°C',
-        windSpeed: data.current_units?.wind_speed_10m || 'km/h'
-      }
+        windSpeed: data.current_units?.wind_speed_10m || 'km/h',
+      },
     };
   }
 
@@ -117,7 +127,7 @@ class WeatherService {
       86: 'Heavy snow showers',
       95: 'Thunderstorm',
       96: 'Thunderstorm with slight hail',
-      99: 'Thunderstorm with heavy hail'
+      99: 'Thunderstorm with heavy hail',
     };
 
     return weatherCodes[code] || 'Unknown';
@@ -159,7 +169,7 @@ class WeatherService {
       86: 'snowflake', // Heavy snow showers
       95: 'bolt', // Thunderstorm
       96: 'bolt', // Thunderstorm with slight hail
-      99: 'bolt' // Thunderstorm with heavy hail
+      99: 'bolt', // Thunderstorm with heavy hail
     };
 
     return iconMap[code] || 'question';

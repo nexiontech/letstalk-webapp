@@ -8,7 +8,11 @@
 /* Hero Section */
 .faq-hero-section {
   padding: 5rem 0 3rem;
-  background: linear-gradient(135deg, rgba(14, 70, 73, 0.05) 0%, rgba(14, 70, 73, 0.1) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(14, 70, 73, 0.05) 0%,
+    rgba(14, 70, 73, 0.1) 100%
+  );
   position: relative;
 }
 
@@ -85,7 +89,9 @@
   height: 100%;
   border-radius: 12px !important;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05) !important;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   text-align: center;
   border-top: 4px solid;
 }
@@ -181,7 +187,11 @@
 .contact-card {
   border-radius: 12px !important;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
-  background: linear-gradient(135deg, var(--color-primary-lighter) 0%, var(--color-primary) 100%) !important;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-lighter) 0%,
+    var(--color-primary) 100%
+  ) !important;
   color: white;
 }
 
@@ -244,7 +254,7 @@
   .faq-hero-title {
     font-size: 2.5rem !important;
   }
-  
+
   .contact-card-content {
     padding: 2rem !important;
   }
@@ -254,39 +264,39 @@
   .faq-hero-section {
     padding: 4rem 0 3rem;
   }
-  
+
   .faq-hero-title {
     font-size: 2rem !important;
   }
-  
+
   .faq-hero-text {
     font-size: 1.1rem !important;
   }
-  
+
   .search-input-root {
     height: 50px;
   }
-  
+
   .faq-categories-section {
     padding: 4rem 0 2rem;
   }
-  
+
   .category-content {
     padding: 1rem !important;
   }
-  
+
   .category-icon {
     font-size: 1.5rem;
   }
-  
+
   .category-title {
     font-size: 0.9rem !important;
   }
-  
+
   .contact-buttons {
     flex-direction: column;
   }
-  
+
   .contact-button,
   .contact-button-secondary {
     width: 100%;
@@ -297,15 +307,15 @@
   .faq-hero-title {
     font-size: 1.8rem !important;
   }
-  
+
   .faq-hero-text {
     font-size: 1rem !important;
   }
-  
+
   .faq-question {
     font-size: 1rem !important;
   }
-  
+
   .category-heading {
     font-size: 1.5rem !important;
   }

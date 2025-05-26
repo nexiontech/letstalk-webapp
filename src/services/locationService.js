@@ -20,20 +20,20 @@ class LocationService {
       const options = {
         enableHighAccuracy: true, // Use high accuracy if available
         timeout: 10000, // Time to wait for a position (10 seconds)
-        maximumAge: 300000 // Accept cached positions up to 5 minutes old
+        maximumAge: 300000, // Accept cached positions up to 5 minutes old
       };
 
       // Request the current position
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        position => {
           resolve({
             latitude: position.coords.latitude,
-            longitude: position.coords.longitude
+            longitude: position.coords.longitude,
           });
         },
-        (error) => {
+        error => {
           let errorMessage;
-          
+
           switch (error.code) {
             case error.PERMISSION_DENIED:
               errorMessage = 'Location access was denied by the user';
@@ -45,9 +45,10 @@ class LocationService {
               errorMessage = 'The request to get user location timed out';
               break;
             default:
-              errorMessage = 'An unknown error occurred while retrieving location';
+              errorMessage =
+                'An unknown error occurred while retrieving location';
           }
-          
+
           reject(new Error(errorMessage));
         },
         options
@@ -63,7 +64,7 @@ class LocationService {
     // Default to Johannesburg, South Africa
     return {
       latitude: -26.2041,
-      longitude: 28.0473
+      longitude: 28.0473,
     };
   }
 }

@@ -9,7 +9,7 @@ export const store = configureStore({
     counter: counterReducer,
     auth: authReducer,
   },
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
         // Ignore these action types
@@ -19,7 +19,7 @@ export const store = configureStore({
           'auth/register/fulfilled',
           'auth/confirmRegistration/fulfilled',
           'auth/forgotPassword/fulfilled',
-          'auth/confirmForgotPassword/fulfilled'
+          'auth/confirmForgotPassword/fulfilled',
         ],
       },
     }),

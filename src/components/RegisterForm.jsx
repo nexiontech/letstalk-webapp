@@ -3,807 +3,872 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    Alert,
-    CircularProgress,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    Button,
-    TextField,
-    Radio,
-    RadioGroup,
-    FormControlLabel,
-    FormControl,
-    FormLabel,
-    Tooltip,
-    Box
+  Alert,
+  CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
+  Tooltip,
+  Box,
 } from '@mui/material';
-import { registerUser, confirmRegistration, resendVerificationCode, clearRegistrationStatus, clearError } from '../services/amplifyAuthService';
 import {
-    validateEmail,
-    validatePassword,
-    validateIdNumber,
-    validatePassportNumber,
-    validatePhoneNumber,
-    formatPhoneNumber,
-    doPasswordsMatch,
-    capitalizeWords
+  registerUser,
+  confirmRegistration,
+  resendVerificationCode,
+  clearRegistrationStatus,
+  clearError,
+} from '../services/amplifyAuthService';
+import {
+  validateEmail,
+  validatePassword,
+  validateIdNumber,
+  validatePassportNumber,
+  validatePhoneNumber,
+  formatPhoneNumber,
+  doPasswordsMatch,
+  capitalizeWords,
 } from '../utils/authUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    faEye,
-    faEyeSlash,
-    faLock,
-    faIdCard,
-    faUser,
-    faEnvelope,
-    faPhone,
-    faPassport,
-    faInfoCircle
+  faLock,
+  faIdCard,
+  faUser,
+  faEnvelope,
+  faPhone,
+  faPassport,
+  faInfoCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import './AuthForms.css';
 
 function RegisterForm() {
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phoneNumber: '',
-        documentType: 'idNumber', // 'idNumber' or 'passport'
-        idNumber: '',
-        passportNumber: '',
-        password: '',
-        confirmPassword: ''
-    });
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [validationErrors, setValidationErrors] = useState({});
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [showVerificationDialog, setShowVerificationDialog] = useState(false);
-    const [verificationCode, setVerificationCode] = useState('');
-    const [unverifiedUser, setUnverifiedUser] = useState(null);
-    const [resendSuccess, setResendSuccess] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+    documentType: 'idNumber', // 'idNumber' or 'passport'
+    idNumber: '',
+    passportNumber: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showVerificationDialog, setShowVerificationDialog] = useState(false);
+  const [verificationCode, setVerificationCode] = useState('');
+  const [unverifiedUser, setUnverifiedUser] = useState(null);
+  const [resendSuccess, setResendSuccess] = useState(false);
 
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    // Get auth state from Redux
-    const {
-        loading,
-        error,
-        registrationSuccess,
-        registrationMessage,
-        verificationSuccess
-    } = useSelector(state => state.auth);
+  // Get auth state from Redux
+  const {
+    // loading, // TODO: Use loading state for better UX
+    error,
+    registrationSuccess,
+    registrationMessage,
+    verificationSuccess,
+  } = useSelector(state => state.auth);
 
-    // Clear errors when component unmounts
-    useEffect(() => {
-        return () => {
-            dispatch(clearError());
-            dispatch(clearRegistrationStatus());
-        };
-    }, [dispatch]);
-
-    // If verification is successful, redirect to login
-    useEffect(() => {
-        if (verificationSuccess) {
-            setTimeout(() => {
-                navigate('/login');
-            }, 2000);
-        }
-    }, [verificationSuccess, navigate]);
-
-    const validateForm = () => {
-        const errors = {};
-
-        // Validate First Name
-        if (!formData.firstName.trim()) {
-            errors.firstName = 'First name is required';
-        } else if (formData.firstName.trim().length < 2) {
-            errors.firstName = 'First name must be at least 2 characters';
-        }
-
-        // Validate Last Name
-        if (!formData.lastName.trim()) {
-            errors.lastName = 'Last name is required';
-        } else if (formData.lastName.trim().length < 2) {
-            errors.lastName = 'Last name must be at least 2 characters';
-        }
-
-        // Validate Email
-        if (!formData.email) {
-            errors.email = 'Email is required';
-        } else if (!validateEmail(formData.email)) {
-            errors.email = 'Please enter a valid email address';
-        }
-
-        // Validate Phone Number (optional)
-        const phoneValidation = validatePhoneNumber(formData.phoneNumber);
-        if (!phoneValidation.isValid) {
-            errors.phoneNumber = phoneValidation.error;
-        }
-
-        // Validate ID Number or Passport Number based on document type
-        if (formData.documentType === 'idNumber') {
-            if (!formData.idNumber) {
-                errors.idNumber = 'ID Number is required';
-            } else if (formData.idNumber.length !== 13) {
-                errors.idNumber = 'ID Number must be exactly 13 digits';
-            } else if (!/^\d+$/.test(formData.idNumber)) {
-                errors.idNumber = 'ID Number must contain only digits';
-            } else if (!validateIdNumber(formData.idNumber)) {
-                errors.idNumber = 'Please enter a valid South African ID number';
-            }
-        } else {
-            // Validate Passport Number
-            const passportValidation = validatePassportNumber(formData.passportNumber);
-            if (!passportValidation.isValid) {
-                errors.passportNumber = passportValidation.error;
-            }
-        }
-
-        // Validate Password
-        const passwordValidation = validatePassword(formData.password);
-        if (!passwordValidation.isValid) {
-            errors.password = passwordValidation.errors[0];
-        }
-
-        // Validate Password Match
-        if (!doPasswordsMatch(formData.password, formData.confirmPassword)) {
-            errors.confirmPassword = 'Passwords do not match';
-        }
-
-        setValidationErrors(errors);
-        return Object.keys(errors).length === 0;
+  // Clear errors when component unmounts
+  useEffect(() => {
+    return () => {
+      dispatch(clearError());
+      dispatch(clearRegistrationStatus());
     };
+  }, [dispatch]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  // If verification is successful, redirect to login
+  useEffect(() => {
+    if (verificationSuccess) {
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+    }
+  }, [verificationSuccess, navigate]);
 
-        // Validate form
-        if (!validateForm()) {
-            return;
+  const validateForm = () => {
+    const errors = {};
+
+    // Validate First Name
+    if (!formData.firstName.trim()) {
+      errors.firstName = 'First name is required';
+    } else if (formData.firstName.trim().length < 2) {
+      errors.firstName = 'First name must be at least 2 characters';
+    }
+
+    // Validate Last Name
+    if (!formData.lastName.trim()) {
+      errors.lastName = 'Last name is required';
+    } else if (formData.lastName.trim().length < 2) {
+      errors.lastName = 'Last name must be at least 2 characters';
+    }
+
+    // Validate Email
+    if (!formData.email) {
+      errors.email = 'Email is required';
+    } else if (!validateEmail(formData.email)) {
+      errors.email = 'Please enter a valid email address';
+    }
+
+    // Validate Phone Number (optional)
+    const phoneValidation = validatePhoneNumber(formData.phoneNumber);
+    if (!phoneValidation.isValid) {
+      errors.phoneNumber = phoneValidation.error;
+    }
+
+    // Validate ID Number or Passport Number based on document type
+    if (formData.documentType === 'idNumber') {
+      if (!formData.idNumber) {
+        errors.idNumber = 'ID Number is required';
+      } else if (formData.idNumber.length !== 13) {
+        errors.idNumber = 'ID Number must be exactly 13 digits';
+      } else if (!/^\d+$/.test(formData.idNumber)) {
+        errors.idNumber = 'ID Number must contain only digits';
+      } else if (!validateIdNumber(formData.idNumber)) {
+        errors.idNumber = 'Please enter a valid South African ID number';
+      }
+    } else {
+      // Validate Passport Number
+      const passportValidation = validatePassportNumber(
+        formData.passportNumber
+      );
+      if (!passportValidation.isValid) {
+        errors.passportNumber = passportValidation.error;
+      }
+    }
+
+    // Validate Password
+    const passwordValidation = validatePassword(formData.password);
+    if (!passwordValidation.isValid) {
+      errors.password = passwordValidation.errors[0];
+    }
+
+    // Validate Password Match
+    if (!doPasswordsMatch(formData.password, formData.confirmPassword)) {
+      errors.confirmPassword = 'Passwords do not match';
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+
+    // Validate form
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Combine first and last name for Cognito
+      const fullName = `${formData.firstName} ${formData.lastName}`.trim();
+
+      // Only allow South African ID numbers for now
+      // Passport registration is disabled with "Coming Soon" message
+      const identifier = formData.idNumber;
+
+      const resultAction = await dispatch(
+        registerUser({
+          idNumber: identifier, // Use South African ID number as username
+          name: fullName,
+          email: formData.email,
+          password: formData.password,
+          // No document type needed since we only support ID numbers now
+        })
+      );
+
+      if (registerUser.fulfilled.match(resultAction)) {
+        // Log the identity pool association status
+        if (resultAction.payload.identityPoolAssociation) {
+          console.log('User successfully associated with Identity Pool');
         }
 
-        setIsSubmitting(true);
+        // Registration successful, show verification dialog
+        // Use the original identifier (not the padded one) for verification UI
+        setUnverifiedUser(identifier);
+        // Store document type for verification
+        localStorage.setItem('temp_document_type', formData.documentType);
+        setShowVerificationDialog(true);
 
-        try {
-            // Combine first and last name for Cognito
-            const fullName = `${formData.firstName} ${formData.lastName}`.trim();
+        // Clear the form data for security but keep the identifier for verification
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phoneNumber: '',
+          documentType: formData.documentType,
+          idNumber:
+            formData.documentType === 'idNumber' ? formData.idNumber : '',
+          passportNumber:
+            formData.documentType === 'passport' ? formData.passportNumber : '',
+          password: '',
+          confirmPassword: '',
+        });
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-            // Only allow South African ID numbers for now
-            // Passport registration is disabled with "Coming Soon" message
-            const identifier = formData.idNumber;
+  const handleVerificationSubmit = async () => {
+    if (!verificationCode.trim()) {
+      setValidationErrors({
+        verificationCode: 'Please enter the verification code',
+      });
+      return;
+    }
 
-            const resultAction = await dispatch(registerUser({
-                idNumber: identifier, // Use South African ID number as username
-                name: fullName,
-                email: formData.email,
-                password: formData.password
-                // No document type needed since we only support ID numbers now
-            }));
+    setIsSubmitting(true);
+    setValidationErrors({});
 
-            if (registerUser.fulfilled.match(resultAction)) {
-                // Log the identity pool association status
-                if (resultAction.payload.identityPoolAssociation) {
-                    console.log('User successfully associated with Identity Pool');
-                }
+    try {
+      // Get the document type from localStorage
+      const documentType =
+        localStorage.getItem('temp_document_type') || 'idNumber';
 
-                // Registration successful, show verification dialog
-                // Use the original identifier (not the padded one) for verification UI
-                setUnverifiedUser(identifier);
-                // Store document type for verification
-                localStorage.setItem('temp_document_type', formData.documentType);
-                setShowVerificationDialog(true);
+      await dispatch(
+        confirmRegistration({
+          idNumber: unverifiedUser,
+          code: verificationCode,
+          documentType: documentType, // Pass document type for proper padding
+        })
+      );
 
-                // Clear the form data for security but keep the identifier for verification
-                setFormData({
-                    firstName: '',
-                    lastName: '',
-                    email: '',
-                    phoneNumber: '',
-                    documentType: formData.documentType,
-                    idNumber: formData.documentType === 'idNumber' ? formData.idNumber : '',
-                    passportNumber: formData.documentType === 'passport' ? formData.passportNumber : '',
-                    password: '',
-                    confirmPassword: ''
-                });
-            }
-        } catch (error) {
-            console.error('Registration error:', error);
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+      // Clean up the temporary storage
+      localStorage.removeItem('temp_document_type');
+    } catch (error) {
+      console.error('Verification error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-    const handleVerificationSubmit = async () => {
-        if (!verificationCode.trim()) {
-            setValidationErrors({ verificationCode: 'Please enter the verification code' });
-            return;
-        }
+  const handleResendCode = async () => {
+    if (!unverifiedUser) return;
 
-        setIsSubmitting(true);
-        setValidationErrors({});
+    setIsSubmitting(true);
 
-        try {
-            // Get the document type from localStorage
-            const documentType = localStorage.getItem('temp_document_type') || 'idNumber';
+    try {
+      // Use ID Number for resending verification code
+      const resultAction = await dispatch(
+        resendVerificationCode(unverifiedUser)
+      );
 
-            await dispatch(confirmRegistration({
-                idNumber: unverifiedUser,
-                code: verificationCode,
-                documentType: documentType // Pass document type for proper padding
-            }));
+      if (resendVerificationCode.fulfilled.match(resultAction)) {
+        // Show success message in the dialog instead of an alert
+        setResendSuccess(true);
 
-            // Clean up the temporary storage
-            localStorage.removeItem('temp_document_type');
-        } catch (error) {
-            console.error('Verification error:', error);
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+        // Hide the success message after 5 seconds
+        setTimeout(() => {
+          setResendSuccess(false);
+        }, 5000);
+      }
+    } catch (error) {
+      console.error('Resend code error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-    const handleResendCode = async () => {
-        if (!unverifiedUser) return;
+  const handleChange = e => {
+    const { name, value } = e.target;
 
-        setIsSubmitting(true);
+    if (name === 'idNumber') {
+      // Only allow digits and limit to 13 characters
+      const sanitizedValue = value.replace(/[^0-9]/g, '').slice(0, 13);
+      setFormData(prev => ({
+        ...prev,
+        [name]: sanitizedValue,
+      }));
+    } else if (name === 'firstName' || name === 'lastName') {
+      // Auto-capitalize first letter of names
+      const capitalizedValue = capitalizeWords(value);
+      setFormData(prev => ({
+        ...prev,
+        [name]: capitalizedValue,
+      }));
+    } else if (name === 'phoneNumber') {
+      // Format the phone number to +27 format
+      const formattedValue = formatPhoneNumber(value);
+      setFormData(prev => ({
+        ...prev,
+        [name]: formattedValue,
+      }));
+    } else if (name === 'passportNumber') {
+      // Allow only alphanumeric characters for passport numbers and convert to uppercase
+      const sanitizedValue = value
+        .replace(/[^A-Za-z0-9]/g, '')
+        .toUpperCase()
+        .slice(0, 12);
+      setFormData(prev => ({
+        ...prev,
+        [name]: sanitizedValue,
+      }));
+    } else if (name === 'documentType') {
+      // Passport option is disabled, so always use ID Number
+      // This is a safeguard in case someone tries to select passport programmatically
+      const newErrors = { ...validationErrors };
+      delete newErrors.passportNumber;
+      setValidationErrors(newErrors);
 
-        try {
-            // Use ID Number for resending verification code
-            const resultAction = await dispatch(resendVerificationCode(unverifiedUser));
+      // Always set to idNumber regardless of the selected value
+      setFormData(prev => ({
+        ...prev,
+        [name]: 'idNumber',
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
 
-            if (resendVerificationCode.fulfilled.match(resultAction)) {
-                // Show success message in the dialog instead of an alert
-                setResendSuccess(true);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
-                // Hide the success message after 5 seconds
-                setTimeout(() => {
-                    setResendSuccess(false);
-                }, 5000);
-            }
-        } catch (error) {
-            console.error('Resend code error:', error);
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
+  return (
+    <div className="auth-form-container">
+      <h1>Create An Account</h1>
+      <p className="subtitle">Please enter your details.</p>
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+      {/* Show success message */}
+      {registrationSuccess && registrationMessage && (
+        <Alert severity="success" className="auth-alert">
+          {registrationMessage}
+        </Alert>
+      )}
 
-        if (name === 'idNumber') {
-            // Only allow digits and limit to 13 characters
-            const sanitizedValue = value.replace(/[^0-9]/g, '').slice(0, 13);
-            setFormData(prev => ({
-                ...prev,
-                [name]: sanitizedValue
-            }));
-        } else if (name === 'firstName' || name === 'lastName') {
-            // Auto-capitalize first letter of names
-            const capitalizedValue = capitalizeWords(value);
-            setFormData(prev => ({
-                ...prev,
-                [name]: capitalizedValue
-            }));
-        } else if (name === 'phoneNumber') {
-            // Format the phone number to +27 format
-            const formattedValue = formatPhoneNumber(value);
-            setFormData(prev => ({
-                ...prev,
-                [name]: formattedValue
-            }));
-        } else if (name === 'passportNumber') {
-            // Allow only alphanumeric characters for passport numbers and convert to uppercase
-            const sanitizedValue = value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 12);
-            setFormData(prev => ({
-                ...prev,
-                [name]: sanitizedValue
-            }));
-        } else if (name === 'documentType') {
-            // Passport option is disabled, so always use ID Number
-            // This is a safeguard in case someone tries to select passport programmatically
-            const newErrors = { ...validationErrors };
-            delete newErrors.passportNumber;
-            setValidationErrors(newErrors);
+      {/* Show error message */}
+      {error && (
+        <Alert severity="error" className="auth-alert">
+          {error}
+        </Alert>
+      )}
 
-            // Always set to idNumber regardless of the selected value
-            setFormData(prev => ({
-                ...prev,
-                [name]: 'idNumber'
-            }));
-        } else {
-            setFormData(prev => ({
-                ...prev,
-                [name]: value
-            }));
-        }
-    };
-
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword);
-    };
-
-    const toggleConfirmPasswordVisibility = () => {
-        setShowConfirmPassword(!showConfirmPassword);
-    };
-
-    return (
-        <div className="auth-form-container">
-            <h1>Create An Account</h1>
-            <p className="subtitle">Please enter your details.</p>
-
-            {/* Show success message */}
-            {registrationSuccess && registrationMessage && (
-                <Alert severity="success" className="auth-alert">
-                    {registrationMessage}
-                </Alert>
+      <form onSubmit={handleSubmit} className="auth-form">
+        {/* First Name and Last Name fields (side by side) */}
+        <div className="form-row">
+          <div className="form-group half-width">
+            <div className="input-with-icon">
+              <FontAwesomeIcon icon={faUser} className="input-icon" />
+              <input
+                type="text"
+                name="firstName"
+                placeholder="First Name"
+                value={formData.firstName}
+                onChange={handleChange}
+                disabled={isSubmitting}
+                required
+              />
+            </div>
+            {validationErrors.firstName && (
+              <div className="error-message">{validationErrors.firstName}</div>
             )}
+          </div>
 
-            {/* Show error message */}
-            {error && (
-                <Alert severity="error" className="auth-alert">
-                    {error}
-                </Alert>
+          <div className="form-group half-width">
+            <div className="input-with-icon">
+              <FontAwesomeIcon icon={faUser} className="input-icon" />
+              <input
+                type="text"
+                name="lastName"
+                placeholder="Last Name"
+                value={formData.lastName}
+                onChange={handleChange}
+                disabled={isSubmitting}
+                required
+              />
+            </div>
+            {validationErrors.lastName && (
+              <div className="error-message">{validationErrors.lastName}</div>
             )}
-
-            <form onSubmit={handleSubmit} className="auth-form">
-                {/* First Name and Last Name fields (side by side) */}
-                <div className="form-row">
-                    <div className="form-group half-width">
-                        <div className="input-with-icon">
-                            <FontAwesomeIcon icon={faUser} className="input-icon" />
-                            <input
-                                type="text"
-                                name="firstName"
-                                placeholder="First Name"
-                                value={formData.firstName}
-                                onChange={handleChange}
-                                disabled={isSubmitting}
-                                required
-                            />
-                        </div>
-                        {validationErrors.firstName && (
-                            <div className="error-message">{validationErrors.firstName}</div>
-                        )}
-                    </div>
-
-                    <div className="form-group half-width">
-                        <div className="input-with-icon">
-                            <FontAwesomeIcon icon={faUser} className="input-icon" />
-                            <input
-                                type="text"
-                                name="lastName"
-                                placeholder="Last Name"
-                                value={formData.lastName}
-                                onChange={handleChange}
-                                disabled={isSubmitting}
-                                required
-                            />
-                        </div>
-                        {validationErrors.lastName && (
-                            <div className="error-message">{validationErrors.lastName}</div>
-                        )}
-                    </div>
-                </div>
-
-                {/* Email field */}
-                <div className="form-group">
-                    <div className="input-with-icon">
-                        <FontAwesomeIcon icon={faEnvelope} className="input-icon" />
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="Email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            disabled={isSubmitting}
-                            required
-                        />
-                    </div>
-                    {validationErrors.email && (
-                        <div className="error-message">{validationErrors.email}</div>
-                    )}
-                </div>
-
-                {/* Phone Number field (optional) */}
-                <div className="form-group">
-                    <div className="input-with-icon">
-                        <FontAwesomeIcon icon={faPhone} className="input-icon" />
-                        <input
-                            type="tel"
-                            name="phoneNumber"
-                            placeholder="Phone Number (+27 Format)"
-                            value={formData.phoneNumber}
-                            onChange={handleChange}
-                            disabled={isSubmitting}
-                        />
-                        <Tooltip title="Phone verification coming soon" placement="top">
-                            <span className="info-icon">
-                                <FontAwesomeIcon icon={faInfoCircle} />
-                            </span>
-                        </Tooltip>
-                    </div>
-                    {validationErrors.phoneNumber && (
-                        <div className="error-message">{validationErrors.phoneNumber}</div>
-                    )}
-                </div>
-
-                {/* Document Type Selection */}
-                <div className="form-group">
-                    <FormControl component="fieldset">
-                        <FormLabel component="legend" style={{ marginBottom: '8px' }}>Identification Type</FormLabel>
-                        <RadioGroup
-                            row
-                            name="documentType"
-                            value={formData.documentType}
-                            onChange={handleChange}
-                            style={{ width: '100%', display: 'flex', justifyContent: 'flex-start', gap: '20px' }}
-                        >
-                            <FormControlLabel
-                                value="idNumber"
-                                control={<Radio />}
-                                label="South African ID"
-                                disabled={isSubmitting}
-                                style={{
-                                    flexShrink: 0,
-                                    whiteSpace: 'nowrap',
-                                    marginRight: '20px',
-                                    height: '40px' // Match height with passport option
-                                }}
-                            />
-                            {/* Custom passport option with fake radio button */}
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                marginLeft: '0px',
-                                opacity: 0.6,
-                                whiteSpace: 'nowrap',
-                                flexShrink: 0,
-                                height: '40px' // Match height of the FormControlLabel
-                            }}>
-                                {/* Fake radio button circle */}
-                                <div style={{
-                                    width: '20px',
-                                    height: '20px',
-                                    borderRadius: '50%',
-                                    border: '2px solid #bdbdbd',
-                                    marginRight: '9px',
-                                    marginLeft: '12px', // Adjusted to match MUI's padding
-                                    boxSizing: 'border-box',
-                                    display: 'inline-block',
-                                    flexShrink: 0
-                                }}></div>
-                                <span style={{
-                                    display: 'inline-block',
-                                    marginRight: '8px',
-                                    fontSize: '1rem', // Match MUI's font size
-                                    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif', // Match MUI's font
-                                    lineHeight: '1.5' // Match MUI's line height
-                                }}>Passport</span>
-                                <span style={{
-                                    fontSize: '0.7rem',
-                                    padding: '2px 6px',
-                                    backgroundColor: 'var(--color-secondary-light)',
-                                    color: 'var(--color-secondary-dark)',
-                                    borderRadius: '10px',
-                                    fontWeight: 'bold',
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    height: '18px',
-                                    whiteSpace: 'nowrap',
-                                    flexShrink: 0
-                                }}>
-                                    Coming Soon
-                                </span>
-                            </div>
-                        </RadioGroup>
-                    </FormControl>
-                </div>
-
-                {/* Conditional ID Number or Passport field */}
-                {formData.documentType === 'idNumber' ? (
-                    <div className="form-group">
-                        <div className="input-with-icon">
-                            <FontAwesomeIcon icon={faIdCard} className="input-icon" />
-                            <input
-                                type="text"
-                                name="idNumber"
-                                placeholder="ID Number"
-                                value={formData.idNumber}
-                                onChange={handleChange}
-                                disabled={isSubmitting}
-                                required
-                                pattern="[0-9]{13}"
-                                title="ID Number must be exactly 13 digits"
-                            />
-                        </div>
-                        {validationErrors.idNumber && (
-                            <div className="error-message">{validationErrors.idNumber}</div>
-                        )}
-                        <div className="form-hint">South African ID Number (13 digits)</div>
-                    </div>
-                ) : (
-                    <div className="form-group">
-                        <div className="input-with-icon">
-                            <FontAwesomeIcon icon={faPassport} className="input-icon" />
-                            <input
-                                type="text"
-                                name="passportNumber"
-                                placeholder="Passport Number"
-                                value={formData.passportNumber}
-                                onChange={handleChange}
-                                disabled={isSubmitting}
-                                required
-                            />
-                        </div>
-                        {validationErrors.passportNumber && (
-                            <div className="error-message">{validationErrors.passportNumber}</div>
-                        )}
-                        <div className="form-hint">Enter your passport number (6-12 characters)</div>
-                    </div>
-                )}
-
-                {/* Password field */}
-                <div className="form-group">
-                    <div className="input-with-icon">
-                        <FontAwesomeIcon icon={faLock} className="input-icon" />
-                        <input
-                            type={showPassword ? "text" : "password"}
-                            name="password"
-                            placeholder="Password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            disabled={isSubmitting}
-                            required
-                        />
-                        <button
-                            type="button"
-                            className="password-toggle"
-                            onClick={togglePasswordVisibility}
-                            tabIndex="-1"
-                        >
-                            <span className="password-toggle-text">
-                                {showPassword ? "Hide" : "Show"}
-                            </span>
-                        </button>
-                    </div>
-                    {validationErrors.password && (
-                        <div className="error-message">{validationErrors.password}</div>
-                    )}
-                    <div className="form-hint">Minimum 8 characters with letters, numbers & symbols</div>
-                </div>
-
-                {/* Confirm Password field */}
-                <div className="form-group">
-                    <div className="input-with-icon">
-                        <FontAwesomeIcon icon={faLock} className="input-icon" />
-                        <input
-                            type={showConfirmPassword ? "text" : "password"}
-                            name="confirmPassword"
-                            placeholder="Confirm Password"
-                            value={formData.confirmPassword}
-                            onChange={handleChange}
-                            disabled={isSubmitting}
-                            required
-                        />
-                        <button
-                            type="button"
-                            className="password-toggle"
-                            onClick={toggleConfirmPasswordVisibility}
-                            tabIndex="-1"
-                        >
-                            <span className="password-toggle-text">
-                                {showConfirmPassword ? "Hide" : "Show"}
-                            </span>
-                        </button>
-                    </div>
-                    {validationErrors.confirmPassword && (
-                        <div className="error-message">{validationErrors.confirmPassword}</div>
-                    )}
-                </div>
-
-                <button type="submit" className="submit-button" disabled={isSubmitting} style={{ color: 'white' }}>
-                    {isSubmitting ? (
-                        <>
-                            <CircularProgress size={20} color="inherit" />
-                            <span style={{ marginLeft: '8px' }}>Creating Account...</span>
-                        </>
-                    ) : (
-                        'Create Account'
-                    )}
-                </button>
-
-                <p className="auth-link">
-                    Already have an account? <Link to="/login">Log In</Link>
-                </p>
-            </form>
-
-            {/* Email Verification Dialog */}
-            <Dialog
-                open={showVerificationDialog}
-                onClose={() => !isSubmitting && setShowVerificationDialog(false)}
-                slotProps={{
-                    paper: {
-                        elevation: 3, // Using a valid elevation value (0-16)
-                        sx: {
-                            borderRadius: '16px',
-                            padding: '10px',
-                            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.05)',
-                            maxWidth: '450px',
-                            width: '100%',
-                            background: 'linear-gradient(145deg, #ffffff, #f8f9fa)',
-                            border: '1px solid rgba(14, 70, 73, 0.05)',
-                            overflow: 'hidden'
-                        }
-                    }
-                }}
-            >
-                <div style={{
-                    width: '100%',
-                    height: '5px',
-                    background: 'linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%)',
-                    marginBottom: '15px'
-                }}></div>
-
-                <DialogTitle style={{
-                    textAlign: 'center',
-                    fontSize: '1.5rem',
-                    fontWeight: '700',
-                    background: 'linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                    color: 'transparent',
-                    padding: '10px 24px'
-                }}>
-                    Verify Your Email
-                </DialogTitle>
-
-                <DialogContent style={{ padding: '20px 24px' }}>
-                    <p style={{
-                        textAlign: 'center',
-                        marginBottom: '20px',
-                        fontSize: '1.05rem',
-                        color: '#555'
-                    }}>
-                        Please enter the verification code sent to your email.
-                    </p>
-
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        label="Verification Code"
-                        type="text"
-                        fullWidth
-                        value={verificationCode}
-                        onChange={(e) => setVerificationCode(e.target.value)}
-                        disabled={isSubmitting}
-                        error={!!validationErrors.verificationCode}
-                        helperText={validationErrors.verificationCode}
-                        slotProps={{
-                            input: {
-                                sx: {
-                                    borderRadius: '12px',
-                                    padding: '5px 15px',
-                                    fontSize: '1.1rem',
-                                    letterSpacing: '2px'
-                                }
-                            }
-                        }}
-                        sx={{
-                            '& .MuiOutlinedInput-root': {
-                                borderRadius: '12px',
-                                '&:hover fieldset': {
-                                    borderColor: 'var(--color-primary-light)',
-                                },
-                                '&.Mui-focused fieldset': {
-                                    borderColor: 'var(--color-primary)',
-                                    borderWidth: '2px',
-                                },
-                            },
-                        }}
-                    />
-
-                    {error && (
-                        <Alert
-                            severity="error"
-                            className="auth-alert"
-                            style={{
-                                marginTop: '15px',
-                                borderRadius: '12px',
-                                animation: 'fadeIn 0.5s ease-out'
-                            }}
-                        >
-                            {error}
-                        </Alert>
-                    )}
-
-                    {resendSuccess && (
-                        <Alert
-                            severity="info"
-                            className="auth-alert"
-                            style={{
-                                marginTop: '15px',
-                                borderRadius: '12px',
-                                animation: 'fadeIn 0.5s ease-out'
-                            }}
-                        >
-                            Verification code has been resent to your email.
-                        </Alert>
-                    )}
-
-                    {verificationSuccess && (
-                        <Alert
-                            severity="success"
-                            className="auth-alert"
-                            style={{
-                                marginTop: '15px',
-                                borderRadius: '12px',
-                                animation: 'fadeIn 0.5s ease-out'
-                            }}
-                        >
-                            Email verified successfully! Redirecting to login...
-                        </Alert>
-                    )}
-                </DialogContent>
-
-                <DialogActions style={{
-                    padding: '15px 24px 24px',
-                    display: 'flex',
-                    justifyContent: 'space-between'
-                }}>
-                    <Button
-                        onClick={handleResendCode}
-                        disabled={isSubmitting}
-                        style={{
-                            color: 'var(--color-secondary)',
-                            fontWeight: '500',
-                            textTransform: 'none',
-                            fontSize: '0.95rem'
-                        }}
-                    >
-                        Resend Code
-                    </Button>
-
-                    <div style={{ display: 'flex', gap: '10px' }}>
-                        <Button
-                            onClick={() => setShowVerificationDialog(false)}
-                            disabled={isSubmitting || verificationSuccess}
-                            style={{
-                                borderRadius: '10px',
-                                textTransform: 'none',
-                                padding: '8px 16px',
-                                fontSize: '0.95rem'
-                            }}
-                        >
-                            Cancel
-                        </Button>
-
-                        <Button
-                            onClick={handleVerificationSubmit}
-                            disabled={isSubmitting || verificationSuccess}
-                            variant="contained"
-                            style={{
-                                background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)',
-                                color: 'white',
-                                borderRadius: '10px',
-                                padding: '8px 24px',
-                                boxShadow: '0 4px 12px rgba(14, 70, 73, 0.2)',
-                                textTransform: 'none',
-                                fontSize: '0.95rem',
-                                fontWeight: '600'
-                            }}
-                        >
-                            {isSubmitting ? <CircularProgress size={20} color="inherit" /> : 'Verify'}
-                        </Button>
-                    </div>
-                </DialogActions>
-            </Dialog>
+          </div>
         </div>
-    );
+
+        {/* Email field */}
+        <div className="form-group">
+          <div className="input-with-icon">
+            <FontAwesomeIcon icon={faEnvelope} className="input-icon" />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              disabled={isSubmitting}
+              required
+            />
+          </div>
+          {validationErrors.email && (
+            <div className="error-message">{validationErrors.email}</div>
+          )}
+        </div>
+
+        {/* Phone Number field (optional) */}
+        <div className="form-group">
+          <div className="input-with-icon">
+            <FontAwesomeIcon icon={faPhone} className="input-icon" />
+            <input
+              type="tel"
+              name="phoneNumber"
+              placeholder="Phone Number (+27 Format)"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              disabled={isSubmitting}
+            />
+            <Tooltip title="Phone verification coming soon" placement="top">
+              <span className="info-icon">
+                <FontAwesomeIcon icon={faInfoCircle} />
+              </span>
+            </Tooltip>
+          </div>
+          {validationErrors.phoneNumber && (
+            <div className="error-message">{validationErrors.phoneNumber}</div>
+          )}
+        </div>
+
+        {/* Document Type Selection */}
+        <div className="form-group">
+          <FormControl component="fieldset">
+            <FormLabel component="legend" style={{ marginBottom: '8px' }}>
+              Identification Type
+            </FormLabel>
+            <RadioGroup
+              row
+              name="documentType"
+              value={formData.documentType}
+              onChange={handleChange}
+              style={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'flex-start',
+                gap: '20px',
+              }}
+            >
+              <FormControlLabel
+                value="idNumber"
+                control={<Radio />}
+                label="South African ID"
+                disabled={isSubmitting}
+                style={{
+                  flexShrink: 0,
+                  whiteSpace: 'nowrap',
+                  marginRight: '20px',
+                  height: '40px', // Match height with passport option
+                }}
+              />
+              {/* Custom passport option with fake radio button */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginLeft: '0px',
+                  opacity: 0.6,
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0,
+                  height: '40px', // Match height of the FormControlLabel
+                }}
+              >
+                {/* Fake radio button circle */}
+                <div
+                  style={{
+                    width: '20px',
+                    height: '20px',
+                    borderRadius: '50%',
+                    border: '2px solid #bdbdbd',
+                    marginRight: '9px',
+                    marginLeft: '12px', // Adjusted to match MUI's padding
+                    boxSizing: 'border-box',
+                    display: 'inline-block',
+                    flexShrink: 0,
+                  }}
+                ></div>
+                <span
+                  style={{
+                    display: 'inline-block',
+                    marginRight: '8px',
+                    fontSize: '1rem', // Match MUI's font size
+                    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif', // Match MUI's font
+                    lineHeight: '1.5', // Match MUI's line height
+                  }}
+                >
+                  Passport
+                </span>
+                <span
+                  style={{
+                    fontSize: '0.7rem',
+                    padding: '2px 6px',
+                    backgroundColor: 'var(--color-secondary-light)',
+                    color: 'var(--color-secondary-dark)',
+                    borderRadius: '10px',
+                    fontWeight: 'bold',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    height: '18px',
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0,
+                  }}
+                >
+                  Coming Soon
+                </span>
+              </div>
+            </RadioGroup>
+          </FormControl>
+        </div>
+
+        {/* Conditional ID Number or Passport field */}
+        {formData.documentType === 'idNumber' ? (
+          <div className="form-group">
+            <div className="input-with-icon">
+              <FontAwesomeIcon icon={faIdCard} className="input-icon" />
+              <input
+                type="text"
+                name="idNumber"
+                placeholder="ID Number"
+                value={formData.idNumber}
+                onChange={handleChange}
+                disabled={isSubmitting}
+                required
+                pattern="[0-9]{13}"
+                title="ID Number must be exactly 13 digits"
+              />
+            </div>
+            {validationErrors.idNumber && (
+              <div className="error-message">{validationErrors.idNumber}</div>
+            )}
+            <div className="form-hint">South African ID Number (13 digits)</div>
+          </div>
+        ) : (
+          <div className="form-group">
+            <div className="input-with-icon">
+              <FontAwesomeIcon icon={faPassport} className="input-icon" />
+              <input
+                type="text"
+                name="passportNumber"
+                placeholder="Passport Number"
+                value={formData.passportNumber}
+                onChange={handleChange}
+                disabled={isSubmitting}
+                required
+              />
+            </div>
+            {validationErrors.passportNumber && (
+              <div className="error-message">
+                {validationErrors.passportNumber}
+              </div>
+            )}
+            <div className="form-hint">
+              Enter your passport number (6-12 characters)
+            </div>
+          </div>
+        )}
+
+        {/* Password field */}
+        <div className="form-group">
+          <div className="input-with-icon">
+            <FontAwesomeIcon icon={faLock} className="input-icon" />
+            <input
+              type={showPassword ? 'text' : 'password'}
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              disabled={isSubmitting}
+              required
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={togglePasswordVisibility}
+              tabIndex="-1"
+            >
+              <span className="password-toggle-text">
+                {showPassword ? 'Hide' : 'Show'}
+              </span>
+            </button>
+          </div>
+          {validationErrors.password && (
+            <div className="error-message">{validationErrors.password}</div>
+          )}
+          <div className="form-hint">
+            Minimum 8 characters with letters, numbers & symbols
+          </div>
+        </div>
+
+        {/* Confirm Password field */}
+        <div className="form-group">
+          <div className="input-with-icon">
+            <FontAwesomeIcon icon={faLock} className="input-icon" />
+            <input
+              type={showConfirmPassword ? 'text' : 'password'}
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              disabled={isSubmitting}
+              required
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={toggleConfirmPasswordVisibility}
+              tabIndex="-1"
+            >
+              <span className="password-toggle-text">
+                {showConfirmPassword ? 'Hide' : 'Show'}
+              </span>
+            </button>
+          </div>
+          {validationErrors.confirmPassword && (
+            <div className="error-message">
+              {validationErrors.confirmPassword}
+            </div>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          className="submit-button"
+          disabled={isSubmitting}
+          style={{ color: 'white' }}
+        >
+          {isSubmitting ? (
+            <>
+              <CircularProgress size={20} color="inherit" />
+              <span style={{ marginLeft: '8px' }}>Creating Account...</span>
+            </>
+          ) : (
+            'Create Account'
+          )}
+        </button>
+
+        <p className="auth-link">
+          Already have an account? <Link to="/login">Log In</Link>
+        </p>
+      </form>
+
+      {/* Email Verification Dialog */}
+      <Dialog
+        open={showVerificationDialog}
+        onClose={() => !isSubmitting && setShowVerificationDialog(false)}
+        slotProps={{
+          paper: {
+            elevation: 3, // Using a valid elevation value (0-16)
+            sx: {
+              borderRadius: '16px',
+              padding: '10px',
+              boxShadow:
+                '0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.05)',
+              maxWidth: '450px',
+              width: '100%',
+              background: 'linear-gradient(145deg, #ffffff, #f8f9fa)',
+              border: '1px solid rgba(14, 70, 73, 0.05)',
+              overflow: 'hidden',
+            },
+          },
+        }}
+      >
+        <div
+          style={{
+            width: '100%',
+            height: '5px',
+            background:
+              'linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%)',
+            marginBottom: '15px',
+          }}
+        ></div>
+
+        <DialogTitle
+          style={{
+            textAlign: 'center',
+            fontSize: '1.5rem',
+            fontWeight: '700',
+            background:
+              'linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            color: 'transparent',
+            padding: '10px 24px',
+          }}
+        >
+          Verify Your Email
+        </DialogTitle>
+
+        <DialogContent style={{ padding: '20px 24px' }}>
+          <p
+            style={{
+              textAlign: 'center',
+              marginBottom: '20px',
+              fontSize: '1.05rem',
+              color: '#555',
+            }}
+          >
+            Please enter the verification code sent to your email.
+          </p>
+
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Verification Code"
+            type="text"
+            fullWidth
+            value={verificationCode}
+            onChange={e => setVerificationCode(e.target.value)}
+            disabled={isSubmitting}
+            error={!!validationErrors.verificationCode}
+            helperText={validationErrors.verificationCode}
+            slotProps={{
+              input: {
+                sx: {
+                  borderRadius: '12px',
+                  padding: '5px 15px',
+                  fontSize: '1.1rem',
+                  letterSpacing: '2px',
+                },
+              },
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '12px',
+                '&:hover fieldset': {
+                  borderColor: 'var(--color-primary-light)',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'var(--color-primary)',
+                  borderWidth: '2px',
+                },
+              },
+            }}
+          />
+
+          {error && (
+            <Alert
+              severity="error"
+              className="auth-alert"
+              style={{
+                marginTop: '15px',
+                borderRadius: '12px',
+                animation: 'fadeIn 0.5s ease-out',
+              }}
+            >
+              {error}
+            </Alert>
+          )}
+
+          {resendSuccess && (
+            <Alert
+              severity="info"
+              className="auth-alert"
+              style={{
+                marginTop: '15px',
+                borderRadius: '12px',
+                animation: 'fadeIn 0.5s ease-out',
+              }}
+            >
+              Verification code has been resent to your email.
+            </Alert>
+          )}
+
+          {verificationSuccess && (
+            <Alert
+              severity="success"
+              className="auth-alert"
+              style={{
+                marginTop: '15px',
+                borderRadius: '12px',
+                animation: 'fadeIn 0.5s ease-out',
+              }}
+            >
+              Email verified successfully! Redirecting to login...
+            </Alert>
+          )}
+        </DialogContent>
+
+        <DialogActions
+          style={{
+            padding: '15px 24px 24px',
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Button
+            onClick={handleResendCode}
+            disabled={isSubmitting}
+            style={{
+              color: 'var(--color-secondary)',
+              fontWeight: '500',
+              textTransform: 'none',
+              fontSize: '0.95rem',
+            }}
+          >
+            Resend Code
+          </Button>
+
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <Button
+              onClick={() => setShowVerificationDialog(false)}
+              disabled={isSubmitting || verificationSuccess}
+              style={{
+                borderRadius: '10px',
+                textTransform: 'none',
+                padding: '8px 16px',
+                fontSize: '0.95rem',
+              }}
+            >
+              Cancel
+            </Button>
+
+            <Button
+              onClick={handleVerificationSubmit}
+              disabled={isSubmitting || verificationSuccess}
+              variant="contained"
+              style={{
+                background:
+                  'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)',
+                color: 'white',
+                borderRadius: '10px',
+                padding: '8px 24px',
+                boxShadow: '0 4px 12px rgba(14, 70, 73, 0.2)',
+                textTransform: 'none',
+                fontSize: '0.95rem',
+                fontWeight: '600',
+              }}
+            >
+              {isSubmitting ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : (
+                'Verify'
+              )}
+            </Button>
+          </div>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
 }
 
 export default RegisterForm;

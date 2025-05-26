@@ -1,9 +1,23 @@
 import React, { useEffect } from 'react';
-import { Container, Grid, Typography, Box, Card, CardContent, Button } from '@mui/material';
+import {
+  Container,
+  Grid,
+  Typography,
+  Box,
+  Card,
+  CardContent,
+  Button,
+} from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faHandshake, faLightbulb, faUsers, faGlobe,
-  faChartLine, faHeart, faRocket, faEye
+  faHandshake,
+  faLightbulb,
+  faUsers,
+  faGlobe,
+  faChartLine,
+  faHeart,
+  faRocket,
+  faEye,
 } from '@fortawesome/free-solid-svg-icons';
 import './AboutUsPage.css';
 
@@ -34,34 +48,40 @@ const AboutUsPage = () => {
   const coreValues = [
     {
       icon: faHandshake,
-      title: "Integrity",
-      description: "We uphold the highest standards of honesty, transparency, and ethical conduct in all our interactions."
+      title: 'Integrity',
+      description:
+        'We uphold the highest standards of honesty, transparency, and ethical conduct in all our interactions.',
     },
     {
       icon: faLightbulb,
-      title: "Innovation",
-      description: "We continuously seek creative solutions to improve service delivery and citizen engagement."
+      title: 'Innovation',
+      description:
+        'We continuously seek creative solutions to improve service delivery and citizen engagement.',
     },
     {
       icon: faUsers,
-      title: "Inclusivity",
-      description: "We ensure our platform is accessible to all citizens regardless of background or technical ability."
+      title: 'Inclusivity',
+      description:
+        'We ensure our platform is accessible to all citizens regardless of background or technical ability.',
     },
     {
       icon: faGlobe,
-      title: "Community",
-      description: "We foster a sense of belonging and shared responsibility within the communities we serve."
+      title: 'Community',
+      description:
+        'We foster a sense of belonging and shared responsibility within the communities we serve.',
     },
     {
       icon: faChartLine,
-      title: "Excellence",
-      description: "We strive for excellence in every aspect of our service and continuously improve our offerings."
+      title: 'Excellence',
+      description:
+        'We strive for excellence in every aspect of our service and continuously improve our offerings.',
     },
     {
       icon: faHeart,
-      title: "Empathy",
-      description: "We approach every interaction with understanding and compassion for the needs of our users."
-    }
+      title: 'Empathy',
+      description:
+        'We approach every interaction with understanding and compassion for the needs of our users.',
+    },
   ];
 
   return (
@@ -80,7 +100,10 @@ const AboutUsPage = () => {
                 Connecting Communities with Government Services
               </Typography>
               <Typography variant="body1" className="about-hero-text">
-                Let's Talk was founded with a simple yet powerful vision: to bridge the gap between citizens and government services through technology. We believe that effective communication and easy access to services are fundamental rights for all citizens.
+                Let's Talk was founded with a simple yet powerful vision: to
+                bridge the gap between citizens and government services through
+                technology. We believe that effective communication and easy
+                access to services are fundamental rights for all citizens.
               </Typography>
             </div>
           </Box>
@@ -102,7 +125,10 @@ const AboutUsPage = () => {
                 </Typography>
                 <div className="card-divider"></div>
                 <Typography variant="body1" className="mission-text">
-                  To empower South African citizens by providing a seamless, accessible platform that facilitates meaningful engagement with government services, enhances transparency, and improves service delivery through innovative technology solutions.
+                  To empower South African citizens by providing a seamless,
+                  accessible platform that facilitates meaningful engagement
+                  with government services, enhances transparency, and improves
+                  service delivery through innovative technology solutions.
                 </Typography>
               </div>
             </Grid>
@@ -116,7 +142,10 @@ const AboutUsPage = () => {
                 </Typography>
                 <div className="card-divider"></div>
                 <Typography variant="body1" className="vision-text">
-                  A South Africa where every citizen can easily access, monitor, and engage with government services through a unified, user-friendly platform, leading to improved service delivery, greater transparency, and stronger communities.
+                  A South Africa where every citizen can easily access, monitor,
+                  and engage with government services through a unified,
+                  user-friendly platform, leading to improved service delivery,
+                  greater transparency, and stronger communities.
                 </Typography>
               </div>
             </Grid>
@@ -137,18 +166,36 @@ const AboutUsPage = () => {
               Our Core Values
             </Typography>
             <div className="center-divider"></div>
-            <Typography variant="body1" className="section-subtitle text-center">
+            <Typography
+              variant="body1"
+              className="section-subtitle text-center"
+            >
               The principles that guide everything we do
             </Typography>
           </div>
 
-          <Grid container spacing={4} className="values-container" justifyContent="center" sx={{ margin: '0 auto', maxWidth: { md: '90%', lg: '85%', xl: '80%' } }}>
+          <Grid
+            container
+            spacing={4}
+            className="values-container"
+            justifyContent="center"
+            sx={{
+              margin: '0 auto',
+              maxWidth: { md: '90%', lg: '85%', xl: '80%' },
+            }}
+          >
             {coreValues.map((value, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card className="value-card animate-on-scroll" style={{animationDelay: `${index * 0.1}s`}}>
+                <Card
+                  className="value-card animate-on-scroll"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
                   <CardContent>
                     <div className="value-icon-container">
-                      <FontAwesomeIcon icon={value.icon} className="value-icon" />
+                      <FontAwesomeIcon
+                        icon={value.icon}
+                        className="value-icon"
+                      />
                     </div>
                     <Typography variant="h5" className="value-title">
                       {value.title}
@@ -181,7 +228,8 @@ const AboutUsPage = () => {
             </Typography>
             <div className="center-divider light"></div>
             <Typography variant="body1" className="cta-text text-center">
-              Be part of our mission to transform citizen-government interactions and improve service delivery across South Africa.
+              Be part of our mission to transform citizen-government
+              interactions and improve service delivery across South Africa.
             </Typography>
             <Box textAlign="center" mt={4} className="cta-button-container">
               <Button

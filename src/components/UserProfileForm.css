@@ -32,7 +32,7 @@
 
 .form-group input:focus,
 .form-group textarea:focus {
-  border-color: #0E4649;
+  border-color: #0e4649;
   outline: none;
 }
 
@@ -82,7 +82,9 @@
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.1s;
+  transition:
+    background-color 0.3s,
+    transform 0.1s;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -90,23 +92,23 @@
 }
 
 .edit-button {
-  background-color: #0E4649;
+  background-color: #0e4649;
   color: white;
 }
 
 .edit-button:hover {
-  background-color: #0A2F32;
+  background-color: #0a2f32;
   transform: translateY(-2px);
 }
 
 .save-button {
-  background-color: #0E4649;
+  background-color: #0e4649;
   color: white;
   flex: 1;
 }
 
 .save-button:hover {
-  background-color: #0A2F32;
+  background-color: #0a2f32;
   transform: translateY(-2px);
 }
 
@@ -134,7 +136,7 @@
   .form-actions {
     flex-direction: column;
   }
-  
+
   .edit-button,
   .save-button,
   .cancel-button {

@@ -8,7 +8,7 @@ const WeatherWidget = ({
   isLoading,
   error,
   onRefresh,
-  className = ''
+  className = '',
 }) => {
   // If there's an error, show error state
   if (error) {
@@ -42,14 +42,16 @@ const WeatherWidget = ({
   // We don't need the weather icon for the simplified version
 
   // Format temperature in Celsius only
-  const formatTemperature = (temp) => {
+  const formatTemperature = temp => {
     return `${temp}°C`;
   };
 
   return (
     <div className={`weather-widget ${className}`}>
       <div className="weather-info">
-        <span className="weather-temp">{formatTemperature(current.temperature)}</span>
+        <span className="weather-temp">
+          {formatTemperature(current.temperature)}
+        </span>
         <span className="weather-condition">{current.condition}</span>
       </div>
       <div className="weather-location">

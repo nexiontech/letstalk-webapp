@@ -23,7 +23,7 @@
 
 .id-info-section h3 {
   font-size: 1.2rem;
-  color: #0E4649;
+  color: #0e4649;
   margin-bottom: 15px;
   padding-bottom: 10px;
   border-bottom: 1px solid #e9ecef;
@@ -74,7 +74,7 @@
   .id-info-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .id-info-item {
     margin-bottom: 10px;
   }

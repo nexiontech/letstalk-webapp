@@ -4,7 +4,7 @@ import {
   signOut,
   getCurrentUser,
   fetchAuthSession,
-  fetchUserAttributes
+  fetchUserAttributes,
 } from 'aws-amplify/auth';
 import {
   cognitoSignIn,
@@ -12,10 +12,10 @@ import {
   cognitoConfirmSignUp,
   cognitoResendConfirmationCode,
   cognitoForgotPassword,
-  cognitoConfirmForgotPassword
+  cognitoConfirmForgotPassword,
 } from '../utils/cognitoAuth';
 import { decodeJWT } from '../utils/jwtDecode';
-import { padIdentifierForCognito, extractOriginalIdentifier } from '../utils/authUtils';
+import { padIdentifierForCognito } from '../utils/authUtils';
 import { getCognitoConfig, logCognitoConfig } from '../utils/envUtils';
 
 // Async thunk for login
@@ -30,7 +30,10 @@ export const loginUser = createAsyncThunk(
         console.log('Signed out existing user');
       } catch (signOutError) {
         // Ignore errors from signOut - it might just mean no user was signed in
-        console.log('No existing user to sign out or sign out failed:', signOutError);
+        console.log(
+          'No existing user to sign out or sign out failed:',
+          signOutError
+        );
       }
 
       // Get Cognito configuration from environment variables
@@ -42,12 +45,17 @@ export const loginUser = createAsyncThunk(
       // TEMPORARY WORKAROUND: Handle padded passport numbers for login
       // Determine if we need to pad the identifier (for passport numbers)
       // If documentType is not provided, try to detect from the format
-      const detectedDocType = documentType ||
-                             (idNumber.length < 13 ? 'passport' : 'idNumber');
+      const detectedDocType =
+        documentType || (idNumber.length < 13 ? 'passport' : 'idNumber');
 
-      const paddedIdentifier = padIdentifierForCognito(idNumber, detectedDocType);
+      const paddedIdentifier = padIdentifierForCognito(
+        idNumber,
+        detectedDocType
+      );
 
-      console.log(`Login - Document type: ${detectedDocType}, Original: ${idNumber}, Padded: ${paddedIdentifier}`);
+      console.log(
+        `Login - Document type: ${detectedDocType}, Original: ${idNumber}, Padded: ${paddedIdentifier}`
+      );
 
       // Now attempt to sign in using our custom function
       const signInResponse = await cognitoSignIn(
@@ -78,7 +86,7 @@ export const loginUser = createAsyncThunk(
       const user = {
         idNumber: idNumber,
         email: decodedToken?.email || '',
-        name: decodedToken?.name || '',  // Extract name from token
+        name: decodedToken?.name || '', // Extract name from token
       };
 
       console.log('User object created:', user);
@@ -88,18 +96,32 @@ export const loginUser = createAsyncThunk(
 
       return {
         user: user,
-        token: idToken
+        token: idToken,
       };
     } catch (error) {
       console.error('Login error:', error);
       // Handle specific error cases
-      if (error.message && error.message.includes('UserNotConfirmedException')) {
-        return rejectWithValue('User is not confirmed. Please check your email for verification code.');
-      } else if (error.message && error.message.includes('NotAuthorizedException')) {
+      if (
+        error.message &&
+        error.message.includes('UserNotConfirmedException')
+      ) {
+        return rejectWithValue(
+          'User is not confirmed. Please check your email for verification code.'
+        );
+      } else if (
+        error.message &&
+        error.message.includes('NotAuthorizedException')
+      ) {
         return rejectWithValue('Incorrect ID Number or password.');
-      } else if (error.message && error.message.includes('UserNotFoundException')) {
+      } else if (
+        error.message &&
+        error.message.includes('UserNotFoundException')
+      ) {
         return rejectWithValue('User does not exist.');
-      } else if (error.message && error.message.includes('UserAlreadyAuthenticatedException')) {
+      } else if (
+        error.message &&
+        error.message.includes('UserAlreadyAuthenticatedException')
+      ) {
         // Handle the case where a user is already authenticated
         try {
           // Try to get the current session
@@ -115,7 +137,7 @@ export const loginUser = createAsyncThunk(
           const user = {
             idNumber: idNumber, // We don't know if this is correct, but it's what the user entered
             email: decodedToken?.email || '',
-            name: decodedToken?.name || '',  // Extract name from token
+            name: decodedToken?.name || '', // Extract name from token
           };
 
           // Store user in localStorage
@@ -123,7 +145,7 @@ export const loginUser = createAsyncThunk(
 
           return {
             user: user,
-            token: tokens.idToken.toString()
+            token: tokens.idToken.toString(),
           };
         } catch (innerError) {
           console.log('Error getting current user session:', innerError);
@@ -134,7 +156,9 @@ export const loginUser = createAsyncThunk(
             console.log('Error during forced sign out:', signOutError);
             // Continue with the flow even if sign out fails
           }
-          return rejectWithValue('Session conflict detected. Please try logging in again.');
+          return rejectWithValue(
+            'Session conflict detected. Please try logging in again.'
+          );
         }
       }
       return rejectWithValue(error.message || 'Login failed');
@@ -163,7 +187,7 @@ export const registerUser = createAsyncThunk(
       const userAttributes = {
         email: userData.email,
         name: userData.name,
-        'custom:idNumber': paddedIdentifier
+        'custom:idNumber': paddedIdentifier,
         // Note: We're not storing 'custom:documentType' or 'custom:originalIdentifier'
         // as they're not configured in the Cognito User Pool schema
       };
@@ -179,14 +203,18 @@ export const registerUser = createAsyncThunk(
         cognitoConfig.identityPoolId // Pass the Identity Pool ID
       );
 
-      console.log('Registration successful with Identity Pool integration:', signUpResponse);
+      console.log(
+        'Registration successful with Identity Pool integration:',
+        signUpResponse
+      );
 
       // Store the original identifier for verification (not the padded one)
       return {
         success: true,
-        message: 'Registration successful. Please check your email for verification.',
+        message:
+          'Registration successful. Please check your email for verification.',
         identityPoolAssociation: signUpResponse.identityPoolAssociation,
-        originalIdentifier: userData.idNumber
+        originalIdentifier: userData.idNumber,
       };
     } catch (error) {
       console.error('Registration error:', error);
@@ -198,17 +226,39 @@ export const registerUser = createAsyncThunk(
 
           // Handle specific error types
           if (parsedError.type === 'UsernameExistsException') {
-            return rejectWithValue('An account with this ID Number already exists.');
-          } else if (parsedError.type === 'InvalidParameterException' && parsedError.message.includes('password')) {
-            return rejectWithValue('Password does not meet requirements. It must be at least 8 characters long and contain uppercase, lowercase, numbers, and special characters.');
-          } else if (parsedError.type === 'InvalidParameterException' && parsedError.message.includes('email')) {
+            return rejectWithValue(
+              'An account with this ID Number already exists.'
+            );
+          } else if (
+            parsedError.type === 'InvalidParameterException' &&
+            parsedError.message.includes('password')
+          ) {
+            return rejectWithValue(
+              'Password does not meet requirements. It must be at least 8 characters long and contain uppercase, lowercase, numbers, and special characters.'
+            );
+          } else if (
+            parsedError.type === 'InvalidParameterException' &&
+            parsedError.message.includes('email')
+          ) {
             return rejectWithValue('Please provide a valid email address.');
-          } else if (parsedError.type === 'InvalidParameterException' && parsedError.message.includes('idNumber')) {
-            return rejectWithValue('Please provide a valid South African ID number.');
-          } else if (parsedError.message && parsedError.message.includes('Attributes did not conform to the schema')) {
+          } else if (
+            parsedError.type === 'InvalidParameterException' &&
+            parsedError.message.includes('idNumber')
+          ) {
+            return rejectWithValue(
+              'Please provide a valid South African ID number.'
+            );
+          } else if (
+            parsedError.message &&
+            parsedError.message.includes(
+              'Attributes did not conform to the schema'
+            )
+          ) {
             // Handle schema validation errors
             console.error('Schema validation error:', parsedError.message);
-            return rejectWithValue('Registration failed due to invalid attributes. Please contact support.');
+            return rejectWithValue(
+              'Registration failed due to invalid attributes. Please contact support.'
+            );
           }
 
           // Return the parsed error message if no specific case matches
@@ -221,15 +271,32 @@ export const registerUser = createAsyncThunk(
 
       // Fall back to original error handling for non-JSON errors
       if (error.message && error.message.includes('UsernameExistsException')) {
-        return rejectWithValue('An account with this ID Number already exists.');
-      } else if (error.message && error.message.includes('InvalidParameterException') && error.message.includes('password')) {
-        return rejectWithValue('Password does not meet requirements. It must be at least 8 characters long and contain uppercase, lowercase, numbers, and special characters.');
-      } else if (error.message && error.message.includes('InvalidParameterException') && error.message.includes('email')) {
+        return rejectWithValue(
+          'An account with this ID Number already exists.'
+        );
+      } else if (
+        error.message &&
+        error.message.includes('InvalidParameterException') &&
+        error.message.includes('password')
+      ) {
+        return rejectWithValue(
+          'Password does not meet requirements. It must be at least 8 characters long and contain uppercase, lowercase, numbers, and special characters.'
+        );
+      } else if (
+        error.message &&
+        error.message.includes('InvalidParameterException') &&
+        error.message.includes('email')
+      ) {
         return rejectWithValue('Please provide a valid email address.');
-      } else if (error.message && error.message.includes('Attributes did not conform to the schema')) {
+      } else if (
+        error.message &&
+        error.message.includes('Attributes did not conform to the schema')
+      ) {
         // Handle schema validation errors
         console.error('Schema validation error:', error.message);
-        return rejectWithValue('Registration failed due to invalid attributes. Please contact support.');
+        return rejectWithValue(
+          'Registration failed due to invalid attributes. Please contact support.'
+        );
       }
 
       return rejectWithValue(error.message || 'Registration failed');
@@ -251,12 +318,17 @@ export const confirmRegistration = createAsyncThunk(
       // TEMPORARY WORKAROUND: Pad passport numbers for confirmation
       // Determine if we need to pad the identifier (for passport numbers)
       // If documentType is not provided, try to detect from the format
-      const detectedDocType = documentType ||
-                             (idNumber.length < 13 ? 'passport' : 'idNumber');
+      const detectedDocType =
+        documentType || (idNumber.length < 13 ? 'passport' : 'idNumber');
 
-      const paddedIdentifier = padIdentifierForCognito(idNumber, detectedDocType);
+      const paddedIdentifier = padIdentifierForCognito(
+        idNumber,
+        detectedDocType
+      );
 
-      console.log(`Confirmation - Document type: ${detectedDocType}, Original: ${idNumber}, Padded: ${paddedIdentifier}`);
+      console.log(
+        `Confirmation - Document type: ${detectedDocType}, Original: ${idNumber}, Padded: ${paddedIdentifier}`
+      );
 
       // Using our custom confirmation function
       await cognitoConfirmSignUp(
@@ -269,7 +341,7 @@ export const confirmRegistration = createAsyncThunk(
 
       return {
         success: true,
-        message: 'Email verification successful. You can now log in.'
+        message: 'Email verification successful. You can now log in.',
       };
     } catch (error) {
       console.error('Confirmation error:', error);
@@ -292,9 +364,14 @@ export const resendVerificationCode = createAsyncThunk(
       // TEMPORARY WORKAROUND: Handle padded passport numbers for resending verification code
       // Determine if we need to pad the identifier (for passport numbers)
       const detectedDocType = idNumber.length < 13 ? 'passport' : 'idNumber';
-      const paddedIdentifier = padIdentifierForCognito(idNumber, detectedDocType);
+      const paddedIdentifier = padIdentifierForCognito(
+        idNumber,
+        detectedDocType
+      );
 
-      console.log(`Resend Code - Document type: ${detectedDocType}, Original: ${idNumber}, Padded: ${paddedIdentifier}`);
+      console.log(
+        `Resend Code - Document type: ${detectedDocType}, Original: ${idNumber}, Padded: ${paddedIdentifier}`
+      );
 
       // Using our custom resend confirmation code function
       await cognitoResendConfirmationCode(
@@ -306,11 +383,13 @@ export const resendVerificationCode = createAsyncThunk(
 
       return {
         success: true,
-        message: 'Verification code has been resent to your email.'
+        message: 'Verification code has been resent to your email.',
       };
     } catch (error) {
       console.error('Resend verification code error:', error);
-      return rejectWithValue(error.message || 'Failed to resend verification code');
+      return rejectWithValue(
+        error.message || 'Failed to resend verification code'
+      );
     }
   }
 );
@@ -367,9 +446,15 @@ export const checkAuthStatus = createAsyncThunk(
         let userAttributes = {};
         try {
           userAttributes = await fetchUserAttributes();
-          console.log('User attributes fetched during status check:', userAttributes);
+          console.log(
+            'User attributes fetched during status check:',
+            userAttributes
+          );
         } catch (attributesError) {
-          console.error('Error fetching user attributes during status check:', attributesError);
+          console.error(
+            'Error fetching user attributes during status check:',
+            attributesError
+          );
         }
 
         // Get existing user from localStorage
@@ -380,9 +465,14 @@ export const checkAuthStatus = createAsyncThunk(
           ...user,
           // Prefer token data, then Amplify attributes, then existing data
           name: decodedToken?.name || userAttributes.name || user.name || '',
-          email: decodedToken?.email || userAttributes.email || user.email || '',
+          email:
+            decodedToken?.email || userAttributes.email || user.email || '',
           // Ensure ID number is always available
-          idNumber: user.idNumber || decodedToken?.['custom:idNumber'] || userAttributes['custom:idNumber'] || '',
+          idNumber:
+            user.idNumber ||
+            decodedToken?.['custom:idNumber'] ||
+            userAttributes['custom:idNumber'] ||
+            '',
         };
 
         // Update localStorage with fresh data
@@ -392,7 +482,7 @@ export const checkAuthStatus = createAsyncThunk(
         // Return user information and token
         return {
           user: user,
-          token: tokens.idToken.toString()
+          token: tokens.idToken.toString(),
         };
       } catch (amplifyError) {
         console.log('Amplify session check failed:', amplifyError);
@@ -442,9 +532,14 @@ export const forgotPassword = createAsyncThunk(
       // TEMPORARY WORKAROUND: Handle padded passport numbers for password reset
       // Determine if we need to pad the identifier (for passport numbers)
       const detectedDocType = idNumber.length < 13 ? 'passport' : 'idNumber';
-      const paddedIdentifier = padIdentifierForCognito(idNumber, detectedDocType);
+      const paddedIdentifier = padIdentifierForCognito(
+        idNumber,
+        detectedDocType
+      );
 
-      console.log(`Forgot Password - Document type: ${detectedDocType}, Original: ${idNumber}, Padded: ${paddedIdentifier}`);
+      console.log(
+        `Forgot Password - Document type: ${detectedDocType}, Original: ${idNumber}, Padded: ${paddedIdentifier}`
+      );
 
       // Using our custom forgot password function
       await cognitoForgotPassword(
@@ -456,7 +551,7 @@ export const forgotPassword = createAsyncThunk(
 
       return {
         success: true,
-        message: 'Password reset code has been sent to your email.'
+        message: 'Password reset code has been sent to your email.',
       };
     } catch (error) {
       console.error('Password reset request error:', error);
@@ -468,7 +563,10 @@ export const forgotPassword = createAsyncThunk(
 // Async thunk for confirm forgot password
 export const confirmForgotPassword = createAsyncThunk(
   'auth/confirmForgotPassword',
-  async ({ idNumber, code, newPassword, documentType }, { rejectWithValue }) => {
+  async (
+    { idNumber, code, newPassword, documentType },
+    { rejectWithValue }
+  ) => {
     try {
       // Get Cognito configuration from environment variables
       const cognitoConfig = getCognitoConfig();
@@ -478,12 +576,17 @@ export const confirmForgotPassword = createAsyncThunk(
 
       // TEMPORARY WORKAROUND: Handle padded passport numbers for password reset confirmation
       // Determine if we need to pad the identifier (for passport numbers)
-      const detectedDocType = documentType ||
-                             (idNumber.length < 13 ? 'passport' : 'idNumber');
+      const detectedDocType =
+        documentType || (idNumber.length < 13 ? 'passport' : 'idNumber');
 
-      const paddedIdentifier = padIdentifierForCognito(idNumber, detectedDocType);
+      const paddedIdentifier = padIdentifierForCognito(
+        idNumber,
+        detectedDocType
+      );
 
-      console.log(`Confirm Forgot Password - Document type: ${detectedDocType}, Original: ${idNumber}, Padded: ${paddedIdentifier}`);
+      console.log(
+        `Confirm Forgot Password - Document type: ${detectedDocType}, Original: ${idNumber}, Padded: ${paddedIdentifier}`
+      );
 
       // Using our custom confirm forgot password function
       await cognitoConfirmForgotPassword(
@@ -497,11 +600,14 @@ export const confirmForgotPassword = createAsyncThunk(
 
       return {
         success: true,
-        message: 'Password has been reset successfully. You can now log in with your new password.'
+        message:
+          'Password has been reset successfully. You can now log in with your new password.',
       };
     } catch (error) {
       console.error('Password reset confirmation error:', error);
-      return rejectWithValue(error.message || 'Password reset confirmation failed');
+      return rejectWithValue(
+        error.message || 'Password reset confirmation failed'
+      );
     }
   }
 );
@@ -520,21 +626,21 @@ const authSlice = createSlice({
     passwordResetRequested: false,
     passwordResetMessage: null,
     verificationSuccess: false,
-    verificationMessage: null
+    verificationMessage: null,
   },
   reducers: {
-    clearError: (state) => {
+    clearError: state => {
       state.error = null;
     },
-    clearRegistrationStatus: (state) => {
+    clearRegistrationStatus: state => {
       state.registrationSuccess = false;
       state.registrationMessage = null;
     },
-    clearPasswordResetStatus: (state) => {
+    clearPasswordResetStatus: state => {
       state.passwordResetRequested = false;
       state.passwordResetMessage = null;
     },
-    clearVerificationStatus: (state) => {
+    clearVerificationStatus: state => {
       state.verificationSuccess = false;
       state.verificationMessage = null;
     },
@@ -542,12 +648,12 @@ const authSlice = createSlice({
       state.user = action.payload;
       // Update localStorage
       localStorage.setItem('auth_user', JSON.stringify(action.payload));
-    }
+    },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       // Login cases
-      .addCase(loginUser.pending, (state) => {
+      .addCase(loginUser.pending, state => {
         state.loading = true;
         state.error = null;
       })
@@ -566,7 +672,7 @@ const authSlice = createSlice({
       })
 
       // Registration cases
-      .addCase(registerUser.pending, (state) => {
+      .addCase(registerUser.pending, state => {
         state.loading = true;
         state.error = null;
       })
@@ -581,7 +687,7 @@ const authSlice = createSlice({
       })
 
       // Confirm registration cases
-      .addCase(confirmRegistration.pending, (state) => {
+      .addCase(confirmRegistration.pending, state => {
         state.loading = true;
         state.error = null;
       })
@@ -596,7 +702,7 @@ const authSlice = createSlice({
       })
 
       // Resend verification code cases
-      .addCase(resendVerificationCode.pending, (state) => {
+      .addCase(resendVerificationCode.pending, state => {
         state.loading = true;
         state.error = null;
       })
@@ -610,10 +716,10 @@ const authSlice = createSlice({
       })
 
       // Logout cases
-      .addCase(logoutUser.pending, (state) => {
+      .addCase(logoutUser.pending, state => {
         state.loading = true;
       })
-      .addCase(logoutUser.fulfilled, (state) => {
+      .addCase(logoutUser.fulfilled, state => {
         state.loading = false;
         state.user = null;
         state.token = null;
@@ -626,7 +732,7 @@ const authSlice = createSlice({
       })
 
       // Check auth status cases
-      .addCase(checkAuthStatus.pending, (state) => {
+      .addCase(checkAuthStatus.pending, state => {
         state.loading = true;
       })
       .addCase(checkAuthStatus.fulfilled, (state, action) => {
@@ -635,7 +741,7 @@ const authSlice = createSlice({
         state.token = action.payload.token;
         state.isAuthenticated = true;
       })
-      .addCase(checkAuthStatus.rejected, (state) => {
+      .addCase(checkAuthStatus.rejected, state => {
         state.loading = false;
         state.user = null;
         state.token = null;
@@ -643,7 +749,7 @@ const authSlice = createSlice({
       })
 
       // Forgot password cases
-      .addCase(forgotPassword.pending, (state) => {
+      .addCase(forgotPassword.pending, state => {
         state.loading = true;
         state.error = null;
       })
@@ -658,7 +764,7 @@ const authSlice = createSlice({
       })
 
       // Confirm forgot password cases
-      .addCase(confirmForgotPassword.pending, (state) => {
+      .addCase(confirmForgotPassword.pending, state => {
         state.loading = true;
         state.error = null;
       })
@@ -671,7 +777,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       });
-  }
+  },
 });
 
 export const {
@@ -679,7 +785,7 @@ export const {
   clearRegistrationStatus,
   clearPasswordResetStatus,
   clearVerificationStatus,
-  updateUserProfile
+  updateUserProfile,
 } = authSlice.actions;
 
 export default authSlice.reducer;

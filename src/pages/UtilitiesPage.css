@@ -197,7 +197,8 @@
   margin-bottom: 2rem;
 }
 
-.pay-now-button, .download-statement {
+.pay-now-button,
+.download-statement {
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 8px;
@@ -317,28 +318,28 @@
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .utilities-search {
     width: 100%;
   }
-  
+
   .utilities-tabs {
     overflow-x: auto;
   }
-  
+
   .tab-button {
     white-space: nowrap;
   }
-  
+
   .account-details {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .account-balance {
     align-items: flex-start;
   }
-  
+
   .payment-actions {
     flex-direction: column;
   }

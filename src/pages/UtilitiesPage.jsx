@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faLightbulb, faWater, faHome, faMoneyBill,
-  faSearch, faFilter, faCalendarAlt, faChevronRight,
-  faDownload, faShare, faInfoCircle, faCreditCard
+  faLightbulb,
+  faWater,
+  faHome,
+  faMoneyBill,
+  faSearch,
+  faDownload,
+  faCreditCard,
 } from '@fortawesome/free-solid-svg-icons';
 import './UtilitiesPage.css';
 
@@ -23,12 +27,37 @@ const UtilitiesPage = () => {
       currentUsage: '320 kWh',
       dueDate: '30 June 2025',
       history: [
-        { month: 'May 2025', amount: 'R 750.25', usage: '320 kWh', status: 'Due' },
-        { month: 'April 2025', amount: 'R 680.50', usage: '290 kWh', status: 'Paid' },
-        { month: 'March 2025', amount: 'R 720.75', usage: '310 kWh', status: 'Paid' },
-        { month: 'February 2025', amount: 'R 650.30', usage: '275 kWh', status: 'Paid' },
-        { month: 'January 2025', amount: 'R 820.15', usage: '350 kWh', status: 'Paid' },
-      ]
+        {
+          month: 'May 2025',
+          amount: 'R 750.25',
+          usage: '320 kWh',
+          status: 'Due',
+        },
+        {
+          month: 'April 2025',
+          amount: 'R 680.50',
+          usage: '290 kWh',
+          status: 'Paid',
+        },
+        {
+          month: 'March 2025',
+          amount: 'R 720.75',
+          usage: '310 kWh',
+          status: 'Paid',
+        },
+        {
+          month: 'February 2025',
+          amount: 'R 650.30',
+          usage: '275 kWh',
+          status: 'Paid',
+        },
+        {
+          month: 'January 2025',
+          amount: 'R 820.15',
+          usage: '350 kWh',
+          status: 'Paid',
+        },
+      ],
     },
     water: {
       provider: 'Johannesburg Water',
@@ -40,12 +69,37 @@ const UtilitiesPage = () => {
       currentUsage: '18 kL',
       dueDate: '30 June 2025',
       history: [
-        { month: 'May 2025', amount: 'R 420.80', usage: '18 kL', status: 'Due' },
-        { month: 'April 2025', amount: 'R 395.50', usage: '17 kL', status: 'Paid' },
-        { month: 'March 2025', amount: 'R 440.25', usage: '19 kL', status: 'Paid' },
-        { month: 'February 2025', amount: 'R 372.60', usage: '16 kL', status: 'Paid' },
-        { month: 'January 2025', amount: 'R 465.30', usage: '20 kL', status: 'Paid' },
-      ]
+        {
+          month: 'May 2025',
+          amount: 'R 420.80',
+          usage: '18 kL',
+          status: 'Due',
+        },
+        {
+          month: 'April 2025',
+          amount: 'R 395.50',
+          usage: '17 kL',
+          status: 'Paid',
+        },
+        {
+          month: 'March 2025',
+          amount: 'R 440.25',
+          usage: '19 kL',
+          status: 'Paid',
+        },
+        {
+          month: 'February 2025',
+          amount: 'R 372.60',
+          usage: '16 kL',
+          status: 'Paid',
+        },
+        {
+          month: 'January 2025',
+          amount: 'R 465.30',
+          usage: '20 kL',
+          status: 'Paid',
+        },
+      ],
     },
     rates: {
       provider: 'City of Johannesburg',
@@ -61,7 +115,7 @@ const UtilitiesPage = () => {
         { month: 'March 2025', amount: 'R 1,250.00', status: 'Paid' },
         { month: 'February 2025', amount: 'R 1,250.00', status: 'Paid' },
         { month: 'January 2025', amount: 'R 1,250.00', status: 'Paid' },
-      ]
+      ],
     },
     other: {
       provider: 'Various',
@@ -71,20 +125,20 @@ const UtilitiesPage = () => {
           accountNumber: 'TV-987654321',
           currentBalance: 'R 265.00',
           dueDate: '30 June 2025',
-          status: 'Due'
+          status: 'Due',
         },
         {
           name: 'Internet Service',
           accountNumber: 'INT-123456789',
           currentBalance: 'R 699.00',
           dueDate: '15 June 2025',
-          status: 'Due'
-        }
-      ]
-    }
+          status: 'Due',
+        },
+      ],
+    },
   };
 
-  const handleTabChange = (tab) => {
+  const handleTabChange = tab => {
     setActiveTab(tab);
   };
 
@@ -168,7 +222,11 @@ const UtilitiesPage = () => {
                     <td>{item.month}</td>
                     <td>{item.amount}</td>
                     <td>{item.usage}</td>
-                    <td className={item.status === 'Paid' ? 'status-paid' : 'status-due'}>
+                    <td
+                      className={
+                        item.status === 'Paid' ? 'status-paid' : 'status-due'
+                      }
+                    >
                       {item.status}
                     </td>
                   </tr>
@@ -243,7 +301,11 @@ const UtilitiesPage = () => {
                   <tr key={index}>
                     <td>{item.month}</td>
                     <td>{item.amount}</td>
-                    <td className={item.status === 'Paid' ? 'status-paid' : 'status-due'}>
+                    <td
+                      className={
+                        item.status === 'Paid' ? 'status-paid' : 'status-due'
+                      }
+                    >
                       {item.status}
                     </td>
                   </tr>
@@ -262,7 +324,11 @@ const UtilitiesPage = () => {
             <div className="other-account" key={index}>
               <div className="account-header">
                 <h4>{account.name}</h4>
-                <span className={account.status === 'Paid' ? 'status-paid' : 'status-due'}>
+                <span
+                  className={
+                    account.status === 'Paid' ? 'status-paid' : 'status-due'
+                  }
+                >
                   {account.status}
                 </span>
               </div>
@@ -311,7 +377,7 @@ const UtilitiesPage = () => {
               type="text"
               placeholder="Search bills..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
