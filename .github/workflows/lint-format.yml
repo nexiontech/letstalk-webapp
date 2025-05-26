@@ -1,0 +1,146 @@
+name: Lint + Format Checks
+
+on:
+  push:
+    branches: ['**']  # All branches
+  pull_request:
+    branches: ['**']  # All PRs
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  eslint:
+    name: ESLint Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: |
+          npx eslint . --ext .js,.jsx \
+            --format json \
+            --output-file eslint-report.json || true
+
+      - name: Generate ESLint summary
+        run: |
+          echo "## 🔍 ESLint Analysis Results" > eslint-summary.md
+          echo "" >> eslint-summary.md
+
+          # Count issues
+          ERRORS=$(jq '[.[] | .messages[] | select(.severity == 2)] | length' eslint-report.json 2>/dev/null || echo "0")
+          WARNINGS=$(jq '[.[] | .messages[] | select(.severity == 1)] | length' eslint-report.json 2>/dev/null || echo "0")
+
+          echo "### 📊 Summary" >> eslint-summary.md
+          echo "- **Errors**: $ERRORS" >> eslint-summary.md
+          echo "- **Warnings**: $WARNINGS" >> eslint-summary.md
+          echo "- **Status**: $([ "$ERRORS" -eq 0 ] && echo "✅ Passed" || echo "❌ Failed")" >> eslint-summary.md
+          echo "" >> eslint-summary.md
+
+          if [ "$ERRORS" -gt 0 ] || [ "$WARNINGS" -gt 0 ]; then
+            echo "### 🚨 Issues Found" >> eslint-summary.md
+            echo "\`\`\`json" >> eslint-summary.md
+            jq '.[] | select(.messages | length > 0) | {filePath, messages: .messages | map({line, column, severity, message, ruleId})}' eslint-report.json >> eslint-summary.md 2>/dev/null || echo "No detailed issues available" >> eslint-summary.md
+            echo "\`\`\`" >> eslint-summary.md
+          else
+            echo "### ✅ No Issues Found" >> eslint-summary.md
+            echo "All files pass ESLint validation!" >> eslint-summary.md
+          fi
+
+      - name: Upload ESLint results
+        uses: actions/upload-artifact@v4
+        with:
+          name: eslint-report-${{ github.run_number }}
+          path: |
+            eslint-report.json
+            eslint-summary.md
+          retention-days: 30
+
+      - name: Comment ESLint results on PR
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('eslint-summary.md', 'utf8');
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `${summary}\n\n---\n*ESLint analysis completed automatically*`
+            });
+
+  prettier:
+    name: Prettier Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check Prettier formatting
+        id: prettier-check
+        run: |
+          echo "## 🎨 Prettier Format Check" > prettier-summary.md
+          echo "" >> prettier-summary.md
+
+          if npx prettier --check "src/**/*.{js,jsx,css,md}"; then
+            echo "✅ All files are properly formatted!" >> prettier-summary.md
+            echo "status=passed" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Some files need formatting!" >> prettier-summary.md
+            echo "" >> prettier-summary.md
+            echo "### Files that need formatting:" >> prettier-summary.md
+            echo "\`\`\`" >> prettier-summary.md
+            npx prettier --check "src/**/*.{js,jsx,css,md}" 2>&1 | grep -E "^\[warn\]|Code style issues" || echo "Run 'npm run format' to fix formatting issues" >> prettier-summary.md
+            echo "\`\`\`" >> prettier-summary.md
+            echo "" >> prettier-summary.md
+            echo "### 🔧 How to fix:" >> prettier-summary.md
+            echo "Run \`npm run format\` to automatically fix all formatting issues." >> prettier-summary.md
+            echo "status=failed" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload Prettier results
+        uses: actions/upload-artifact@v4
+        with:
+          name: prettier-report-${{ github.run_number }}
+          path: prettier-summary.md
+          retention-days: 30
+
+      - name: Comment Prettier results on PR
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && steps.prettier-check.outputs.status == 'failed'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('prettier-summary.md', 'utf8');
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `${summary}\n\n---\n*Prettier format check completed automatically*`
+            });

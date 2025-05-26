@@ -1,0 +1,242 @@
+name: OWASP Dependency Vulnerability Scan
+
+on:
+  push:
+    branches: ['**']  # All branches
+  pull_request:
+    branches: ['**']  # All PRs
+  schedule:
+    - cron: '0 2 * * 1' # Run every Monday at 2 AM UTC
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  security-events: write
+
+jobs:
+  owasp-dependency-check:
+    name: OWASP Dependency Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run OWASP Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        id: depcheck
+        with:
+          project: 'letstalk-webapp'
+          path: '.'
+          format: 'ALL'
+          args: >
+            --enableRetired
+            --scan ./package-lock.json
+            --scan ./package.json
+            --exclude "**/node_modules/**/test/**"
+            --exclude "**/node_modules/**/tests/**"
+            --exclude "**/node_modules/**/*.test.js"
+            --exclude "**/node_modules/**/*.spec.js"
+        continue-on-error: true
+
+      - name: Generate OWASP summary
+        run: |
+          echo "## 🛡️ OWASP Dependency Check Results" > owasp-summary.md
+          echo "" >> owasp-summary.md
+          echo "### 📊 Scan Information" >> owasp-summary.md
+          echo "- **Project**: letstalk-webapp" >> owasp-summary.md
+          echo "- **Scan Date**: $(date)" >> owasp-summary.md
+          echo "- **Scan Type**: OWASP Dependency Check" >> owasp-summary.md
+          echo "" >> owasp-summary.md
+
+          # Check if HTML report exists and extract summary
+          if [ -f "reports/dependency-check-report.html" ]; then
+            echo "### 📋 Vulnerability Summary" >> owasp-summary.md
+
+            # Extract vulnerability counts from HTML report
+            HIGH_VULNS=$(grep -o "High.*[0-9]\+" reports/dependency-check-report.html | grep -o "[0-9]\+" | head -1 || echo "0")
+            MEDIUM_VULNS=$(grep -o "Medium.*[0-9]\+" reports/dependency-check-report.html | grep -o "[0-9]\+" | head -1 || echo "0")
+            LOW_VULNS=$(grep -o "Low.*[0-9]\+" reports/dependency-check-report.html | grep -o "[0-9]\+" | head -1 || echo "0")
+
+            echo "- **High Severity**: ${HIGH_VULNS:-0}" >> owasp-summary.md
+            echo "- **Medium Severity**: ${MEDIUM_VULNS:-0}" >> owasp-summary.md
+            echo "- **Low Severity**: ${LOW_VULNS:-0}" >> owasp-summary.md
+            echo "" >> owasp-summary.md
+
+            TOTAL_VULNS=$((${HIGH_VULNS:-0} + ${MEDIUM_VULNS:-0} + ${LOW_VULNS:-0}))
+
+            if [ "$TOTAL_VULNS" -eq 0 ]; then
+              echo "### ✅ No Vulnerabilities Found" >> owasp-summary.md
+              echo "All dependencies are secure according to OWASP database." >> owasp-summary.md
+            else
+              echo "### ⚠️ Vulnerabilities Detected" >> owasp-summary.md
+              echo "**Total Vulnerabilities**: $TOTAL_VULNS" >> owasp-summary.md
+              echo "" >> owasp-summary.md
+              echo "Please review the detailed report and update vulnerable dependencies." >> owasp-summary.md
+            fi
+          else
+            echo "### ℹ️ Scan Completed" >> owasp-summary.md
+            echo "OWASP Dependency Check scan completed. Check artifacts for detailed reports." >> owasp-summary.md
+          fi
+
+          echo "" >> owasp-summary.md
+          echo "### 📁 Available Reports" >> owasp-summary.md
+          echo "- HTML Report: \`reports/dependency-check-report.html\`" >> owasp-summary.md
+          echo "- JSON Report: \`reports/dependency-check-report.json\`" >> owasp-summary.md
+          echo "- XML Report: \`reports/dependency-check-report.xml\`" >> owasp-summary.md
+
+      - name: Upload OWASP Dependency Check results
+        uses: actions/upload-artifact@v4
+        with:
+          name: owasp-dependency-check-${{ github.run_number }}
+          path: |
+            reports/
+            owasp-summary.md
+          retention-days: 30
+
+      - name: Parse vulnerabilities for issue creation
+        id: parse-vulns
+        run: |
+          if [ -f "reports/dependency-check-report.json" ]; then
+            # Check if there are any vulnerabilities
+            VULN_COUNT=$(jq '.dependencies | map(select(.vulnerabilities)) | length' reports/dependency-check-report.json 2>/dev/null || echo "0")
+            echo "vulnerability_count=$VULN_COUNT" >> $GITHUB_OUTPUT
+
+            if [ "$VULN_COUNT" -gt 0 ]; then
+              echo "vulnerabilities_found=true" >> $GITHUB_OUTPUT
+            else
+              echo "vulnerabilities_found=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "vulnerability_count=0" >> $GITHUB_OUTPUT
+            echo "vulnerabilities_found=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create security issue for vulnerabilities
+        if: steps.parse-vulns.outputs.vulnerabilities_found == 'true' && github.event_name != 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('owasp-summary.md', 'utf8');
+
+            // Check if there's already an open OWASP security issue
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'security,owasp,vulnerabilities',
+              state: 'open'
+            });
+
+            if (issues.length === 0) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '🛡️ OWASP Dependency Check: Vulnerabilities Detected',
+                body: `${summary}
+
+                ---
+                **Automated Issue**: This issue was automatically created by the OWASP Dependency Check workflow.
+                **Action Required**: Please review the vulnerability report and update affected dependencies.
+                **Next Steps**:
+                1. Download the detailed reports from the workflow artifacts
+                2. Review each vulnerability and assess impact
+                3. Update vulnerable dependencies to secure versions
+                4. Re-run the scan to verify fixes
+                5. Close this issue once all vulnerabilities are resolved
+
+                **Vulnerability Count**: ${{ steps.parse-vulns.outputs.vulnerability_count }}`,
+                labels: ['security', 'owasp', 'vulnerabilities', 'automated']
+              });
+            }
+
+      - name: Comment OWASP results on PR
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('owasp-summary.md', 'utf8');
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `${summary}\n\n---\n*OWASP Dependency Check completed automatically*`
+            });
+
+  npm-audit-enhanced:
+    name: Enhanced npm Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run enhanced npm audit
+        run: |
+          echo "## 🔍 Enhanced npm Audit Results" > npm-audit-summary.md
+          echo "" >> npm-audit-summary.md
+
+          # Run npm audit and capture output
+          if npm audit --audit-level=low --json > npm-audit.json 2>/dev/null; then
+            echo "### ✅ No Vulnerabilities Found" >> npm-audit-summary.md
+            echo "All dependencies pass npm security audit." >> npm-audit-summary.md
+          else
+            echo "### ⚠️ Vulnerabilities Detected" >> npm-audit-summary.md
+            echo "" >> npm-audit-summary.md
+
+            # Parse audit results
+            if [ -f "npm-audit.json" ]; then
+              CRITICAL=$(jq '.metadata.vulnerabilities.critical // 0' npm-audit.json)
+              HIGH=$(jq '.metadata.vulnerabilities.high // 0' npm-audit.json)
+              MODERATE=$(jq '.metadata.vulnerabilities.moderate // 0' npm-audit.json)
+              LOW=$(jq '.metadata.vulnerabilities.low // 0' npm-audit.json)
+
+              echo "#### Vulnerability Breakdown:" >> npm-audit-summary.md
+              echo "- **Critical**: $CRITICAL" >> npm-audit-summary.md
+              echo "- **High**: $HIGH" >> npm-audit-summary.md
+              echo "- **Moderate**: $MODERATE" >> npm-audit-summary.md
+              echo "- **Low**: $LOW" >> npm-audit-summary.md
+              echo "" >> npm-audit-summary.md
+
+              echo "#### Recommended Actions:" >> npm-audit-summary.md
+              echo "1. Run \`npm audit fix\` to automatically fix issues" >> npm-audit-summary.md
+              echo "2. For manual fixes, run \`npm audit\` for detailed information" >> npm-audit-summary.md
+              echo "3. Consider updating to newer versions of vulnerable packages" >> npm-audit-summary.md
+            fi
+          fi
+
+          echo "" >> npm-audit-summary.md
+          echo "### 📊 Audit Summary" >> npm-audit-summary.md
+          echo "- **Scan Date**: $(date)" >> npm-audit-summary.md
+          echo "- **Node Version**: $(node --version)" >> npm-audit-summary.md
+          echo "- **npm Version**: $(npm --version)" >> npm-audit-summary.md
+
+      - name: Upload npm audit results
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-audit-enhanced-${{ github.run_number }}
+          path: |
+            npm-audit.json
+            npm-audit-summary.md
+          retention-days: 30

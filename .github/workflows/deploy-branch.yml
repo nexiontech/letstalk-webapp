@@ -1,0 +1,129 @@
+name: Create Deploy Branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 1.0.0)'
+        required: true
+        type: string
+      release_notes:
+        description: 'Release notes (optional)'
+        required: false
+        type: string
+        default: 'New release'
+
+jobs:
+  create-deploy-branch:
+    name: Create Deploy Branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate version format
+        run: |
+          if [[ ! "${{ github.event.inputs.version }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ Invalid version format. Please use semantic versioning (e.g., 1.0.0)"
+            exit 1
+          fi
+          echo "✅ Version format is valid: ${{ github.event.inputs.version }}"
+
+      - name: Check if version already exists
+        run: |
+          if git tag | grep -q "^v${{ github.event.inputs.version }}$"; then
+            echo "❌ Version v${{ github.event.inputs.version }} already exists!"
+            exit 1
+          fi
+          echo "✅ Version v${{ github.event.inputs.version }} is available"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies and test build
+        run: |
+          npm ci
+          npm run build
+          echo "✅ Build successful for version ${{ github.event.inputs.version }}"
+
+      - name: Update package.json version
+        run: |
+          npm version ${{ github.event.inputs.version }} --no-git-tag-version
+          echo "✅ Updated package.json to version ${{ github.event.inputs.version }}"
+
+      - name: Create deploy branch
+        run: |
+          BRANCH_NAME="deploy/v${{ github.event.inputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git checkout -b $BRANCH_NAME
+          git add package.json package-lock.json
+          git commit -m "🚀 Release v${{ github.event.inputs.version }}"
+          git push origin $BRANCH_NAME
+          
+          echo "✅ Created deploy branch: $BRANCH_NAME"
+
+      - name: Create and push tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git tag -a "v${{ github.event.inputs.version }}" -m "Release v${{ github.event.inputs.version }}"
+          git push origin "v${{ github.event.inputs.version }}"
+          
+          echo "✅ Created and pushed tag: v${{ github.event.inputs.version }}"
+
+      - name: Create GitHub Release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const releaseBody = `## 🚀 Release v${{ github.event.inputs.version }}
+
+            ${{ github.event.inputs.release_notes }}
+
+            ### 📦 Deployment Information
+            - **Deploy Branch:** \`deploy/v${{ github.event.inputs.version }}\`
+            - **Build Status:** ✅ Successful
+            - **Created:** ${new Date().toISOString()}
+
+            ### 🔗 Quick Links
+            - [Deploy Branch](https://github.com/${{ github.repository }}/tree/deploy/v${{ github.event.inputs.version }})
+            - [Commit History](https://github.com/${{ github.repository }}/commits/deploy/v${{ github.event.inputs.version }})
+
+            ---
+            *This release was automatically created by GitHub Actions*`;
+
+            const { data: release } = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: 'v${{ github.event.inputs.version }}',
+              name: 'Release v${{ github.event.inputs.version }}',
+              body: releaseBody,
+              draft: false,
+              prerelease: false
+            });
+            
+            console.log(`✅ Created GitHub Release: ${release.html_url}`);
+
+      - name: Summary
+        run: |
+          echo "## 🎉 Deploy Branch Created Successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📋 Release Details" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version:** v${{ github.event.inputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Deploy Branch:** \`deploy/v${{ github.event.inputs.version }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag:** \`v${{ github.event.inputs.version }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Release Notes:** ${{ github.event.inputs.release_notes }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔗 Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "1. Review the deploy branch" >> $GITHUB_STEP_SUMMARY
+          echo "2. Check the GitHub Release" >> $GITHUB_STEP_SUMMARY
+          echo "3. Deploy from the deploy branch when ready" >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,186 @@
+name: Security Scan (Alternative)
+
+on:
+  push:
+    branches: ['**']  # All branches
+  pull_request:
+    branches: ['**']  # All PRs
+  schedule:
+    - cron: '0 3 * * 1' # Run every Monday at 3 AM UTC
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  security-scan:
+    name: Security Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run npm audit
+        id: audit
+        run: |
+          echo "## 🔒 Security Audit Results" > security-report.md
+          echo "" >> security-report.md
+
+          if npm audit --audit-level=moderate; then
+            echo "✅ No security vulnerabilities found!" >> security-report.md
+            echo "audit_status=clean" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️ Security vulnerabilities detected!" >> security-report.md
+            echo "" >> security-report.md
+            echo "### Detailed Report:" >> security-report.md
+            echo "\`\`\`" >> security-report.md
+            npm audit >> security-report.md || true
+            echo "\`\`\`" >> security-report.md
+            echo "audit_status=vulnerabilities" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check for sensitive files
+        run: |
+          echo "" >> security-report.md
+          echo "## 🔍 Sensitive File Check" >> security-report.md
+          echo "" >> security-report.md
+
+          # Check for common sensitive files
+          SENSITIVE_FILES=""
+          for pattern in "*.key" "*.pem" "*.p12" "*.pfx" ".env" ".env.*" "id_rsa" "id_dsa" "*.crt" "*.cer"; do
+            if find . -name "$pattern" -not -path "./node_modules/*" -not -path "./.git/*" | grep -q .; then
+              SENSITIVE_FILES="$SENSITIVE_FILES $pattern"
+            fi
+          done
+
+          if [ -n "$SENSITIVE_FILES" ]; then
+            echo "⚠️ **Warning**: Potential sensitive files found:" >> security-report.md
+            find . -name "*.key" -o -name "*.pem" -o -name "*.p12" -o -name "*.pfx" -o -name ".env*" -o -name "id_rsa" -o -name "id_dsa" -o -name "*.crt" -o -name "*.cer" | grep -v node_modules | grep -v .git >> security-report.md || true
+          else
+            echo "✅ No sensitive files detected" >> security-report.md
+          fi
+
+      - name: Check for hardcoded secrets
+        run: |
+          echo "" >> security-report.md
+          echo "## 🔐 Hardcoded Secrets Check" >> security-report.md
+          echo "" >> security-report.md
+
+          # Check for potential hardcoded secrets
+          SECRET_PATTERNS="password|secret|key|token|api_key|private_key"
+
+          if grep -r -i -E "$SECRET_PATTERNS" src/ --include="*.js" --include="*.jsx" | grep -v "// " | grep -v "* " | head -10; then
+            echo "⚠️ **Warning**: Potential hardcoded secrets found in source code" >> security-report.md
+            echo "Please review the above matches and ensure no actual secrets are committed" >> security-report.md
+          else
+            echo "✅ No obvious hardcoded secrets detected" >> security-report.md
+          fi
+
+      - name: Upload security report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-scan-report
+          path: security-report.md
+          retention-days: 30
+
+      - name: Create issue if vulnerabilities found
+        if: steps.audit.outputs.audit_status == 'vulnerabilities' && github.event_name != 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const reportContent = fs.readFileSync('security-report.md', 'utf8');
+
+            // Check if there's already an open security issue
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'security,vulnerabilities',
+              state: 'open'
+            });
+
+            if (issues.length === 0) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '🔒 Security Vulnerabilities Detected',
+                body: `${reportContent}
+
+                ---
+                **Automated Issue**: This issue was automatically created by the security scan workflow.
+                **Action Required**: Please review and address the security vulnerabilities listed above.
+                **Next Steps**:
+                1. Run \`npm audit fix\` to automatically fix issues
+                2. For manual fixes, run \`npm audit\` for detailed information
+                3. Close this issue once all vulnerabilities are resolved`,
+                labels: ['security', 'vulnerabilities', 'automated']
+              });
+            }
+
+      - name: Comment on PR if vulnerabilities found
+        if: steps.audit.outputs.audit_status == 'vulnerabilities' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const reportContent = fs.readFileSync('security-report.md', 'utf8');
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🔒 Security Scan Results
+
+              ${reportContent}
+
+              ---
+              *This security scan was automatically generated. Please address any vulnerabilities before merging.*`
+            });
+
+  eslint-security:
+    name: ESLint Security Rules
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install ESLint security plugin
+        run: npm install --no-save eslint-plugin-security
+
+      - name: Run ESLint with security rules
+        run: |
+          npx eslint src/ --ext .js,.jsx \
+            --rule "security/detect-object-injection: error" \
+            --rule "security/detect-non-literal-regexp: warn" \
+            --rule "security/detect-unsafe-regex: error" \
+            --rule "security/detect-buffer-noassert: error" \
+            --rule "security/detect-child-process: warn" \
+            --rule "security/detect-disable-mustache-escape: error" \
+            --rule "security/detect-eval-with-expression: error" \
+            --rule "security/detect-no-csrf-before-method-override: error" \
+            --rule "security/detect-non-literal-fs-filename: warn" \
+            --rule "security/detect-non-literal-require: warn" \
+            --rule "security/detect-possible-timing-attacks: warn" \
+            --rule "security/detect-pseudoRandomBytes: error" \
+            || echo "ESLint security scan completed with warnings/errors"
