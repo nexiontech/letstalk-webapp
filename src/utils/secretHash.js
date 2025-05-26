@@ -29,11 +29,7 @@ export async function calculateSecretHash(username, clientId, clientSecret) {
     );
 
     // Sign the message
-    const signature = await window.crypto.subtle.sign(
-      'HMAC',
-      key,
-      message
-    );
+    const signature = await window.crypto.subtle.sign('HMAC', key, message);
 
     // Convert to Base64
     return btoa(String.fromCharCode(...new Uint8Array(signature)));

@@ -4,12 +4,9 @@ import {
   signOut,
   getCurrentUser,
   fetchAuthSession,
-  fetchUserAttributes
+  fetchUserAttributes,
 } from 'aws-amplify/auth';
-import {
-  cognitoSignIn,
-  cognitoSignUp
-} from '../utils/cognitoAuth';
+import { cognitoSignIn, cognitoSignUp } from '../utils/cognitoAuth';
 import { decodeJWT } from '../utils/jwtDecode';
 
 // Async thunk for login
@@ -24,7 +21,10 @@ export const loginUser = createAsyncThunk(
         console.log('Signed out existing user');
       } catch (signOutError) {
         // Ignore errors from signOut - it might just mean no user was signed in
-        console.log('No existing user to sign out or sign out failed:', signOutError);
+        console.log(
+          'No existing user to sign out or sign out failed:',
+          signOutError
+        );
       }
 
       // Get environment variables
@@ -35,7 +35,7 @@ export const loginUser = createAsyncThunk(
       console.log('Using Cognito configuration:', {
         region,
         clientId,
-        clientSecret: clientSecret ? '***' : 'not set'
+        clientSecret: clientSecret ? '***' : 'not set',
       });
 
       // Now attempt to sign in using our custom function
@@ -66,7 +66,7 @@ export const loginUser = createAsyncThunk(
         idNumber: idNumber,
         email: decodedToken?.email || '',
         name: decodedToken?.name || '',
-        role: 'citizen' // Default role
+        role: 'citizen', // Default role
       };
 
       // Store user in localStorage
@@ -74,7 +74,7 @@ export const loginUser = createAsyncThunk(
 
       return {
         user: user,
-        token: idToken
+        token: idToken,
       };
     } catch (error) {
       console.error('Login error:', error);
@@ -96,14 +96,14 @@ export const registerUser = createAsyncThunk(
       console.log('Using Cognito configuration for registration:', {
         region,
         clientId,
-        clientSecret: clientSecret ? '***' : 'not set'
+        clientSecret: clientSecret ? '***' : 'not set',
       });
 
       // Prepare user attributes
       const userAttributes = {
         email: userData.email,
         name: userData.name,
-        'custom:idNumber': userData.idNumber
+        'custom:idNumber': userData.idNumber,
       };
 
       // Using our custom sign up function
@@ -118,7 +118,8 @@ export const registerUser = createAsyncThunk(
 
       return {
         success: true,
-        message: 'Registration successful. Please check your email for verification.'
+        message:
+          'Registration successful. Please check your email for verification.',
       };
     } catch (error) {
       console.error('Registration error:', error);
@@ -174,10 +175,13 @@ export const checkAuthStatus = createAsyncThunk(
 
         // Create user object with info from attributes and token
         const user = {
-          idNumber: userAttributes['custom:idNumber'] || decodedToken?.['custom:idNumber'] || '',
+          idNumber:
+            userAttributes['custom:idNumber'] ||
+            decodedToken?.['custom:idNumber'] ||
+            '',
           email: userAttributes.email || decodedToken?.email || '',
           name: userAttributes.name || decodedToken?.name || '',
-          role: 'citizen' // Default role
+          role: 'citizen', // Default role
         };
 
         // Update localStorage with fresh data
@@ -188,7 +192,7 @@ export const checkAuthStatus = createAsyncThunk(
         // Return user information and token
         return {
           user: user,
-          token: idToken
+          token: idToken,
         };
       } catch (amplifyError) {
         console.log('Amplify session check failed:', amplifyError);
@@ -200,7 +204,7 @@ export const checkAuthStatus = createAsyncThunk(
         if (token && userData) {
           return {
             user: JSON.parse(userData),
-            token
+            token,
           };
         }
 
@@ -230,21 +234,21 @@ const authSlice = createSlice({
     loading: false,
     error: null,
     registrationSuccess: false,
-    registrationMessage: null
+    registrationMessage: null,
   },
   reducers: {
-    clearError: (state) => {
+    clearError: state => {
       state.error = null;
     },
-    clearRegistrationStatus: (state) => {
+    clearRegistrationStatus: state => {
       state.registrationSuccess = false;
       state.registrationMessage = null;
-    }
+    },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       // Login cases
-      .addCase(loginUser.pending, (state) => {
+      .addCase(loginUser.pending, state => {
         state.loading = true;
         state.error = null;
       })
@@ -264,7 +268,7 @@ const authSlice = createSlice({
       })
 
       // Registration cases
-      .addCase(registerUser.pending, (state) => {
+      .addCase(registerUser.pending, state => {
         state.loading = true;
         state.error = null;
         state.registrationSuccess = false;
@@ -281,10 +285,10 @@ const authSlice = createSlice({
       })
 
       // Logout cases
-      .addCase(logoutUser.pending, (state) => {
+      .addCase(logoutUser.pending, state => {
         state.loading = true;
       })
-      .addCase(logoutUser.fulfilled, (state) => {
+      .addCase(logoutUser.fulfilled, state => {
         state.loading = false;
         state.user = null;
         state.token = null;
@@ -300,7 +304,7 @@ const authSlice = createSlice({
       })
 
       // Check auth status cases
-      .addCase(checkAuthStatus.pending, (state) => {
+      .addCase(checkAuthStatus.pending, state => {
         state.loading = true;
       })
       .addCase(checkAuthStatus.fulfilled, (state, action) => {
@@ -309,13 +313,13 @@ const authSlice = createSlice({
         state.token = action.payload.token;
         state.isAuthenticated = true;
       })
-      .addCase(checkAuthStatus.rejected, (state) => {
+      .addCase(checkAuthStatus.rejected, state => {
         state.loading = false;
         state.user = null;
         state.token = null;
         state.isAuthenticated = false;
       });
-  }
+  },
 });
 
 export const { clearError, clearRegistrationStatus } = authSlice.actions;

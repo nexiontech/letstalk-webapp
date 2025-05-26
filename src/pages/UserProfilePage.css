@@ -6,7 +6,7 @@
 }
 
 .profile-hero-section {
-  background: linear-gradient(135deg, #0E4649 0%, #0A2F32 100%);
+  background: linear-gradient(135deg, #0e4649 0%, #0a2f32 100%);
   color: white;
   padding: 40px 0;
   margin-bottom: 30px;
@@ -56,7 +56,7 @@
 .section-title {
   font-size: 1.5rem !important;
   font-weight: 600 !important;
-  color: #0E4649;
+  color: #0e4649;
   margin-bottom: 10px !important;
   border-bottom: 2px solid #f0f0f0;
   padding-bottom: 10px;
@@ -66,7 +66,7 @@
 }
 
 .section-icon {
-  color: #0E4649;
+  color: #0e4649;
   font-size: 1.2rem;
 }
 

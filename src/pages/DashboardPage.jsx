@@ -14,7 +14,7 @@ import {
   faExclamationTriangle,
   faChevronRight,
   faSearch,
-  faFileInvoiceDollar
+  faFileInvoiceDollar,
 } from '@fortawesome/free-solid-svg-icons';
 import WeatherWidget from '../components/weather/WeatherWidget';
 import useWeather from '../hooks/useWeather';
@@ -24,12 +24,17 @@ const DashboardPage = () => {
   const { user, isAuthenticated } = useAuth();
   const fullName = user?.name || 'User';
   const firstName = fullName.split(' ')[0]; // Extract just the first name
-  const hasRealName = user?.name && user.name !== 'User' && user.name.trim() !== '';
+  const hasRealName =
+    user?.name && user.name !== 'User' && user.name.trim() !== '';
   const navigate = useNavigate();
 
   // Log user info for debugging
   useEffect(() => {
-    console.log('Dashboard - Auth state:', { user, isAuthenticated, hasRealName });
+    console.log('Dashboard - Auth state:', {
+      user,
+      isAuthenticated,
+      hasRealName,
+    });
   }, [user, isAuthenticated, hasRealName]);
 
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -39,7 +44,7 @@ const DashboardPage = () => {
     weatherData,
     isLoading: isWeatherLoading,
     error: weatherError,
-    refreshWeather
+    refreshWeather,
   } = useWeather();
 
   // Update time every minute
@@ -61,7 +66,7 @@ const DashboardPage = () => {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
-    year: 'numeric'
+    year: 'numeric',
   });
 
   // Navigation handlers
@@ -85,7 +90,7 @@ const DashboardPage = () => {
       title: 'Electricity',
       value: 'R 750.25',
       status: 'Due in 5 days',
-      color: '#FFB61D'
+      color: '#FFB61D',
     },
     {
       id: 'water',
@@ -93,7 +98,7 @@ const DashboardPage = () => {
       title: 'Water & Sanitation',
       value: 'R 420.80',
       status: 'Due in 8 days',
-      color: '#0E4649'
+      color: '#0E4649',
     },
     {
       id: 'property',
@@ -101,8 +106,8 @@ const DashboardPage = () => {
       title: 'Property Rates',
       value: 'R 1,250.00',
       status: 'Paid',
-      color: '#2E8B57'
-    }
+      color: '#2E8B57',
+    },
   ];
 
   // Mock data for recent alerts
@@ -110,17 +115,19 @@ const DashboardPage = () => {
     {
       id: 1,
       title: 'Scheduled Water Maintenance',
-      description: 'Water supply will be interrupted on June 15th from 09:00 to 14:00 in your area.',
+      description:
+        'Water supply will be interrupted on June 15th from 09:00 to 14:00 in your area.',
       date: '10 June 2025',
-      priority: 'medium'
+      priority: 'medium',
     },
     {
       id: 2,
       title: 'Power Outage Alert',
-      description: 'Planned power outage for maintenance on June 18th from 22:00 to 05:00.',
+      description:
+        'Planned power outage for maintenance on June 18th from 22:00 to 05:00.',
       date: '12 June 2025',
-      priority: 'high'
-    }
+      priority: 'high',
+    },
   ];
 
   // Mock data for upcoming events
@@ -130,15 +137,15 @@ const DashboardPage = () => {
       title: 'Community Meeting',
       date: '20 June 2025',
       time: '18:00',
-      location: 'Town Hall'
+      location: 'Town Hall',
     },
     {
       id: 2,
       title: 'Public Participation Forum',
       date: '25 June 2025',
       time: '10:00',
-      location: 'Civic Center'
-    }
+      location: 'Civic Center',
+    },
   ];
 
   return (
@@ -147,7 +154,8 @@ const DashboardPage = () => {
       <div className="dashboard-header">
         <div className="greeting-container">
           <h1 className="greeting-heading">
-            {getGreeting()}{hasRealName ? `, ${firstName}` : ''}
+            {getGreeting()}
+            {hasRealName ? `, ${firstName}` : ''}
           </h1>
           <p className="date-display">{formattedDate}</p>
         </div>
@@ -178,14 +186,23 @@ const DashboardPage = () => {
               <p>View service disruptions & notices</p>
               <FontAwesomeIcon icon={faChevronRight} className="action-arrow" />
             </div>
-            <div className="action-card tertiary" onClick={handleCommunityHubClick}>
+            <div
+              className="action-card tertiary"
+              onClick={handleCommunityHubClick}
+            >
               <FontAwesomeIcon icon={faCalendarAlt} className="action-icon" />
               <h3>Community Hub</h3>
               <p>Access community resources & events</p>
               <FontAwesomeIcon icon={faChevronRight} className="action-arrow" />
             </div>
-            <div className="action-card quaternary" onClick={() => navigate('/services')}>
-              <FontAwesomeIcon icon={faFileInvoiceDollar} className="action-icon" />
+            <div
+              className="action-card quaternary"
+              onClick={() => navigate('/services')}
+            >
+              <FontAwesomeIcon
+                icon={faFileInvoiceDollar}
+                className="action-icon"
+              />
               <h3>My Accounts</h3>
               <p>View account statements & history</p>
               <FontAwesomeIcon icon={faChevronRight} className="action-arrow" />
@@ -205,13 +222,21 @@ const DashboardPage = () => {
             <div className="stats-container">
               {quickStats.map(stat => (
                 <div className="stat-card" key={stat.id}>
-                  <div className="stat-icon-container" style={{ backgroundColor: `${stat.color}20`, color: stat.color }}>
+                  <div
+                    className="stat-icon-container"
+                    style={{
+                      backgroundColor: `${stat.color}20`,
+                      color: stat.color,
+                    }}
+                  >
                     <FontAwesomeIcon icon={stat.icon} className="stat-icon" />
                   </div>
                   <div className="stat-details">
                     <h3 className="stat-title">{stat.title}</h3>
                     <p className="stat-value">{stat.value}</p>
-                    <p className={`stat-status ${stat.status === 'Paid' ? 'status-paid' : 'status-due'}`}>
+                    <p
+                      className={`stat-status ${stat.status === 'Paid' ? 'status-paid' : 'status-due'}`}
+                    >
                       {stat.status}
                     </p>
                   </div>
@@ -230,15 +255,24 @@ const DashboardPage = () => {
             </div>
             <div className="alerts-container">
               {recentAlerts.map(alert => (
-                <div className={`alert-card priority-${alert.priority}`} key={alert.id}>
+                <div
+                  className={`alert-card priority-${alert.priority}`}
+                  key={alert.id}
+                >
                   <div className="alert-header">
-                    <FontAwesomeIcon icon={faExclamationTriangle} className="alert-icon" />
+                    <FontAwesomeIcon
+                      icon={faExclamationTriangle}
+                      className="alert-icon"
+                    />
                     <h3 className="alert-title">{alert.title}</h3>
                   </div>
                   <p className="alert-description">{alert.description}</p>
                   <div className="alert-footer">
                     <span className="alert-date">{alert.date}</span>
-                    <button className="alert-action" onClick={handleAlertsClick}>
+                    <button
+                      className="alert-action"
+                      onClick={handleAlertsClick}
+                    >
                       Details
                     </button>
                   </div>
@@ -272,7 +306,10 @@ const DashboardPage = () => {
           <section className="events-section">
             <div className="section-header">
               <h2 className="section-title">Upcoming Events</h2>
-              <button className="view-all-button" onClick={handleCommunityHubClick}>
+              <button
+                className="view-all-button"
+                onClick={handleCommunityHubClick}
+              >
                 View All <FontAwesomeIcon icon={faChevronRight} />
               </button>
             </div>
@@ -285,7 +322,9 @@ const DashboardPage = () => {
                   </div>
                   <div className="event-details">
                     <h4>{event.title}</h4>
-                    <p>{event.time} • {event.location}</p>
+                    <p>
+                      {event.time} • {event.location}
+                    </p>
                   </div>
                 </div>
               ))}

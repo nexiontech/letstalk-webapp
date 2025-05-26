@@ -6,14 +6,14 @@ import {
   loginUser,
   logoutUser,
   registerUser,
-  confirmRegistration,
-  resendVerificationCode,
+  // confirmRegistration, // TODO: Add email confirmation functionality
+  // resendVerificationCode, // TODO: Add resend verification functionality
   forgotPassword,
   confirmForgotPassword,
   clearError,
   clearRegistrationStatus,
   clearPasswordResetStatus,
-  clearVerificationStatus
+  clearVerificationStatus,
 } from '../services/amplifyAuthService';
 
 // Create the context
@@ -22,7 +22,7 @@ const AuthContext = createContext();
 // Create a provider component
 export const AuthProvider = ({ children }) => {
   const dispatch = useDispatch();
-  const auth = useSelector((state) => state.auth);
+  const auth = useSelector(state => state.auth);
 
   // Check authentication status on mount
   useEffect(() => {
@@ -33,26 +33,31 @@ export const AuthProvider = ({ children }) => {
   const login = async (idNumber, password, documentType) => {
     try {
       // Pass document type for the passport number padding workaround
-      const resultAction = await dispatch(loginUser({
-        idNumber,
-        password,
-        documentType // Include document type for proper padding
-      }));
+      const resultAction = await dispatch(
+        loginUser({
+          idNumber,
+          password,
+          documentType, // Include document type for proper padding
+        })
+      );
 
       if (loginUser.fulfilled.match(resultAction)) {
         return { success: true };
       } else {
         // Check if this is a user not confirmed error
-        if (resultAction.payload && resultAction.payload.includes('not confirmed')) {
+        if (
+          resultAction.payload &&
+          resultAction.payload.includes('not confirmed')
+        ) {
           return {
             success: false,
             userConfirmationRequired: true,
-            error: 'Please verify your email before logging in.'
+            error: 'Please verify your email before logging in.',
           };
         }
         return {
           success: false,
-          error: resultAction.payload || 'Login failed'
+          error: resultAction.payload || 'Login failed',
         };
       }
     } catch (error) {
@@ -61,18 +66,18 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Register function
-  const register = async (userData) => {
+  const register = async userData => {
     try {
       const resultAction = await dispatch(registerUser(userData));
       if (registerUser.fulfilled.match(resultAction)) {
         return {
           success: true,
-          message: resultAction.payload.message
+          message: resultAction.payload.message,
         };
       } else {
         return {
           success: false,
-          error: resultAction.payload || 'Registration failed'
+          error: resultAction.payload || 'Registration failed',
         };
       }
     } catch (error) {
@@ -91,47 +96,60 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Forgot password function
-  const forgotPasswordRequest = async (idNumber) => {
+  const forgotPasswordRequest = async idNumber => {
     try {
       const resultAction = await dispatch(forgotPassword(idNumber));
       if (forgotPassword.fulfilled.match(resultAction)) {
         return {
           success: true,
-          message: resultAction.payload.message
+          message: resultAction.payload.message,
         };
       } else {
         return {
           success: false,
-          error: resultAction.payload || 'Password reset request failed'
+          error: resultAction.payload || 'Password reset request failed',
         };
       }
     } catch (error) {
-      return { success: false, error: error.message || 'Password reset request failed' };
+      return {
+        success: false,
+        error: error.message || 'Password reset request failed',
+      };
     }
   };
 
   // Confirm forgot password function
-  const confirmPasswordReset = async (idNumber, code, newPassword, documentType) => {
+  const confirmPasswordReset = async (
+    idNumber,
+    code,
+    newPassword,
+    documentType
+  ) => {
     try {
-      const resultAction = await dispatch(confirmForgotPassword({
-        idNumber,
-        code,
-        newPassword,
-        documentType // Pass document type for proper padding
-      }));
+      const resultAction = await dispatch(
+        confirmForgotPassword({
+          idNumber,
+          code,
+          newPassword,
+          documentType, // Pass document type for proper padding
+        })
+      );
       if (confirmForgotPassword.fulfilled.match(resultAction)) {
         return {
           success: true,
-          message: resultAction.payload.message
+          message: resultAction.payload.message,
         };
       } else {
         return {
           success: false,
-          error: resultAction.payload || 'Password reset confirmation failed'
+          error: resultAction.payload || 'Password reset confirmation failed',
         };
       }
     } catch (error) {
-      return { success: false, error: error.message || 'Password reset confirmation failed' };
+      return {
+        success: false,
+        error: error.message || 'Password reset confirmation failed',
+      };
     }
   };
 
@@ -175,13 +193,11 @@ export const AuthProvider = ({ children }) => {
     clearAuthError,
     clearRegStatus,
     clearPwdResetStatus,
-    clearVerifStatus
+    clearVerifStatus,
   };
 
   return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
 

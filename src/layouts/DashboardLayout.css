@@ -3,11 +3,11 @@
 :root {
   --sidebar-width: 260px;
   --sidebar-collapsed-width: 70px;
-  --sidebar-bg: #0E4649;
+  --sidebar-bg: #0e4649;
   --sidebar-text: #ffffff;
   --sidebar-hover: rgba(255, 255, 255, 0.1);
   --sidebar-active: rgba(255, 182, 29, 0.2);
-  --sidebar-active-border: #FFB61D;
+  --sidebar-active-border: #ffb61d;
   --sidebar-icon-bg: rgba(255, 255, 255, 0.1);
   --sidebar-header-height: 70px;
   --sidebar-transition: all 0.3s ease;
@@ -48,7 +48,7 @@
 /* Sidebar */
 .dashboard-sidebar {
   width: var(--sidebar-width);
-  background: linear-gradient(180deg, var(--sidebar-bg) 0%, #0A3437 100%);
+  background: linear-gradient(180deg, var(--sidebar-bg) 0%, #0a3437 100%);
   color: var(--sidebar-text);
   overflow-y: auto;
   height: 100%;
@@ -72,7 +72,7 @@
   font-weight: 700;
   color: white;
   margin: 0;
-  background: linear-gradient(90deg, #FFFFFF 0%, #FFB61D 100%);
+  background: linear-gradient(90deg, #ffffff 0%, #ffb61d 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -101,7 +101,9 @@
   right: 12px;
   font-size: 14px;
   color: rgba(255, 255, 255, 0.5);
-  transition: color 0.3s, transform 0.3s;
+  transition:
+    color 0.3s,
+    transform 0.3s;
 }
 
 .user-profile-section:hover .profile-edit-icon {
@@ -113,7 +115,11 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--sidebar-active-border) 0%, #FFA500 100%);
+  background: linear-gradient(
+    135deg,
+    var(--sidebar-active-border) 0%,
+    #ffa500 100%
+  );
   color: var(--sidebar-bg);
   display: flex;
   align-items: center;

@@ -19,7 +19,7 @@ export const LanguageProvider = ({ children }) => {
   }, [currentLanguage]);
 
   // Function to change the language
-  const changeLanguage = (langCode) => {
+  const changeLanguage = langCode => {
     setCurrentLanguage(langCode);
   };
 

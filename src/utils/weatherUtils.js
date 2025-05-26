@@ -5,7 +5,7 @@
  * @param {number} code - WMO weather code
  * @returns {string} - Weather condition description
  */
-export const getWeatherCondition = (code) => {
+export const getWeatherCondition = code => {
   // WMO Weather interpretation codes (WW)
   const weatherCodes = {
     0: 'Clear sky',
@@ -35,7 +35,7 @@ export const getWeatherCondition = (code) => {
     86: 'Heavy snow showers',
     95: 'Thunderstorm',
     96: 'Thunderstorm with slight hail',
-    99: 'Thunderstorm with heavy hail'
+    99: 'Thunderstorm with heavy hail',
   };
 
   return weatherCodes[code] || 'Unknown';
@@ -46,8 +46,8 @@ export const getWeatherCondition = (code) => {
  * @param {number} celsius - Temperature in Celsius
  * @returns {number} - Temperature in Fahrenheit
  */
-export const celsiusToFahrenheit = (celsius) => {
-  return (celsius * 9/5) + 32;
+export const celsiusToFahrenheit = celsius => {
+  return (celsius * 9) / 5 + 32;
 };
 
 /**
@@ -55,8 +55,8 @@ export const celsiusToFahrenheit = (celsius) => {
  * @param {number} fahrenheit - Temperature in Fahrenheit
  * @returns {number} - Temperature in Celsius
  */
-export const fahrenheitToCelsius = (fahrenheit) => {
-  return (fahrenheit - 32) * 5/9;
+export const fahrenheitToCelsius = fahrenheit => {
+  return ((fahrenheit - 32) * 5) / 9;
 };
 
 /**

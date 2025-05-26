@@ -1,11 +1,24 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faWater, faBolt, faHome, faRoad, faIdCard, faPassport,
-  faCarSide, faGraduationCap, faMoneyBillWave, faSearch,
-  faHistory, faChevronRight, faCreditCard, faUniversity,
-  faReceipt, faExclamationCircle, faCheckCircle, faInfoCircle,
-  faFilter, faStar, faBuilding, faShieldAlt
+  faWater,
+  faBolt,
+  faHome,
+  faIdCard,
+  faPassport,
+  faCarSide,
+  faGraduationCap,
+  faMoneyBillWave,
+  faSearch,
+  faChevronRight,
+  faHistory,
+  faReceipt,
+  faFilter,
+  faCheckCircle,
+  faInfoCircle,
+  faStar,
+  faBuilding,
+  faShieldAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTranslation } from '../translations';
@@ -26,172 +39,190 @@ const GovernmentServicesPage = () => {
     cardName: '',
     expiryDate: '',
     cvv: '',
-    savePaymentMethod: false
+    savePaymentMethod: false,
   });
 
   // Sample data for services
   const services = [
     {
       id: 1,
-      title: "Electricity Payment",
-      category: "utilities",
+      title: 'Electricity Payment',
+      category: 'utilities',
       icon: faBolt,
-      color: "#f39c12",
-      description: "Pay your electricity bill to your local municipality or Eskom.",
-      provider: "Eskom / Local Municipality",
-      accountFormat: "10-digit account number",
+      color: '#f39c12',
+      description:
+        'Pay your electricity bill to your local municipality or Eskom.',
+      provider: 'Eskom / Local Municipality',
+      accountFormat: '10-digit account number',
       acceptsPartial: true,
-      paymentMethods: ["Credit Card", "Debit Card", "EFT", "Instant EFT"],
+      paymentMethods: ['Credit Card', 'Debit Card', 'EFT', 'Instant EFT'],
       popularService: true,
-      instructions: "Enter your electricity account number and the amount you wish to pay. You can find your account number on your latest bill or prepaid meter."
+      instructions:
+        'Enter your electricity account number and the amount you wish to pay. You can find your account number on your latest bill or prepaid meter.',
     },
     {
       id: 2,
-      title: "Water & Sanitation",
-      category: "utilities",
+      title: 'Water & Sanitation',
+      category: 'utilities',
       icon: faWater,
-      color: "#3498db",
-      description: "Pay your water and sanitation bill to your local municipality.",
-      provider: "Local Municipality",
-      accountFormat: "Municipal account number",
+      color: '#3498db',
+      description:
+        'Pay your water and sanitation bill to your local municipality.',
+      provider: 'Local Municipality',
+      accountFormat: 'Municipal account number',
       acceptsPartial: true,
-      paymentMethods: ["Credit Card", "Debit Card", "EFT"],
+      paymentMethods: ['Credit Card', 'Debit Card', 'EFT'],
       popularService: true,
-      instructions: "Enter your municipal account number and the amount you wish to pay. Your account number can be found on your latest municipal bill."
+      instructions:
+        'Enter your municipal account number and the amount you wish to pay. Your account number can be found on your latest municipal bill.',
     },
     {
       id: 3,
-      title: "Property Rates",
-      category: "property",
+      title: 'Property Rates',
+      category: 'property',
       icon: faHome,
-      color: "#27ae60",
-      description: "Pay your property rates and taxes to your local municipality.",
-      provider: "Local Municipality",
-      accountFormat: "Municipal account number",
+      color: '#27ae60',
+      description:
+        'Pay your property rates and taxes to your local municipality.',
+      provider: 'Local Municipality',
+      accountFormat: 'Municipal account number',
       acceptsPartial: true,
-      paymentMethods: ["Credit Card", "Debit Card", "EFT"],
+      paymentMethods: ['Credit Card', 'Debit Card', 'EFT'],
       popularService: false,
-      instructions: "Enter your municipal account number and the amount you wish to pay. Your account number can be found on your latest municipal bill."
+      instructions:
+        'Enter your municipal account number and the amount you wish to pay. Your account number can be found on your latest municipal bill.',
     },
     {
       id: 4,
-      title: "Traffic Fines",
-      category: "transport",
+      title: 'Traffic Fines',
+      category: 'transport',
       icon: faCarSide,
-      color: "#e74c3c",
-      description: "Pay your traffic fines to avoid penalties and legal action.",
-      provider: "RTMC / Local Municipality",
-      accountFormat: "Fine reference number",
+      color: '#e74c3c',
+      description:
+        'Pay your traffic fines to avoid penalties and legal action.',
+      provider: 'RTMC / Local Municipality',
+      accountFormat: 'Fine reference number',
       acceptsPartial: false,
-      paymentMethods: ["Credit Card", "Debit Card", "EFT"],
+      paymentMethods: ['Credit Card', 'Debit Card', 'EFT'],
       popularService: true,
-      instructions: "Enter your traffic fine reference number. The full amount must be paid - partial payments are not accepted for traffic fines."
+      instructions:
+        'Enter your traffic fine reference number. The full amount must be paid - partial payments are not accepted for traffic fines.',
     },
     {
       id: 5,
-      title: "Vehicle License Renewal",
-      category: "transport",
+      title: 'Vehicle License Renewal',
+      category: 'transport',
       icon: faCarSide,
-      color: "#9b59b6",
-      description: "Renew your vehicle license (motor vehicle license disc).",
-      provider: "Department of Transport",
-      accountFormat: "Vehicle registration number",
+      color: '#9b59b6',
+      description: 'Renew your vehicle license (motor vehicle license disc).',
+      provider: 'Department of Transport',
+      accountFormat: 'Vehicle registration number',
       acceptsPartial: false,
-      paymentMethods: ["Credit Card", "Debit Card"],
+      paymentMethods: ['Credit Card', 'Debit Card'],
       popularService: true,
-      instructions: "Enter your vehicle registration number. You will need to collect your license disc from your nearest licensing department after payment."
+      instructions:
+        'Enter your vehicle registration number. You will need to collect your license disc from your nearest licensing department after payment.',
     },
     {
       id: 6,
-      title: "SARS Tax Payment",
-      category: "tax",
+      title: 'SARS Tax Payment',
+      category: 'tax',
       icon: faMoneyBillWave,
-      color: "#f1c40f",
-      description: "Make payments to the South African Revenue Service.",
-      provider: "SARS",
-      accountFormat: "Tax reference number",
+      color: '#f1c40f',
+      description: 'Make payments to the South African Revenue Service.',
+      provider: 'SARS',
+      accountFormat: 'Tax reference number',
       acceptsPartial: true,
-      paymentMethods: ["Credit Card", "Debit Card", "EFT"],
+      paymentMethods: ['Credit Card', 'Debit Card', 'EFT'],
       popularService: false,
-      instructions: "Enter your tax reference number and the amount you wish to pay. For specific tax types, please visit the SARS eFiling website."
+      instructions:
+        'Enter your tax reference number and the amount you wish to pay. For specific tax types, please visit the SARS eFiling website.',
     },
     {
       id: 7,
-      title: "ID Application Fee",
-      category: "identity",
+      title: 'ID Application Fee',
+      category: 'identity',
       icon: faIdCard,
-      color: "#34495e",
-      description: "Pay for your new ID card application or renewal.",
-      provider: "Department of Home Affairs",
-      accountFormat: "ID number",
+      color: '#34495e',
+      description: 'Pay for your new ID card application or renewal.',
+      provider: 'Department of Home Affairs',
+      accountFormat: 'ID number',
       acceptsPartial: false,
-      paymentMethods: ["Credit Card", "Debit Card"],
+      paymentMethods: ['Credit Card', 'Debit Card'],
       popularService: false,
-      instructions: "Enter your ID number. After payment, you will need to visit your nearest Home Affairs office to complete the application process."
+      instructions:
+        'Enter your ID number. After payment, you will need to visit your nearest Home Affairs office to complete the application process.',
     },
     {
       id: 8,
-      title: "Passport Application Fee",
-      category: "identity",
+      title: 'Passport Application Fee',
+      category: 'identity',
       icon: faPassport,
-      color: "#16a085",
-      description: "Pay for your passport application or renewal.",
-      provider: "Department of Home Affairs",
-      accountFormat: "ID number",
+      color: '#16a085',
+      description: 'Pay for your passport application or renewal.',
+      provider: 'Department of Home Affairs',
+      accountFormat: 'ID number',
       acceptsPartial: false,
-      paymentMethods: ["Credit Card", "Debit Card"],
+      paymentMethods: ['Credit Card', 'Debit Card'],
       popularService: false,
-      instructions: "Enter your ID number. After payment, you will need to visit your nearest Home Affairs office to complete the application process."
+      instructions:
+        'Enter your ID number. After payment, you will need to visit your nearest Home Affairs office to complete the application process.',
     },
     {
       id: 9,
-      title: "NSFAS Loan Repayment",
-      category: "education",
+      title: 'NSFAS Loan Repayment',
+      category: 'education',
       icon: faGraduationCap,
-      color: "#2980b9",
-      description: "Make repayments towards your NSFAS student loan.",
-      provider: "NSFAS",
-      accountFormat: "NSFAS reference number",
+      color: '#2980b9',
+      description: 'Make repayments towards your NSFAS student loan.',
+      provider: 'NSFAS',
+      accountFormat: 'NSFAS reference number',
       acceptsPartial: true,
-      paymentMethods: ["Credit Card", "Debit Card", "EFT"],
+      paymentMethods: ['Credit Card', 'Debit Card', 'EFT'],
       popularService: false,
-      instructions: "Enter your NSFAS reference number and the amount you wish to pay. You can make partial payments towards your outstanding balance."
+      instructions:
+        'Enter your NSFAS reference number and the amount you wish to pay. You can make partial payments towards your outstanding balance.',
     },
     {
       id: 10,
-      title: "TV License",
-      category: "other",
+      title: 'TV License',
+      category: 'other',
       icon: faBuilding,
-      color: "#8e44ad",
-      description: "Pay your annual television license fee.",
-      provider: "SABC",
-      accountFormat: "TV license number",
+      color: '#8e44ad',
+      description: 'Pay your annual television license fee.',
+      provider: 'SABC',
+      accountFormat: 'TV license number',
       acceptsPartial: false,
-      paymentMethods: ["Credit Card", "Debit Card", "EFT"],
+      paymentMethods: ['Credit Card', 'Debit Card', 'EFT'],
       popularService: false,
-      instructions: "Enter your TV license number. You can find this on your TV license invoice or renewal notice."
+      instructions:
+        'Enter your TV license number. You can find this on your TV license invoice or renewal notice.',
     },
     {
       id: 11,
-      title: "UIF Contributions",
-      category: "other",
+      title: 'UIF Contributions',
+      category: 'other',
       icon: faShieldAlt,
-      color: "#d35400",
-      description: "Make Unemployment Insurance Fund contributions.",
-      provider: "Department of Labour",
-      accountFormat: "UIF reference number",
+      color: '#d35400',
+      description: 'Make Unemployment Insurance Fund contributions.',
+      provider: 'Department of Labour',
+      accountFormat: 'UIF reference number',
       acceptsPartial: true,
-      paymentMethods: ["Credit Card", "Debit Card", "EFT"],
+      paymentMethods: ['Credit Card', 'Debit Card', 'EFT'],
       popularService: false,
-      instructions: "Enter your UIF reference number and the amount you wish to contribute. This service is primarily for employers making contributions."
-    }
+      instructions:
+        'Enter your UIF reference number and the amount you wish to contribute. This service is primarily for employers making contributions.',
+    },
   ];
 
   // Filter services based on search and category
   const filteredServices = services.filter(service => {
     // Filter by search query
-    if (searchQuery && !service.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !service.description.toLowerCase().includes(searchQuery.toLowerCase())) {
+    if (
+      searchQuery &&
+      !service.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      !service.description.toLowerCase().includes(searchQuery.toLowerCase())
+    ) {
       return false;
     }
 
@@ -206,12 +237,12 @@ const GovernmentServicesPage = () => {
   // Popular services for quick access
   const popularServices = services.filter(service => service.popularService);
 
-  const handleCategoryChange = (category) => {
+  const handleCategoryChange = category => {
     setActiveCategory(category);
     setSelectedService(null);
   };
 
-  const handleServiceSelect = (service) => {
+  const handleServiceSelect = service => {
     setSelectedService(service);
     setPaymentStep(1);
     setPaymentDetails({
@@ -221,15 +252,15 @@ const GovernmentServicesPage = () => {
       cardName: '',
       expiryDate: '',
       cvv: '',
-      savePaymentMethod: false
+      savePaymentMethod: false,
     });
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = e => {
     const { name, value, type, checked } = e.target;
     setPaymentDetails({
       ...paymentDetails,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : value,
     });
   };
 
@@ -245,7 +276,7 @@ const GovernmentServicesPage = () => {
     }
   };
 
-  const handlePaymentSubmit = (e) => {
+  const handlePaymentSubmit = e => {
     e.preventDefault();
     // In a real app, this would process the payment
     // For now, we'll just simulate a successful payment
@@ -261,7 +292,7 @@ const GovernmentServicesPage = () => {
       { id: 'tax', name: 'Tax', icon: faMoneyBillWave },
       { id: 'identity', name: 'Identity', icon: faIdCard },
       { id: 'education', name: 'Education', icon: faGraduationCap },
-      { id: 'other', name: 'Other', icon: faBuilding }
+      { id: 'other', name: 'Other', icon: faBuilding },
     ];
 
     return (
@@ -289,7 +320,13 @@ const GovernmentServicesPage = () => {
             className={`service-card ${selectedService?.id === service.id ? 'selected' : ''}`}
             onClick={() => handleServiceSelect(service)}
           >
-            <div className="service-icon" style={{ backgroundColor: `${service.color}20`, color: service.color }}>
+            <div
+              className="service-icon"
+              style={{
+                backgroundColor: `${service.color}20`,
+                color: service.color,
+              }}
+            >
               <FontAwesomeIcon icon={service.icon} />
             </div>
             <div className="service-content">
@@ -327,7 +364,10 @@ const GovernmentServicesPage = () => {
             className="popular-service-card"
             onClick={() => handleServiceSelect(service)}
           >
-            <div className="popular-service-icon" style={{ backgroundColor: service.color }}>
+            <div
+              className="popular-service-icon"
+              style={{ backgroundColor: service.color }}
+            >
               <FontAwesomeIcon icon={service.icon} />
             </div>
             <h4>{service.title}</h4>
@@ -341,7 +381,7 @@ const GovernmentServicesPage = () => {
     const steps = [
       { number: 1, title: t('governmentServices.accountDetails') },
       { number: 2, title: t('governmentServices.paymentMethod') },
-      { number: 3, title: t('governmentServices.confirmPayment') }
+      { number: 3, title: t('governmentServices.confirmPayment') },
     ];
 
     return (
@@ -428,7 +468,9 @@ const GovernmentServicesPage = () => {
   const renderPaymentMethodForm = () => (
     <div className="payment-form-step">
       <h3>Payment Method</h3>
-      <p className="form-instructions">Enter your card details to make a secure payment.</p>
+      <p className="form-instructions">
+        Enter your card details to make a secure payment.
+      </p>
 
       <div className="form-group">
         <label htmlFor="cardName">
@@ -529,7 +571,12 @@ const GovernmentServicesPage = () => {
           type="button"
           className="btn-primary"
           onClick={handleNextStep}
-          disabled={!paymentDetails.cardName || !paymentDetails.cardNumber || !paymentDetails.expiryDate || !paymentDetails.cvv}
+          disabled={
+            !paymentDetails.cardName ||
+            !paymentDetails.cardNumber ||
+            !paymentDetails.expiryDate ||
+            !paymentDetails.cvv
+          }
         >
           Next
         </button>
@@ -540,7 +587,9 @@ const GovernmentServicesPage = () => {
   const renderConfirmationForm = () => (
     <div className="payment-form-step">
       <h3>Confirm Payment</h3>
-      <p className="form-instructions">Please review your payment details before confirming.</p>
+      <p className="form-instructions">
+        Please review your payment details before confirming.
+      </p>
 
       <div className="confirmation-details">
         <div className="confirmation-section">
@@ -563,11 +612,15 @@ const GovernmentServicesPage = () => {
           <h4>Payment Details</h4>
           <div className="confirmation-row">
             <span className="label">Amount:</span>
-            <span className="value highlight">R {parseFloat(paymentDetails.amount).toFixed(2)}</span>
+            <span className="value highlight">
+              R {parseFloat(paymentDetails.amount).toFixed(2)}
+            </span>
           </div>
           <div className="confirmation-row">
             <span className="label">Payment Method:</span>
-            <span className="value">Card ending in {paymentDetails.cardNumber.slice(-4)}</span>
+            <span className="value">
+              Card ending in {paymentDetails.cardNumber.slice(-4)}
+            </span>
           </div>
           <div className="confirmation-row">
             <span className="label">Cardholder:</span>
@@ -577,7 +630,11 @@ const GovernmentServicesPage = () => {
       </div>
 
       <div className="terms-agreement">
-        <p>By clicking "Confirm Payment", you agree to the terms and conditions of this service and authorize a charge of R {parseFloat(paymentDetails.amount).toFixed(2)} to your card.</p>
+        <p>
+          By clicking "Confirm Payment", you agree to the terms and conditions
+          of this service and authorize a charge of R{' '}
+          {parseFloat(paymentDetails.amount).toFixed(2)} to your card.
+        </p>
       </div>
 
       <div className="form-actions">
@@ -605,13 +662,18 @@ const GovernmentServicesPage = () => {
         <FontAwesomeIcon icon={faCheckCircle} />
       </div>
       <h2>{t('governmentServices.paymentSuccess')}</h2>
-      <p>Your payment of R {parseFloat(paymentDetails.amount).toFixed(2)} for {selectedService.title} has been processed successfully.</p>
+      <p>
+        Your payment of R {parseFloat(paymentDetails.amount).toFixed(2)} for{' '}
+        {selectedService.title} has been processed successfully.
+      </p>
 
       <div className="receipt-details">
         <h3>Receipt Details</h3>
         <div className="receipt-row">
           <span className="label">Transaction ID:</span>
-          <span className="value">TRX{Math.floor(Math.random() * 1000000000)}</span>
+          <span className="value">
+            TRX{Math.floor(Math.random() * 1000000000)}
+          </span>
         </div>
         <div className="receipt-row">
           <span className="label">Date & Time:</span>
@@ -619,7 +681,9 @@ const GovernmentServicesPage = () => {
         </div>
         <div className="receipt-row">
           <span className="label">Payment Method:</span>
-          <span className="value">Card ending in {paymentDetails.cardNumber.slice(-4)}</span>
+          <span className="value">
+            Card ending in {paymentDetails.cardNumber.slice(-4)}
+          </span>
         </div>
         <div className="receipt-row">
           <span className="label">Account Number:</span>
@@ -627,7 +691,9 @@ const GovernmentServicesPage = () => {
         </div>
         <div className="receipt-row highlight">
           <span className="label">Amount Paid:</span>
-          <span className="value">R {parseFloat(paymentDetails.amount).toFixed(2)}</span>
+          <span className="value">
+            R {parseFloat(paymentDetails.amount).toFixed(2)}
+          </span>
         </div>
       </div>
 
@@ -668,7 +734,10 @@ const GovernmentServicesPage = () => {
     <div className="service-detail">
       {paymentStep < 4 && (
         <div className="service-detail-header">
-          <div className="service-detail-icon" style={{ backgroundColor: selectedService.color }}>
+          <div
+            className="service-detail-icon"
+            style={{ backgroundColor: selectedService.color }}
+          >
             <FontAwesomeIcon icon={selectedService.icon} />
           </div>
           <div className="service-detail-title">
@@ -680,9 +749,7 @@ const GovernmentServicesPage = () => {
 
       {paymentStep < 4 && renderPaymentSteps()}
 
-      <div className="payment-form-container">
-        {renderPaymentForm()}
-      </div>
+      <div className="payment-form-container">{renderPaymentForm()}</div>
     </div>
   );
 
@@ -694,7 +761,10 @@ const GovernmentServicesPage = () => {
       </h3>
       <div className="recent-payments-list">
         <div className="recent-payment-item">
-          <div className="payment-icon" style={{ backgroundColor: "#3498db20", color: "#3498db" }}>
+          <div
+            className="payment-icon"
+            style={{ backgroundColor: '#3498db20', color: '#3498db' }}
+          >
             <FontAwesomeIcon icon={faWater} />
           </div>
           <div className="payment-details">
@@ -707,7 +777,10 @@ const GovernmentServicesPage = () => {
           </div>
         </div>
         <div className="recent-payment-item">
-          <div className="payment-icon" style={{ backgroundColor: "#f39c1220", color: "#f39c12" }}>
+          <div
+            className="payment-icon"
+            style={{ backgroundColor: '#f39c1220', color: '#f39c12' }}
+          >
             <FontAwesomeIcon icon={faBolt} />
           </div>
           <div className="payment-details">
@@ -720,7 +793,10 @@ const GovernmentServicesPage = () => {
           </div>
         </div>
         <div className="recent-payment-item">
-          <div className="payment-icon" style={{ backgroundColor: "#e74c3c20", color: "#e74c3c" }}>
+          <div
+            className="payment-icon"
+            style={{ backgroundColor: '#e74c3c20', color: '#e74c3c' }}
+          >
             <FontAwesomeIcon icon={faCarSide} />
           </div>
           <div className="payment-details">
@@ -751,7 +827,7 @@ const GovernmentServicesPage = () => {
               type="text"
               placeholder={t('governmentServices.searchPlaceholder')}
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
@@ -763,17 +839,25 @@ const GovernmentServicesPage = () => {
             {renderServiceCategories()}
 
             <div className="services-main-content">
-              {activeCategory === 'all' && searchQuery === '' && renderPopularServices()}
+              {activeCategory === 'all' &&
+                searchQuery === '' &&
+                renderPopularServices()}
 
               <div className="services-section">
                 <h3 className="section-title">
                   <FontAwesomeIcon icon={faFilter} />
-                  <span>{activeCategory === 'all' ? 'All Services' : `${activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)} Services`}</span>
+                  <span>
+                    {activeCategory === 'all'
+                      ? 'All Services'
+                      : `${activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)} Services`}
+                  </span>
                 </h3>
                 {renderServicesList()}
               </div>
 
-              {activeCategory === 'all' && searchQuery === '' && renderRecentPayments()}
+              {activeCategory === 'all' &&
+                searchQuery === '' &&
+                renderRecentPayments()}
             </div>
           </>
         ) : (

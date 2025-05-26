@@ -3,7 +3,7 @@ import {
   extractDateOfBirth,
   extractGender,
   extractCitizenship,
-  parseIdNumber
+  parseIdNumber,
 } from '../idNumberParser';
 
 describe('ID Number Parser', () => {
@@ -92,7 +92,9 @@ describe('ID Number Parser', () => {
       expect(result.valid).toBe(true);
       expect(result.dateOfBirth.year).toBe(1992);
       expect(result.gender.gender).toBe('Female');
-      expect(result.citizenship.citizenshipStatus).toBe('South African Citizen');
+      expect(result.citizenship.citizenshipStatus).toBe(
+        'South African Citizen'
+      );
     });
 
     test('should handle ID number with spaces', () => {

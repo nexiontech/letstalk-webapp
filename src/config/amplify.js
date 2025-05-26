@@ -18,26 +18,26 @@ Amplify.configure({
       clientSecret: cognitoConfig.clientSecret, // Add client secret
       identityPoolId: cognitoConfig.identityPoolId, // Add identity pool ID
       loginWith: {
-        username: true,  // Using ID Number as username
-        email: false     // Not using email as username
+        username: true, // Using ID Number as username
+        email: false, // Not using email as username
       },
       signUpAttributes: ['email', 'name', 'custom:idNumber'],
       mfa: {
-        status: 'optional'
+        status: 'optional',
       },
       userAttributes: {
         email: {
-          required: true
+          required: true,
         },
         name: {
-          required: true
+          required: true,
         },
         'custom:idNumber': {
-          required: true
-        }
+          required: true,
+        },
       },
       // Add custom auth hooks to handle SECRET_HASH for all operations
-      handleSignUp: async (input) => {
+      handleSignUp: async input => {
         const { username, options } = input;
         // Note: password is extracted by AWS Amplify internally
         const secretHash = await calculateSecretHash(
@@ -50,11 +50,11 @@ Amplify.configure({
           ...input,
           options: {
             ...options,
-            secretHash
-          }
+            secretHash,
+          },
         };
       },
-      handleSignIn: async (input) => {
+      handleSignIn: async input => {
         const { username, options } = input;
         // Note: password is extracted by AWS Amplify internally
         const secretHash = await calculateSecretHash(
@@ -67,11 +67,11 @@ Amplify.configure({
           ...input,
           options: {
             ...options,
-            secretHash
-          }
+            secretHash,
+          },
         };
       },
-      handleConfirmSignUp: async (input) => {
+      handleConfirmSignUp: async input => {
         const { username, options } = input;
         // Note: confirmationCode is extracted by AWS Amplify internally
         const secretHash = await calculateSecretHash(
@@ -84,11 +84,11 @@ Amplify.configure({
           ...input,
           options: {
             ...options,
-            secretHash
-          }
+            secretHash,
+          },
         };
       },
-      handleResendSignUpCode: async (input) => {
+      handleResendSignUpCode: async input => {
         const { username, options } = input;
         const secretHash = await calculateSecretHash(
           username,
@@ -100,11 +100,11 @@ Amplify.configure({
           ...input,
           options: {
             ...options,
-            secretHash
-          }
+            secretHash,
+          },
         };
       },
-      handleResetPassword: async (input) => {
+      handleResetPassword: async input => {
         const { username, options } = input;
         const secretHash = await calculateSecretHash(
           username,
@@ -116,11 +116,11 @@ Amplify.configure({
           ...input,
           options: {
             ...options,
-            secretHash
-          }
+            secretHash,
+          },
         };
       },
-      handleConfirmResetPassword: async (input) => {
+      handleConfirmResetPassword: async input => {
         const { username, options } = input;
         // Note: confirmationCode and newPassword are extracted by AWS Amplify internally
         const secretHash = await calculateSecretHash(
@@ -133,12 +133,12 @@ Amplify.configure({
           ...input,
           options: {
             ...options,
-            secretHash
-          }
+            secretHash,
+          },
         };
-      }
-    }
-  }
+      },
+    },
+  },
 });
 
 export default Amplify;

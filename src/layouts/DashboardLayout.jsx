@@ -15,7 +15,7 @@ import {
   faBars,
   faTimes,
   faUser,
-  faCog
+  faCog,
 } from '@fortawesome/free-solid-svg-icons';
 import './DashboardLayout.css';
 
@@ -24,14 +24,21 @@ const DashboardLayout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const userName = user?.name || 'User';
-  const hasRealName = user?.name && user.name !== 'User' && user.name.trim() !== '';
+  const hasRealName =
+    user?.name && user.name !== 'User' && user.name.trim() !== '';
   // Get first letter of first name for avatar
-  const userInitial = hasRealName ? userName.split(' ')[0].charAt(0).toUpperCase() : 'U';
+  const userInitial = hasRealName
+    ? userName.split(' ')[0].charAt(0).toUpperCase()
+    : 'U';
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Log user info for debugging
   useEffect(() => {
-    console.log('DashboardLayout - Auth state:', { user, isAuthenticated, hasRealName });
+    console.log('DashboardLayout - Auth state:', {
+      user,
+      isAuthenticated,
+      hasRealName,
+    });
   }, [user, isAuthenticated, hasRealName]);
 
   const handleLogout = async () => {
@@ -40,7 +47,7 @@ const DashboardLayout = ({ children }) => {
   };
 
   // Determine which nav link is active based on current path
-  const isActive = (path) => {
+  const isActive = path => {
     if (Array.isArray(path)) {
       return path.some(p => location.pathname === p) ? 'active current' : '';
     }
@@ -57,26 +64,26 @@ const DashboardLayout = ({ children }) => {
       path: '/dashboard',
       icon: faTachometerAlt,
       label: 'Dashboard',
-      onClick: () => navigate('/dashboard')
+      onClick: () => navigate('/dashboard'),
     },
     {
       path: '/service-issues',
       icon: faExclamationTriangle,
       label: 'Service Issues',
-      onClick: () => navigate('/service-issues')
+      onClick: () => navigate('/service-issues'),
     },
     {
       path: ['/services', '/utilities'],
       icon: faCreditCard,
       label: 'Pay Bills',
-      onClick: () => navigate('/services')
+      onClick: () => navigate('/services'),
     },
     {
       path: '/CommunityHub',
       icon: faUsers,
       label: 'Community Hub',
-      onClick: () => navigate('/CommunityHub')
-    }
+      onClick: () => navigate('/CommunityHub'),
+    },
   ];
 
   // Footer navigation items
@@ -84,7 +91,7 @@ const DashboardLayout = ({ children }) => {
     {
       icon: faUser,
       label: 'My Profile',
-      onClick: () => navigate('/profile')
+      onClick: () => navigate('/profile'),
     },
     {
       icon: faQuestionCircle,
@@ -92,14 +99,14 @@ const DashboardLayout = ({ children }) => {
       onClick: () => {
         // Handle help action
         console.log('Help clicked');
-      }
+      },
     },
     {
       icon: faSignOutAlt,
       label: 'Log Out',
       className: 'logout',
-      onClick: handleLogout
-    }
+      onClick: handleLogout,
+    },
   ];
 
   return (
@@ -108,13 +115,15 @@ const DashboardLayout = ({ children }) => {
       <button
         className="mobile-menu-toggle"
         onClick={toggleMobileMenu}
-        aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+        aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
       >
         <FontAwesomeIcon icon={mobileMenuOpen ? faTimes : faBars} />
       </button>
 
       {/* Sidebar */}
-      <aside className={`dashboard-sidebar ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+      <aside
+        className={`dashboard-sidebar ${mobileMenuOpen ? 'mobile-open' : ''}`}
+      >
         <div className="sidebar-header">
           <h2 className="dashboard-heading">LetsTalk</h2>
           <div className="sidebar-close-mobile" onClick={toggleMobileMenu}>
@@ -131,9 +140,7 @@ const DashboardLayout = ({ children }) => {
           style={{ cursor: 'pointer' }}
           title="View and edit your profile"
         >
-          <div className="user-avatar">
-            {userInitial}
-          </div>
+          <div className="user-avatar">{userInitial}</div>
           <div className="user-info">
             <div className="user-name">{hasRealName ? userName : 'User'}</div>
             {user?.idNumber && (
@@ -162,7 +169,7 @@ const DashboardLayout = ({ children }) => {
                 key={index}
                 href={Array.isArray(item.path) ? item.path[0] : item.path}
                 className={`nav-link ${isActive(item.path)}`}
-                onClick={(e) => {
+                onClick={e => {
                   e.preventDefault();
                   item.onClick();
                   if (mobileMenuOpen) setMobileMenuOpen(false);
@@ -182,7 +189,7 @@ const DashboardLayout = ({ children }) => {
                 key={index}
                 href="#"
                 className={`nav-link ${item.className || ''}`}
-                onClick={(e) => {
+                onClick={e => {
                   e.preventDefault();
                   item.onClick();
                   if (mobileMenuOpen) setMobileMenuOpen(false);
@@ -199,9 +206,7 @@ const DashboardLayout = ({ children }) => {
       </aside>
 
       {/* Main content */}
-      <main className="dashboard-main-content">
-        {children}
-      </main>
+      <main className="dashboard-main-content">{children}</main>
 
       {/* Overlay for mobile */}
       {mobileMenuOpen && (

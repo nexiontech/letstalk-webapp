@@ -13,8 +13,13 @@
  * @param {string} idNumber - The 13-digit ID number
  * @returns {boolean} - Whether the ID number is valid
  */
-export const validateIdNumberChecksum = (idNumber) => {
-  if (!idNumber || typeof idNumber !== 'string' || idNumber.length !== 13 || !/^\d+$/.test(idNumber)) {
+export const validateIdNumberChecksum = idNumber => {
+  if (
+    !idNumber ||
+    typeof idNumber !== 'string' ||
+    idNumber.length !== 13 ||
+    !/^\d+$/.test(idNumber)
+  ) {
     return false;
   }
 
@@ -48,7 +53,7 @@ export const validateIdNumberChecksum = (idNumber) => {
  * @param {string} idNumber - The 13-digit ID number
  * @returns {Object} - Date of birth information
  */
-export const extractDateOfBirth = (idNumber) => {
+export const extractDateOfBirth = idNumber => {
   if (!idNumber || typeof idNumber !== 'string' || idNumber.length !== 13) {
     return { valid: false, error: 'Invalid ID number format' };
   }
@@ -71,8 +76,18 @@ export const extractDateOfBirth = (idNumber) => {
 
     // Format date in a readable way
     const monthNames = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ];
 
     const formattedDate = `${parseInt(day, 10)} ${monthNames[dateObj.getMonth()]} ${fullYear}`;
@@ -86,9 +101,9 @@ export const extractDateOfBirth = (idNumber) => {
       month: parseInt(month, 10),
       monthName: monthNames[dateObj.getMonth()],
       year: parseInt(fullYear, 10),
-      age
+      age,
     };
-  } catch (error) {
+  } catch {
     return { valid: false, error: 'Error parsing date of birth' };
   }
 };
@@ -98,12 +113,15 @@ export const extractDateOfBirth = (idNumber) => {
  * @param {Date} birthDate - The birth date
  * @returns {number} - The age in years
  */
-const calculateAge = (birthDate) => {
+const calculateAge = birthDate => {
   const today = new Date();
   let age = today.getFullYear() - birthDate.getFullYear();
   const monthDiff = today.getMonth() - birthDate.getMonth();
 
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < birthDate.getDate())
+  ) {
     age--;
   }
 
@@ -115,7 +133,7 @@ const calculateAge = (birthDate) => {
  * @param {string} idNumber - The 13-digit ID number
  * @returns {Object} - Gender information
  */
-export const extractGender = (idNumber) => {
+export const extractGender = idNumber => {
   if (!idNumber || typeof idNumber !== 'string' || idNumber.length !== 13) {
     return { valid: false, error: 'Invalid ID number format' };
   }
@@ -127,9 +145,9 @@ export const extractGender = (idNumber) => {
     return {
       valid: true,
       gender,
-      genderCode: genderDigits
+      genderCode: genderDigits,
     };
-  } catch (error) {
+  } catch {
     return { valid: false, error: 'Error parsing gender information' };
   }
 };
@@ -139,21 +157,22 @@ export const extractGender = (idNumber) => {
  * @param {string} idNumber - The 13-digit ID number
  * @returns {Object} - Citizenship information
  */
-export const extractCitizenship = (idNumber) => {
+export const extractCitizenship = idNumber => {
   if (!idNumber || typeof idNumber !== 'string' || idNumber.length !== 13) {
     return { valid: false, error: 'Invalid ID number format' };
   }
 
   try {
     const citizenshipDigit = parseInt(idNumber.charAt(10), 10);
-    const status = citizenshipDigit === 0 ? 'South African Citizen' : 'Permanent Resident';
+    const status =
+      citizenshipDigit === 0 ? 'South African Citizen' : 'Permanent Resident';
 
     return {
       valid: true,
       citizenshipStatus: status,
-      citizenshipCode: citizenshipDigit
+      citizenshipCode: citizenshipDigit,
     };
-  } catch (error) {
+  } catch {
     return { valid: false, error: 'Error parsing citizenship information' };
   }
 };
@@ -163,11 +182,11 @@ export const extractCitizenship = (idNumber) => {
  * @param {string} idNumber - The 13-digit ID number
  * @returns {Object} - All extracted information and validation status
  */
-export const parseIdNumber = (idNumber) => {
+export const parseIdNumber = idNumber => {
   if (!idNumber || typeof idNumber !== 'string') {
     return {
       valid: false,
-      error: 'ID number is required'
+      error: 'ID number is required',
     };
   }
 
@@ -177,7 +196,7 @@ export const parseIdNumber = (idNumber) => {
   if (cleanIdNumber.length !== 13 || !/^\d+$/.test(cleanIdNumber)) {
     return {
       valid: false,
-      error: 'ID number must be 13 digits'
+      error: 'ID number must be 13 digits',
     };
   }
 
@@ -185,7 +204,7 @@ export const parseIdNumber = (idNumber) => {
   if (!isChecksumValid) {
     return {
       valid: false,
-      error: 'ID number checksum is invalid'
+      error: 'ID number checksum is invalid',
     };
   }
 
@@ -196,7 +215,7 @@ export const parseIdNumber = (idNumber) => {
   if (!dateOfBirth.valid) {
     return {
       valid: false,
-      error: dateOfBirth.error
+      error: dateOfBirth.error,
     };
   }
 
@@ -206,7 +225,10 @@ export const parseIdNumber = (idNumber) => {
     dateOfBirth,
     gender,
     citizenship,
-    formattedIdNumber: cleanIdNumber.replace(/(\d{6})(\d{4})(\d{1})(\d{1})(\d{1})/, '$1 $2 $3 $4 $5')
+    formattedIdNumber: cleanIdNumber.replace(
+      /(\d{6})(\d{4})(\d{1})(\d{1})(\d{1})/,
+      '$1 $2 $3 $4 $5'
+    ),
   };
 };
 

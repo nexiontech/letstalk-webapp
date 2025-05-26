@@ -3,10 +3,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTranslation } from '../translations';
 import {
-  faSearch, faFilter, faCalendarAlt, faPlayCircle,
-  faNewspaper, faVideo, faBuilding, faPeopleGroup,
-  faMapMarkerAlt, faChevronRight, faDownload, faShare,
-  faBookmark, faEye, faClock, faTag, faStream, faBell
+  faSearch,
+  faFilter,
+  faCalendarAlt,
+  faPlayCircle,
+  faNewspaper,
+  faVideo,
+  faBuilding,
+  faPeopleGroup,
+  faChevronRight,
+  faDownload,
+  faShare,
+  faBookmark,
+  faEye,
+  faClock,
+  faTag,
+  faStream,
+  faBell,
 } from '@fortawesome/free-solid-svg-icons';
 import './PressReleasesPage.css';
 
@@ -22,12 +35,13 @@ const PressReleasesPage = () => {
   const newsReleases = [
     {
       id: 1,
-      title: "Water Infrastructure Upgrade Project Deployed",
-      summary: "The municipality has approved a R50 million project to upgrade water infrastructure in Alexandra and surrounding areas.",
-      date: "June 15, 2023",
-      category: "Water Services",
-      source: "Department of Water and Sanitation",
-      image: "https://via.placeholder.com/300x200?text=Water+Infrastructure",
+      title: 'Water Infrastructure Upgrade Project Deployed',
+      summary:
+        'The municipality has approved a R50 million project to upgrade water infrastructure in Alexandra and surrounding areas.',
+      date: 'June 15, 2023',
+      category: 'Water Services',
+      source: 'Department of Water and Sanitation',
+      image: 'https://via.placeholder.com/300x200?text=Water+Infrastructure',
       content: `
         <p>The Department of Water and Sanitation has announced a major infrastructure upgrade project aimed at improving water supply reliability in Alexandra and surrounding areas.</p>
         <p>The R50 million project will include:</p>
@@ -39,16 +53,17 @@ const PressReleasesPage = () => {
         </ul>
         <p>"This investment represents our commitment to ensuring reliable water access for all residents," said the Minister of Water and Sanitation. "The project is expected to reduce water losses by up to 30% and significantly improve service delivery."</p>
         <p>Construction is scheduled to begin next month and will be completed in phases over the next 18 months. Residents may experience temporary water interruptions during the upgrade process, but these will be announced in advance.</p>
-      `
+      `,
     },
     {
       id: 2,
-      title: "New Electricity Tariff Structure Effective July 1",
-      summary: "The National Energy Regulator has approved a new electricity tariff structure that will take effect from July 1.",
-      date: "May 28, 2023",
-      category: "Electricity",
-      source: "National Energy Regulator",
-      image: "https://via.placeholder.com/300x200?text=Electricity+Tariffs",
+      title: 'New Electricity Tariff Structure Effective July 1',
+      summary:
+        'The National Energy Regulator has approved a new electricity tariff structure that will take effect from July 1.',
+      date: 'May 28, 2023',
+      category: 'Electricity',
+      source: 'National Energy Regulator',
+      image: 'https://via.placeholder.com/300x200?text=Electricity+Tariffs',
       content: `
         <p>The National Energy Regulator has approved a new electricity tariff structure that aims to make electricity more affordable for low-income households while encouraging energy conservation.</p>
         <p>Key changes include:</p>
@@ -60,16 +75,17 @@ const PressReleasesPage = () => {
         </ul>
         <p>"The new tariff structure is designed to be more equitable and to promote energy efficiency," said the Chairperson of the National Energy Regulator. "We believe this approach will help manage demand while protecting vulnerable households."</p>
         <p>Residents are encouraged to register for the low-income subsidy program if they qualify. Registration can be completed at local municipal offices or online through the official website.</p>
-      `
+      `,
     },
     {
       id: 3,
-      title: "Waste Management Improvement Plan Launched",
-      summary: "A comprehensive waste management improvement plan has been launched to address refuse collection challenges.",
-      date: "April 10, 2023",
-      category: "Waste Management",
-      source: "Department of Environmental Affairs",
-      image: "https://via.placeholder.com/300x200?text=Waste+Management",
+      title: 'Waste Management Improvement Plan Launched',
+      summary:
+        'A comprehensive waste management improvement plan has been launched to address refuse collection challenges.',
+      date: 'April 10, 2023',
+      category: 'Waste Management',
+      source: 'Department of Environmental Affairs',
+      image: 'https://via.placeholder.com/300x200?text=Waste+Management',
       content: `
         <p>The Department of Environmental Affairs has launched a comprehensive waste management improvement plan to address ongoing challenges with refuse collection and disposal.</p>
         <p>The initiative includes:</p>
@@ -81,16 +97,17 @@ const PressReleasesPage = () => {
         </ul>
         <p>"We recognize the frustrations residents have experienced with inconsistent waste collection," said the Director of Environmental Affairs. "This plan represents a holistic approach to resolving these issues and improving service delivery."</p>
         <p>The new collection schedule will be distributed to all households in the coming weeks. Residents are encouraged to participate in the recycling program, which will offer rewards for community participation.</p>
-      `
+      `,
     },
     {
       id: 4,
-      title: "Road Maintenance Program to Begin Next Month",
-      summary: "A major road maintenance program will begin next month, focusing on pothole repairs and resurfacing of major routes.",
-      date: "March 5, 2023",
-      category: "Roads and Transport",
-      source: "Department of Transport",
-      image: "https://via.placeholder.com/300x200?text=Road+Maintenance",
+      title: 'Road Maintenance Program to Begin Next Month',
+      summary:
+        'A major road maintenance program will begin next month, focusing on pothole repairs and resurfacing of major routes.',
+      date: 'March 5, 2023',
+      category: 'Roads and Transport',
+      source: 'Department of Transport',
+      image: 'https://via.placeholder.com/300x200?text=Road+Maintenance',
       content: `
         <p>The Department of Transport has announced a major road maintenance program that will begin next month, focusing on pothole repairs and resurfacing of major routes throughout the municipality.</p>
         <p>The program will include:</p>
@@ -102,88 +119,101 @@ const PressReleasesPage = () => {
         </ul>
         <p>"Our roads have suffered significant deterioration due to recent heavy rains," said the Head of Road Infrastructure. "This program will not only address current issues but also implement preventative measures to improve road longevity."</p>
         <p>Work will be conducted primarily during off-peak hours to minimize traffic disruption. Detailed schedules for specific areas will be published weekly on the municipal website and through local media.</p>
-      `
-    }
+      `,
+    },
   ];
 
   // Sample data for live and recorded meetings
   const meetings = [
     {
       id: 1,
-      title: "Parliamentary Session: Service Delivery Oversight",
-      type: "Parliament",
-      status: "Live",
-      date: "Today, 10:00 AM",
-      duration: "2 hours",
+      title: 'Parliamentary Session: Service Delivery Oversight',
+      type: 'Parliament',
+      status: 'Live',
+      date: 'Today, 10:00 AM',
+      duration: '2 hours',
       viewers: 1245,
-      thumbnail: "https://via.placeholder.com/300x200?text=Parliament+Session",
-      description: "Live parliamentary session discussing oversight mechanisms for service delivery improvement across municipalities.",
-      videoUrl: "#",
-      downloadable: false
+      thumbnail: 'https://via.placeholder.com/300x200?text=Parliament+Session',
+      description:
+        'Live parliamentary session discussing oversight mechanisms for service delivery improvement across municipalities.',
+      videoUrl: '#',
+      downloadable: false,
     },
     {
       id: 2,
-      title: "Municipal Budget Allocation Meeting",
-      type: "Municipality",
-      status: "Recorded",
-      date: "June 10, 2023",
-      duration: "1 hour 45 minutes",
+      title: 'Municipal Budget Allocation Meeting',
+      type: 'Municipality',
+      status: 'Recorded',
+      date: 'June 10, 2023',
+      duration: '1 hour 45 minutes',
       viewers: 876,
-      thumbnail: "https://via.placeholder.com/300x200?text=Budget+Meeting",
-      description: "Discussion of the annual budget allocation for service delivery projects in the Johannesburg metropolitan area.",
-      videoUrl: "#",
-      downloadable: true
+      thumbnail: 'https://via.placeholder.com/300x200?text=Budget+Meeting',
+      description:
+        'Discussion of the annual budget allocation for service delivery projects in the Johannesburg metropolitan area.',
+      videoUrl: '#',
+      downloadable: true,
     },
     {
       id: 3,
-      title: "Alexandra Ward 105 Community Forum",
-      type: "Ward",
-      status: "Scheduled",
-      date: "June 20, 2023, 14:00 PM",
-      duration: "Expected 2 hours",
+      title: 'Alexandra Ward 105 Community Forum',
+      type: 'Ward',
+      status: 'Scheduled',
+      date: 'June 20, 2023, 14:00 PM',
+      duration: 'Expected 2 hours',
       viewers: 0,
-      thumbnail: "https://via.placeholder.com/300x200?text=Ward+Meeting",
-      description: "Upcoming ward meeting to address local service delivery concerns and community development initiatives.",
-      videoUrl: "#",
-      downloadable: false
+      thumbnail: 'https://via.placeholder.com/300x200?text=Ward+Meeting',
+      description:
+        'Upcoming ward meeting to address local service delivery concerns and community development initiatives.',
+      videoUrl: '#',
+      downloadable: false,
     },
     {
       id: 4,
-      title: "Water Crisis Response Task Force",
-      type: "Municipality",
-      status: "Recorded",
-      date: "May 15, 2023",
-      duration: "2 hours 30 minutes",
+      title: 'Water Crisis Response Task Force',
+      type: 'Municipality',
+      status: 'Recorded',
+      date: 'May 15, 2023',
+      duration: '2 hours 30 minutes',
       viewers: 1532,
-      thumbnail: "https://via.placeholder.com/300x200?text=Water+Crisis+Meeting",
-      description: "Special municipal meeting convened to address the ongoing water supply challenges in several regions.",
-      videoUrl: "#",
-      downloadable: true
+      thumbnail:
+        'https://via.placeholder.com/300x200?text=Water+Crisis+Meeting',
+      description:
+        'Special municipal meeting convened to address the ongoing water supply challenges in several regions.',
+      videoUrl: '#',
+      downloadable: true,
     },
     {
       id: 5,
-      title: "Parliamentary Committee on Public Works",
-      type: "Parliament",
-      status: "Recorded",
-      date: "April 28, 2023",
-      duration: "3 hours 15 minutes",
+      title: 'Parliamentary Committee on Public Works',
+      type: 'Parliament',
+      status: 'Recorded',
+      date: 'April 28, 2023',
+      duration: '3 hours 15 minutes',
       viewers: 945,
-      thumbnail: "https://via.placeholder.com/300x200?text=Public+Works+Committee",
-      description: "Committee meeting focused on infrastructure development and maintenance standards for public facilities.",
-      videoUrl: "#",
-      downloadable: true
-    }
+      thumbnail:
+        'https://via.placeholder.com/300x200?text=Public+Works+Committee',
+      description:
+        'Committee meeting focused on infrastructure development and maintenance standards for public facilities.',
+      videoUrl: '#',
+      downloadable: true,
+    },
   ];
 
   const filteredNews = newsReleases.filter(item => {
     // Filter by search query
-    if (searchQuery && !item.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !item.summary.toLowerCase().includes(searchQuery.toLowerCase())) {
+    if (
+      searchQuery &&
+      !item.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      !item.summary.toLowerCase().includes(searchQuery.toLowerCase())
+    ) {
       return false;
     }
 
     // Filter by category
-    if (activeFilter !== 'all' && item.category.toLowerCase() !== activeFilter.toLowerCase()) {
+    if (
+      activeFilter !== 'all' &&
+      item.category.toLowerCase() !== activeFilter.toLowerCase()
+    ) {
       return false;
     }
 
@@ -192,39 +222,49 @@ const PressReleasesPage = () => {
 
   const filteredMeetings = meetings.filter(item => {
     // Filter by search query
-    if (searchQuery && !item.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !item.description.toLowerCase().includes(searchQuery.toLowerCase())) {
+    if (
+      searchQuery &&
+      !item.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      !item.description.toLowerCase().includes(searchQuery.toLowerCase())
+    ) {
       return false;
     }
 
     // Filter by type
-    if (activeFilter !== 'all' && item.type.toLowerCase() !== activeFilter.toLowerCase()) {
+    if (
+      activeFilter !== 'all' &&
+      item.type.toLowerCase() !== activeFilter.toLowerCase()
+    ) {
       return false;
     }
 
     return true;
   });
 
-  const handleTabChange = (tab) => {
+  const handleTabChange = tab => {
     setActiveTab(tab);
     setActiveFilter('all');
     setSelectedItem(null);
   };
 
-  const handleFilterChange = (filter) => {
+  const handleFilterChange = filter => {
     setActiveFilter(filter);
   };
 
-  const handleItemSelect = (item) => {
+  const handleItemSelect = item => {
     setSelectedItem(item);
   };
 
-  const getStatusColor = (status) => {
-    switch(status) {
-      case 'Live': return '#e74c3c';
-      case 'Recorded': return '#3498db';
-      case 'Scheduled': return '#2ecc71';
-      default: return '#95a5a6';
+  const getStatusColor = status => {
+    switch (status) {
+      case 'Live':
+        return '#e74c3c';
+      case 'Recorded':
+        return '#3498db';
+      case 'Scheduled':
+        return '#2ecc71';
+      default:
+        return '#95a5a6';
     }
   };
 
@@ -366,9 +406,13 @@ const PressReleasesPage = () => {
             <div className="press-card-content">
               <div className="meeting-type">
                 <FontAwesomeIcon
-                  icon={item.type === 'Parliament' ? faBuilding :
-                        item.type === 'Municipality' ? faBuilding :
-                        faPeopleGroup}
+                  icon={
+                    item.type === 'Parliament'
+                      ? faBuilding
+                      : item.type === 'Municipality'
+                        ? faBuilding
+                        : faPeopleGroup
+                  }
                 />
                 <span>{item.type}</span>
               </div>
@@ -473,9 +517,13 @@ const PressReleasesPage = () => {
             </div>
             <div className="detail-meta-item">
               <FontAwesomeIcon
-                icon={selectedItem.type === 'Parliament' ? faBuilding :
-                      selectedItem.type === 'Municipality' ? faBuilding :
-                      faPeopleGroup}
+                icon={
+                  selectedItem.type === 'Parliament'
+                    ? faBuilding
+                    : selectedItem.type === 'Municipality'
+                      ? faBuilding
+                      : faPeopleGroup
+                }
               />
               <span>{selectedItem.type}</span>
             </div>
@@ -483,17 +531,25 @@ const PressReleasesPage = () => {
         </div>
 
         <div className="video-container">
-          {selectedItem.status === 'Live' || selectedItem.status === 'Recorded' ? (
+          {selectedItem.status === 'Live' ||
+          selectedItem.status === 'Recorded' ? (
             <div className="video-player">
               <div className="video-placeholder">
                 <FontAwesomeIcon icon={faPlayCircle} />
-                <span>{selectedItem.status === 'Live' ? 'Watch Live Stream' : 'Play Recording'}</span>
+                <span>
+                  {selectedItem.status === 'Live'
+                    ? 'Watch Live Stream'
+                    : 'Play Recording'}
+                </span>
               </div>
             </div>
           ) : (
             <div className="scheduled-meeting">
               <div className="scheduled-info">
-                <FontAwesomeIcon icon={faCalendarAlt} className="scheduled-icon" />
+                <FontAwesomeIcon
+                  icon={faCalendarAlt}
+                  className="scheduled-icon"
+                />
                 <div>
                   <h3>Scheduled Meeting</h3>
                   <p>This meeting is scheduled for {selectedItem.date}</p>
@@ -547,7 +603,7 @@ const PressReleasesPage = () => {
               type="text"
               placeholder={t('pressReleases.searchPlaceholder')}
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
@@ -578,7 +634,9 @@ const PressReleasesPage = () => {
               <h3>{t('pressReleases.filters')}</h3>
             </div>
 
-            {activeTab === 'news' ? renderNewsFilters() : renderMeetingFilters()}
+            {activeTab === 'news'
+              ? renderNewsFilters()
+              : renderMeetingFilters()}
           </div>
 
           <div className="press-items-container">
@@ -595,7 +653,9 @@ const PressReleasesPage = () => {
                 </>
               )}
               <span className="item-count">
-                {activeTab === 'news' ? filteredNews.length : filteredMeetings.length}
+                {activeTab === 'news'
+                  ? filteredNews.length
+                  : filteredMeetings.length}
               </span>
             </h3>
 
@@ -605,7 +665,11 @@ const PressReleasesPage = () => {
 
         <div className="press-main">
           {selectedItem ? (
-            activeTab === 'news' ? renderNewsDetail() : renderMeetingDetail()
+            activeTab === 'news' ? (
+              renderNewsDetail()
+            ) : (
+              renderMeetingDetail()
+            )
           ) : (
             <div className="press-empty-state">
               <div className="empty-icon-large">

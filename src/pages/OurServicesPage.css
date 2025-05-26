@@ -8,7 +8,11 @@
 /* Hero Section */
 .services-hero-section {
   padding: 6rem 2rem 4rem; /* Added horizontal padding */
-  background: linear-gradient(135deg, rgba(14, 70, 73, 0.05) 0%, rgba(14, 70, 73, 0.1) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(14, 70, 73, 0.05) 0%,
+    rgba(14, 70, 73, 0.1) 100%
+  );
   position: relative;
 }
 
@@ -99,7 +103,9 @@
   height: 100%;
   border-radius: 12px !important;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05) !important;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   overflow: hidden;
 }
 
@@ -272,7 +278,11 @@
 /* Call to Action Section */
 .services-cta-section {
   padding: 5rem 2rem; /* Added horizontal padding */
-  background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-dark) 0%,
+    var(--color-primary) 100%
+  );
   color: white;
 }
 

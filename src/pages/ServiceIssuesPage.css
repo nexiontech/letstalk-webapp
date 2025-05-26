@@ -28,7 +28,7 @@
 .issues-title-section h1 {
   font-size: 2rem;
   font-weight: 700;
-  color: #0E4649;
+  color: #0e4649;
   margin: 0 0 0.5rem 0;
   position: relative;
   display: inline-block;
@@ -41,7 +41,7 @@
   left: 0;
   width: 40px;
   height: 3px;
-  background-color: #FFB61D;
+  background-color: #ffb61d;
   border-radius: 2px;
 }
 
@@ -82,13 +82,13 @@
 
 .issues-search input:focus {
   outline: none;
-  border-color: #0E4649;
+  border-color: #0e4649;
   box-shadow: 0 0 0 3px rgba(14, 70, 73, 0.1);
   width: 280px;
 }
 
 .report-issue-btn {
-  background-color: #FFB61D;
+  background-color: #ffb61d;
   color: #333;
   border: none;
   border-radius: 8px;
@@ -145,12 +145,12 @@
 .filter-header h3 {
   font-size: 16px;
   font-weight: 600;
-  color: #0E4649;
+  color: #0e4649;
   margin: 0;
 }
 
 .filter-header svg {
-  color: #0E4649;
+  color: #0e4649;
   font-size: 14px;
 }
 
@@ -177,7 +177,7 @@
 }
 
 .filter-option.active {
-  background-color: #0E4649;
+  background-color: #0e4649;
   color: white;
   box-shadow: 0 2px 6px rgba(14, 70, 73, 0.2);
 }
@@ -205,7 +205,7 @@
 }
 
 .list-title svg {
-  color: #0E4649;
+  color: #0e4649;
   font-size: 16px;
 }
 
@@ -239,7 +239,7 @@
 }
 
 .issue-card.selected {
-  border-color: #0E4649;
+  border-color: #0e4649;
   box-shadow: 0 0 0 2px rgba(14, 70, 73, 0.2);
 }
 
@@ -303,7 +303,7 @@
 }
 
 .issue-card:hover .issue-arrow {
-  color: #0E4649;
+  color: #0e4649;
   transform: translateX(2px);
 }
 
@@ -331,7 +331,8 @@
   text-align: center;
 }
 
-.issue-time, .issue-eta {
+.issue-time,
+.issue-eta {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -339,7 +340,8 @@
   min-width: 120px;
 }
 
-.issue-time svg, .issue-eta svg {
+.issue-time svg,
+.issue-eta svg {
   font-size: 12px;
   width: 14px;
 }
@@ -406,7 +408,7 @@
 .map-info h2 {
   font-size: 18px;
   font-weight: 600;
-  color: #0E4649;
+  color: #0e4649;
   margin: 0 0 8px 0;
 }
 
@@ -509,27 +511,30 @@
   font-weight: 500;
 }
 
-.issue-description, .issue-updates {
+.issue-description,
+.issue-updates {
   margin-bottom: 1.5rem;
 }
 
-.issue-description h3, .issue-updates h3 {
+.issue-description h3,
+.issue-updates h3 {
   font-size: 16px;
   font-weight: 600;
-  color: #0E4649;
+  color: #0e4649;
   margin: 0 0 12px 0;
   position: relative;
   padding-left: 12px;
 }
 
-.issue-description h3::before, .issue-updates h3::before {
+.issue-description h3::before,
+.issue-updates h3::before {
   content: '';
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
   width: 3px;
-  background-color: #FFB61D;
+  background-color: #ffb61d;
   border-radius: 3px;
 }
 
@@ -570,7 +575,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: #0E4649;
+  background-color: #0e4649;
   border: 2px solid white;
   box-shadow: 0 0 0 2px rgba(14, 70, 73, 0.2);
 }
@@ -578,7 +583,7 @@
 .update-time {
   font-size: 12px;
   font-weight: 600;
-  color: #0E4649;
+  color: #0e4649;
   margin-bottom: 4px;
 }
 
@@ -595,7 +600,7 @@
 .issue-map h3 {
   font-size: 16px;
   font-weight: 600;
-  color: #0E4649;
+  color: #0e4649;
   margin: 0 0 12px 0;
 }
 

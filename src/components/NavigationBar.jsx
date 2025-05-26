@@ -20,41 +20,44 @@ function NavigationBar() {
     navigate('/');
   }, [logout, navigate]);
   useEffect(() => {
-    const hamburger = document.querySelector(".hamburger");
-    const navMenu = document.querySelector(".nav-menu");
-    const authControls = document.querySelector(".auth-controls");
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    const authControls = document.querySelector('.auth-controls');
 
     function mobileMenu() {
-      hamburger.classList.toggle("active");
-      navMenu.classList.toggle("active");
+      hamburger.classList.toggle('active');
+      navMenu.classList.toggle('active');
 
       // Clone auth controls into mobile menu if not already there
-      if (navMenu.classList.contains("active") && !navMenu.querySelector(".auth-controls")) {
+      if (
+        navMenu.classList.contains('active') &&
+        !navMenu.querySelector('.auth-controls')
+      ) {
         const authControlsClone = authControls.cloneNode(true);
         navMenu.appendChild(authControlsClone);
 
         // Add event listeners to cloned buttons
-        const logoutBtn = authControlsClone.querySelector(".logout-btn");
+        const logoutBtn = authControlsClone.querySelector('.logout-btn');
         if (logoutBtn) {
-          logoutBtn.addEventListener("click", handleLogout);
+          logoutBtn.addEventListener('click', handleLogout);
         }
       }
     }
 
-    hamburger.addEventListener("click", mobileMenu);
+    hamburger.addEventListener('click', mobileMenu);
 
-    const navLink = document.querySelectorAll(".nav-link");
+    const navLink = document.querySelectorAll('.nav-link');
 
     function closeMenu() {
-      hamburger.classList.remove("active");
-      navMenu.classList.remove("active");
+      hamburger.classList.remove('active');
+      navMenu.classList.remove('active');
     }
 
-    navLink.forEach(n => n.addEventListener("click", closeMenu));
+    navLink.forEach(n => n.addEventListener('click', closeMenu));
 
     return () => {
-      hamburger.removeEventListener("click", mobileMenu);
-      navLink.forEach(n => n.removeEventListener("click", closeMenu));
+      hamburger.removeEventListener('click', mobileMenu);
+      navLink.forEach(n => n.removeEventListener('click', closeMenu));
     };
   }, [handleLogout]);
 
@@ -63,29 +66,43 @@ function NavigationBar() {
       <nav className="navbar">
         <div className="nav-left">
           <Link to="/" className="nav-logo">
-            <img src={letsTalkLogo} alt="Let's Talk Logo" className="logo-image" />
+            <img
+              src={letsTalkLogo}
+              alt="Let's Talk Logo"
+              className="logo-image"
+            />
           </Link>
 
           <ul className="nav-menu">
             {/* Always visible links */}
             <li className="nav-item">
-              <Link to="/press-releases" className="nav-link">{t('nav.pressReleases')}</Link>
+              <Link to="/press-releases" className="nav-link">
+                {t('nav.pressReleases')}
+              </Link>
             </li>
 
             {/* Links visible only when authenticated */}
             {isAuthenticated && (
               <>
                 <li className="nav-item">
-                  <Link to="/service-issues" className="nav-link">{t('nav.serviceIssues')}</Link>
+                  <Link to="/service-issues" className="nav-link">
+                    {t('nav.serviceIssues')}
+                  </Link>
                 </li>
                 <li className="nav-item">
-                  <Link to="/services" className="nav-link">{t('nav.governmentServices')}</Link>
+                  <Link to="/services" className="nav-link">
+                    {t('nav.governmentServices')}
+                  </Link>
                 </li>
                 <li className="nav-item">
-                  <Link to="/CommunityHub" className="nav-link">{t('nav.communityHub')}</Link>
+                  <Link to="/CommunityHub" className="nav-link">
+                    {t('nav.communityHub')}
+                  </Link>
                 </li>
                 <li className="nav-item">
-                  <Link to="/dashboard" className="nav-link">{t('nav.dashboard')}</Link>
+                  <Link to="/dashboard" className="nav-link">
+                    {t('nav.dashboard')}
+                  </Link>
                 </li>
               </>
             )}
@@ -97,13 +114,21 @@ function NavigationBar() {
           <div className="auth-controls">
             {!isAuthenticated ? (
               <>
-                <Link to="/login" className="nav-link login-btn">{t('nav.login')}</Link>
-                <Link to="/register" className="nav-link signup-btn">{t('nav.signup')}</Link>
+                <Link to="/login" className="nav-link login-btn">
+                  {t('nav.login')}
+                </Link>
+                <Link to="/register" className="nav-link signup-btn">
+                  {t('nav.signup')}
+                </Link>
               </>
             ) : (
               <>
-                <span className="nav-link user-greeting">Hello, {user?.name || 'User'}</span>
-                <button onClick={handleLogout} className="nav-link logout-btn">{t('nav.logout')}</button>
+                <span className="nav-link user-greeting">
+                  Hello, {user?.name || 'User'}
+                </span>
+                <button onClick={handleLogout} className="nav-link logout-btn">
+                  {t('nav.logout')}
+                </button>
               </>
             )}
           </div>

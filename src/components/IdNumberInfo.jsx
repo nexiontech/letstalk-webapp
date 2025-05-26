@@ -50,33 +50,40 @@ const IdNumberInfo = ({ idNumber }) => {
             <span className="id-info-label">ID Number:</span>
             <span className="id-info-value">{idInfo.formattedIdNumber}</span>
           </div>
-          
+
           <div className="id-info-item">
             <span className="id-info-label">Date of Birth:</span>
-            <span className="id-info-value">{idInfo.dateOfBirth.formattedDate}</span>
+            <span className="id-info-value">
+              {idInfo.dateOfBirth.formattedDate}
+            </span>
           </div>
-          
+
           <div className="id-info-item">
             <span className="id-info-label">Age:</span>
-            <span className="id-info-value">{idInfo.dateOfBirth.age} years</span>
+            <span className="id-info-value">
+              {idInfo.dateOfBirth.age} years
+            </span>
           </div>
-          
+
           <div className="id-info-item">
             <span className="id-info-label">Gender:</span>
             <span className="id-info-value">{idInfo.gender.gender}</span>
           </div>
-          
+
           <div className="id-info-item">
             <span className="id-info-label">Citizenship:</span>
-            <span className="id-info-value">{idInfo.citizenship.citizenshipStatus}</span>
+            <span className="id-info-value">
+              {idInfo.citizenship.citizenshipStatus}
+            </span>
           </div>
         </div>
       </div>
-      
+
       <div className="id-info-note">
         <p>
-          <strong>Note:</strong> This information is automatically extracted from your ID number 
-          and cannot be edited. If any information is incorrect, please contact support.
+          <strong>Note:</strong> This information is automatically extracted
+          from your ID number and cannot be edited. If any information is
+          incorrect, please contact support.
         </p>
       </div>
     </div>

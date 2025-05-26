@@ -57,8 +57,12 @@ const ReportIssuePage = () => {
           </div>
 
           <div className="button-group">
-            <button className="cancel-button" onClick={handleCancel}>Cancel</button>
-            <button className="submit-button" onClick={handleSubmit}>Report Issue</button>
+            <button className="cancel-button" onClick={handleCancel}>
+              Cancel
+            </button>
+            <button className="submit-button" onClick={handleSubmit}>
+              Report Issue
+            </button>
           </div>
         </div>
       </div>

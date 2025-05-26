@@ -3,77 +3,77 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap');
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 html {
-    font-size: 16px; /* Standard base font size */
-    font-family: 'Roboto', sans-serif;
-    overflow-x: hidden; /* Prevent horizontal scrolling */
+  font-size: 16px; /* Standard base font size */
+  font-family: 'Roboto', sans-serif;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 body {
-    width: 100%;
-    overflow-x: hidden; /* Prevent horizontal scrolling */
-    background-color: #ffffff;
-    color: #213547;
-    min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  background-color: #ffffff;
+  color: #213547;
+  min-height: 100vh;
 }
 
 #root {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 li {
-    list-style: none;
+  list-style: none;
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 /* Common spacing variables */
 :root {
-    --spacing-xs: 0.25rem;
-    --spacing-sm: 0.5rem;
-    --spacing-md: 1rem;
-    --spacing-lg: 1.5rem;
-    --spacing-xl: 2rem;
-    --spacing-2xl: 3rem;
-    --spacing-3xl: 4rem;
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 4rem;
 
-    /* Primary color palette - Green */
-    --color-primary: #0E4649;
-    --color-primary-light: #1A5C60;
-    --color-primary-lighter: #267377;
-    --color-primary-dark: #0A3437;
-    --color-primary-darker: #062224;
+  /* Primary color palette - Green */
+  --color-primary: #0e4649;
+  --color-primary-light: #1a5c60;
+  --color-primary-lighter: #267377;
+  --color-primary-dark: #0a3437;
+  --color-primary-darker: #062224;
 
-    /* Secondary color palette - Yellow */
-    --color-secondary: #FFB61D;
-    --color-secondary-light: #FFC54A;
-    --color-secondary-lighter: #FFD477;
-    --color-secondary-dark: #E6A00A;
-    --color-secondary-darker: #CC8C00;
+  /* Secondary color palette - Yellow */
+  --color-secondary: #ffb61d;
+  --color-secondary-light: #ffc54a;
+  --color-secondary-lighter: #ffd477;
+  --color-secondary-dark: #e6a00a;
+  --color-secondary-darker: #cc8c00;
 
-    /* Text colors */
-    --color-text: #1F1F1F;
-    --color-text-light: #666666;
-    --color-text-lighter: #888888;
+  /* Text colors */
+  --color-text: #1f1f1f;
+  --color-text-light: #666666;
+  --color-text-lighter: #888888;
 
-    /* Background colors */
-    --color-background: #ffffff;
-    --color-background-light: #f8f8f8;
-    --color-background-dark: #f0f0f0;
+  /* Background colors */
+  --color-background: #ffffff;
+  --color-background-light: #f8f8f8;
+  --color-background-dark: #f0f0f0;
 
-    /* Utility colors */
-    --color-success: #2E8B57;
-    --color-warning: #FFA500;
-    --color-error: #DC3545;
-    --color-info: #0D6EFD;
+  /* Utility colors */
+  --color-success: #2e8b57;
+  --color-warning: #ffa500;
+  --color-error: #dc3545;
+  --color-info: #0d6efd;
 }

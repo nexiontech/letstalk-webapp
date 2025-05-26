@@ -10,7 +10,6 @@
   flex-direction: column;
 }
 
-
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 6px;
@@ -58,7 +57,7 @@
   height: 40px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid #0E4649;
+  border: 2px solid #0e4649;
 }
 
 .hub-avatar img {
@@ -71,7 +70,7 @@
   font-size: 14px;
   font-weight: 600;
   margin: 0;
-  color: #0E4649;
+  color: #0e4649;
 }
 
 .hub-user-info p {
@@ -95,7 +94,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #0E4649;
+  color: #0e4649;
   background-color: rgba(14, 70, 73, 0.1);
   transition: all 0.2s ease;
   border: none;
@@ -133,7 +132,7 @@
 
 .hub-search input:focus {
   outline: none;
-  border-color: #0E4649;
+  border-color: #0e4649;
   box-shadow: 0 0 0 2px rgba(14, 70, 73, 0.1);
 }
 
@@ -161,8 +160,8 @@
 }
 
 .hub-tab.active {
-  color: #0E4649;
-  border-bottom-color: #FFB61D;
+  color: #0e4649;
+  border-bottom-color: #ffb61d;
 }
 
 .hub-tab:hover:not(.active) {
@@ -178,7 +177,6 @@
   font-size: 12px;
   font-weight: 500;
 }
-
 
 /* Chat groups and list */
 .hub-groups {
@@ -196,7 +194,7 @@
   align-items: center;
   gap: 8px;
   padding: 8px 0;
-  color: #0E4649;
+  color: #0e4649;
 }
 
 .hub-group-header svg {
@@ -253,7 +251,7 @@
   right: 0;
   width: 16px;
   height: 16px;
-  background-color: #0E4649;
+  background-color: #0e4649;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -308,7 +306,7 @@
 }
 
 .hub-chat-badge {
-  background-color: #FFB61D;
+  background-color: #ffb61d;
   color: #333;
   font-size: 11px;
   font-weight: 600;
@@ -327,7 +325,7 @@
 
 .hub-chat-members-count {
   font-size: 11px;
-  color: #0E4649;
+  color: #0e4649;
 }
 
 .hub-create-chat {
@@ -340,7 +338,7 @@
   width: 100%;
   padding: 10px;
   border-radius: 8px;
-  background-color: #FFB61D;
+  background-color: #ffb61d;
   color: #333;
   font-weight: 600;
   font-size: 14px;
@@ -358,7 +356,6 @@
   transform: translateY(-2px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
-
 
 /* Main chat area */
 .hub-main {
@@ -394,7 +391,7 @@
   right: 0;
   width: 12px;
   height: 12px;
-  background-color: #2E8B57;
+  background-color: #2e8b57;
   border-radius: 50%;
   border: 2px solid white;
 }
@@ -403,7 +400,7 @@
   font-size: 16px;
   font-weight: 600;
   margin: 0;
-  color: #0E4649;
+  color: #0e4649;
 }
 
 .hub-chat-info p {
@@ -505,7 +502,7 @@
 .hub-message-sender {
   font-size: 13px;
   font-weight: 600;
-  color: #0E4649;
+  color: #0e4649;
   margin-bottom: 4px;
 }
 
@@ -533,7 +530,7 @@
 
 .hub-file-icon {
   font-size: 24px;
-  color: #0E4649;
+  color: #0e4649;
 }
 
 .hub-file-info {
@@ -553,7 +550,7 @@
 }
 
 .hub-file-download {
-  background-color: #FFB61D;
+  background-color: #ffb61d;
   color: #333;
   font-size: 12px;
   font-weight: 600;
@@ -593,7 +590,7 @@
 
 .hub-input-action:hover {
   background-color: rgba(0, 0, 0, 0.1);
-  color: #0E4649;
+  color: #0e4649;
 }
 
 .hub-chat-input input {
@@ -609,7 +606,7 @@
 
 .hub-chat-input input:focus {
   outline: none;
-  border-color: #0E4649;
+  border-color: #0e4649;
   box-shadow: 0 0 0 2px rgba(14, 70, 73, 0.1);
 }
 
@@ -621,7 +618,7 @@
   align-items: center;
   justify-content: center;
   color: white;
-  background-color: #FFB61D;
+  background-color: #ffb61d;
   transition: all 0.2s ease;
   border: none;
   cursor: pointer;
@@ -654,7 +651,7 @@
 .hub-empty-state h2 {
   font-size: 20px;
   font-weight: 600;
-  color: #0E4649;
+  color: #0e4649;
   margin: 0 0 8px 0;
 }
 
@@ -708,4 +705,3 @@
     max-width: 90%;
   }
 }
-

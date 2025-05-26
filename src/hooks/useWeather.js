@@ -57,7 +57,7 @@ const useWeather = ({ autoFetch = true, temperatureUnit = 'C' } = {}) => {
    * Refresh the weather data or change the temperature unit
    * @param {string} newUnit - Optional new temperature unit
    */
-  const refreshWeather = (newUnit) => {
+  const refreshWeather = newUnit => {
     if (newUnit && newUnit !== unit) {
       setUnit(newUnit);
     } else {
@@ -79,7 +79,7 @@ const useWeather = ({ autoFetch = true, temperatureUnit = 'C' } = {}) => {
     error,
     temperatureUnit: unit,
     fetchWeatherData,
-    refreshWeather
+    refreshWeather,
   };
 };
 

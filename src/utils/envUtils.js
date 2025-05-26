@@ -23,7 +23,7 @@ export const getCognitoConfig = () => {
     userPoolWebClientId: getEnvVariable('VITE_COGNITO_USER_POOL_WEB_CLIENT_ID'),
     clientSecret: getEnvVariable('VITE_COGNITO_CLIENT_SECRET'),
     domain: getEnvVariable('VITE_COGNITO_DOMAIN'),
-    identityPoolId: getEnvVariable('VITE_COGNITO_IDENTITY_POOL_ID')
+    identityPoolId: getEnvVariable('VITE_COGNITO_IDENTITY_POOL_ID'),
   };
 };
 
@@ -39,6 +39,6 @@ export const logCognitoConfig = (context, config) => {
     userPoolWebClientId: config.userPoolWebClientId,
     domain: config.domain,
     identityPoolId: config.identityPoolId ? '***' : 'not set',
-    clientSecret: config.clientSecret ? '***' : 'not set'
+    clientSecret: config.clientSecret ? '***' : 'not set',
   });
 };

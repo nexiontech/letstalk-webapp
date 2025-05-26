@@ -1,9 +1,22 @@
 // src/pages/UserProfilePage.jsx
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Box, Paper, Alert, CircularProgress, Breadcrumbs } from '@mui/material';
+import {
+  Container,
+  Typography,
+  Box,
+  Paper,
+  Alert,
+  CircularProgress,
+  Breadcrumbs,
+} from '@mui/material';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faChevronRight, faUser, faIdCard } from '@fortawesome/free-solid-svg-icons';
+import {
+  faHome,
+  faChevronRight,
+  faUser,
+  faIdCard,
+} from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../contexts/AuthContext';
 import UserProfileForm from '../components/UserProfileForm';
 import IdNumberInfo from '../components/IdNumberInfo';
@@ -24,7 +37,7 @@ const UserProfilePage = () => {
     return () => clearTimeout(timer);
   }, [user, isAuthenticated]);
 
-  const handleUpdateSuccess = (message) => {
+  const handleUpdateSuccess = message => {
     setSuccess(message);
     // Clear success message after 5 seconds
     setTimeout(() => {
@@ -32,7 +45,7 @@ const UserProfilePage = () => {
     }, 5000);
   };
 
-  const handleUpdateError = (message) => {
+  const handleUpdateError = message => {
     setError(message);
     // Clear error message after 5 seconds
     setTimeout(() => {
@@ -42,7 +55,14 @@ const UserProfilePage = () => {
 
   if (loading || pageLoading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
         <CircularProgress />
       </Box>
     );
@@ -61,7 +81,11 @@ const UserProfilePage = () => {
           </Typography>
 
           {/* Breadcrumbs */}
-          <Breadcrumbs separator={<FontAwesomeIcon icon={faChevronRight} size="xs" />} aria-label="breadcrumb" className="breadcrumbs">
+          <Breadcrumbs
+            separator={<FontAwesomeIcon icon={faChevronRight} size="xs" />}
+            aria-label="breadcrumb"
+            className="breadcrumbs"
+          >
             <Link to="/dashboard" className="breadcrumb-link">
               <FontAwesomeIcon icon={faHome} className="breadcrumb-icon" />
               Dashboard
@@ -77,13 +101,21 @@ const UserProfilePage = () => {
       {/* Main Content */}
       <Container maxWidth="lg" className="profile-container">
         {error && (
-          <Alert severity="error" className="profile-alert" onClose={() => setError(null)}>
+          <Alert
+            severity="error"
+            className="profile-alert"
+            onClose={() => setError(null)}
+          >
             {error}
           </Alert>
         )}
 
         {success && (
-          <Alert severity="success" className="profile-alert" onClose={() => setSuccess(null)}>
+          <Alert
+            severity="success"
+            className="profile-alert"
+            onClose={() => setSuccess(null)}
+          >
             {success}
           </Alert>
         )}
