@@ -1,0 +1,80 @@
+{
+  "name": "Let's Talk - Citizen Engagement Platform",
+  "short_name": "Let's Talk",
+  "description": "South Africa's premier citizen engagement platform for municipal and government services",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0E4649",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en-ZA",
+  "dir": "ltr",
+  "categories": ["government", "utilities", "productivity"],
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/app-screenshot.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "platform": "wide",
+      "label": "Let's Talk Platform Dashboard"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Report Issue",
+      "short_name": "Report",
+      "description": "Quickly report a municipal service issue",
+      "url": "/register",
+      "icons": [
+        {
+          "src": "/favicon.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Community Hub",
+      "short_name": "Community",
+      "description": "Access community discussions and events",
+      "url": "/register",
+      "icons": [
+        {
+          "src": "/favicon.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Services",
+      "short_name": "Services",
+      "description": "Access government and municipal services",
+      "url": "/our-services",
+      "icons": [
+        {
+          "src": "/favicon.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}

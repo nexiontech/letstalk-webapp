@@ -46,6 +46,7 @@ import {
 } from './contexts/SecurityPatchContext';
 import SecurityNotice from './components/SecurityNotice';
 import ConsentBanner from './components/ConsentBanner';
+import SEOMonitoring from './components/SEOMonitoring';
 import './App.css';
 import './styles/global.css';
 
@@ -241,6 +242,9 @@ function AppContent() {
 
         {/* Thusong AI Chatbot - visible on all pages */}
         <ThusongAIChatbot initiallyMinimized={isChatbotInitiallyMinimized} />
+
+        {/* SEO Monitoring - tracks page views and performance */}
+        <SEOMonitoring />
       </Box>
 
       {/* Only show Footer for non-protected routes */}

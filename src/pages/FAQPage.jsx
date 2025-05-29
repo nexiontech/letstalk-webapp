@@ -14,6 +14,8 @@ import {
   CardContent,
 } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import SEOHead, { generatePageStructuredData } from '../components/SEOHead';
+import { generateSEOKeywords, generateFAQStructuredData } from '../utils/seoUtils';
 import {
   faChevronDown,
   faSearch,
@@ -258,8 +260,34 @@ const FAQPage = () => {
     return acc;
   }, {});
 
+  // Prepare all FAQs for structured data
+  const allFAQs = Object.values(faqData).flat();
+
+  // SEO data for FAQ page
+  const seoData = {
+    title: 'Frequently Asked Questions - Let\'s Talk Help Center | Saya-Setona',
+    description: 'Find answers to common questions about using Let\'s Talk platform, municipal services, account management, payments, security, and technical support. Comprehensive FAQ for South African citizens.',
+    keywords: generateSEOKeywords([
+      'FAQ',
+      'help center',
+      'support',
+      'questions and answers',
+      'user guide',
+      'platform help',
+      'municipal services help',
+      'account support',
+      'payment help',
+      'security questions',
+      'troubleshooting',
+      'customer support'
+    ], 'faq'),
+    type: 'website',
+    structuredData: generateFAQStructuredData(allFAQs)
+  };
+
   return (
     <div className="faq-page">
+      <SEOHead {...seoData} />
       {/* Hero Section */}
       <div className="faq-hero-section">
         <Container maxWidth="md">
