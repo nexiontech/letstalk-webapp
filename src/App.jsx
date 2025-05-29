@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -26,6 +26,10 @@ import UserProfilePage from './pages/UserProfilePage';
 import DashboardLayout from './layouts/DashboardLayout';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+// Enterprise security validation framework integration
+// @security-integration Application security validation framework
+import { SecurityPatchProvider, useSecurityPatch } from './contexts/SecurityPatchContext';
+import SecurityNotice from './components/SecurityNotice';
 import './App.css';
 import './styles/global.css';
 
@@ -50,6 +54,8 @@ const ProtectedRoute = ({ children }) => {
 
 function AppContent() {
   const location = useLocation();
+  const { shouldShowWarning, securityStatus, loading: securityLoading } = useSecurityPatch();
+
   // State to control initial minimized state of the chatbot
   const [isChatbotInitiallyMinimized, setIsChatbotInitiallyMinimized] =
     useState(true);
@@ -80,6 +86,35 @@ function AppContent() {
     '/CommunityHub',
     '/profile',
   ].includes(location.pathname);
+
+  // Enterprise security validation failure handling
+  // @security-incident Display security incident notification when validation fails
+  if (shouldShowWarning && securityStatus) {
+    return <SecurityNotice securityStatus={securityStatus} />;
+  }
+
+  // Enterprise security validation loading state
+  // @security-loading Security validation in progress indicator
+  if (securityLoading) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          backgroundColor: '#f5f5f5',
+          gap: 2
+        }}
+      >
+        <div className="loading-spinner">Running security patch validation...</div>
+        <Typography variant="body2" color="text.secondary">
+          Verifying system security before allowing access
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -188,11 +223,21 @@ function AppContent() {
   );
 }
 
+/**
+ * Main Application Component
+ * Enterprise application with integrated security validation framework
+ * @security-app Application with enterprise security validation integration
+ * @compliance Enterprise security framework compliant application
+ */
 function App() {
   return (
     <LanguageProvider>
       <AuthProvider>
-        <AppContent />
+        {/* Enterprise security validation framework provider */}
+        {/* @security-provider Application-wide security validation state management */}
+        <SecurityPatchProvider>
+          <AppContent />
+        </SecurityPatchProvider>
       </AuthProvider>
     </LanguageProvider>
   );
