@@ -853,8 +853,8 @@ git clone https://github.com/saya-setona/letstalk-webapp.git
 # Navigate to the project directory
 cd letstalk-webapp
 
-# Switch to the changes branch (main development branch)
-git checkout changes
+# Switch to the develop branch (main development branch)
+git checkout develop
 ```
 
 **2. Install Dependencies**
@@ -986,16 +986,16 @@ The production build will be available in the `dist` directory.
 
 #### Overview
 
-This document outlines the Git branching strategy and workflow used in the Let's Talk project. We follow a GitHub Flow approach with short-lived feature branches and a central integration branch called `changes`.
+develop
 
 #### Branch Structure
 
 **Main Branches:**
 - **`main`**: Production-ready code that has been deployed
-- **`changes`**: Integration branch for features and fixes before they are merged to `main`
+- **`develop`**: Integration branch for features and fixes before they are merged to `main`
 
 **Feature Branches:**
-Feature branches are created from the `changes` branch and follow a specific naming convention:
+Feature branches are created from the `develop` branch and follow a specific naming convention:
 
 ```
 <type>/<ticket-number>-<description>
@@ -1020,11 +1020,11 @@ Examples:
 
 **1. Create a Feature Branch**
 
-Start by creating a new branch from the `changes` branch:
+Start by creating a new branch from the `develop` branch:
 
 ```bash
-# Ensure you're on the changes branch
-git checkout changes
+# Ensure you're on the develop branch
+git checkout develop
 
 # Pull the latest changes
 git pull
@@ -1065,13 +1065,13 @@ Push your branch to the remote repository:
 git push origin feature/LT-123-new-feature
 ```
 
-**4. Merge to Changes Branch**
+**4. Merge to Develop Branch**
 
-Once the feature is complete and tested, merge it back to the `changes` branch:
+Once the feature is complete and tested, merge it back to the `develop` branch:
 
 ```bash
-# Switch to the changes branch
-git checkout changes
+# Switch to the develop branch
+git checkout develop
 
 # Pull the latest changes
 git pull
@@ -1080,7 +1080,7 @@ git pull
 git merge feature/LT-123-new-feature
 
 # Push the updated changes branch
-git push origin changes
+git push origin develop
 ```
 
 **5. Clean Up**
@@ -1097,10 +1097,10 @@ git push origin --delete feature/LT-123-new-feature
 
 #### Best Practices
 
-1. **Keep branches short-lived**: Feature branches should be merged back to `changes` as soon as possible
-2. **Pull regularly**: Keep your local `changes` branch up to date by pulling regularly
+1. **Keep branches short-lived**: Feature branches should be merged back to `develop` as soon as possible
+2. **Pull regularly**: Keep your local `develop` branch up to date by pulling regularly
 3. **Commit often**: Make small, focused commits with clear messages
-4. **Test before merging**: Ensure all tests pass before merging to `changes`
+4. **Test before merging**: Ensure all tests pass before merging to `develop`
 5. **Resolve conflicts promptly**: Address merge conflicts as soon as they arise
 6. **Use descriptive branch names**: Follow the naming convention to make it clear what each branch is for
 7. **Clean up old branches**: Delete branches after they've been merged
@@ -1121,7 +1121,7 @@ npm run deploy
 
 The project uses GitHub Actions for CI/CD:
 
-1. Push changes to the `changes` branch
+1. Push changes to the `develop` branch
 2. GitHub Actions will run tests and linting
 3. If all checks pass, the changes can be merged to `main`
 4. Pushing to `main` triggers automatic deployment to the production environment
