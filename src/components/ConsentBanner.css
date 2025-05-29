@@ -22,34 +22,34 @@
 
 .consent-banner-paper {
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  border-top: 3px solid #0E4649;
-  border-radius: 16px 16px 0 0;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15), 0 -2px 10px rgba(14, 70, 73, 0.1);
-  backdrop-filter: blur(10px);
+  border-top: 2px solid #0E4649;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.12), 0 -1px 6px rgba(14, 70, 73, 0.08);
+  backdrop-filter: blur(8px);
 }
 
 .consent-settings {
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 24px;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .consent-option-card {
   background: white;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 12px;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 8px;
   border: 1px solid rgba(14, 70, 73, 0.2);
   transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .consent-option-card:hover {
-  box-shadow: 0 2px 8px rgba(14, 70, 73, 0.15);
-  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(14, 70, 73, 0.12);
+  transform: translateY(-0.5px);
   border-color: rgba(14, 70, 73, 0.3);
 }
 
@@ -68,12 +68,12 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px;
 }
 
 .consent-buttons-right {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
@@ -90,30 +90,31 @@
 /* Mobile responsiveness */
 @media (max-width: 600px) {
   .consent-banner-paper {
-    border-radius: 12px 12px 0 0;
+    border-radius: 8px 8px 0 0;
     margin: 0;
+    padding: 12px;
   }
 
   .consent-buttons {
     flex-direction: column;
     align-items: stretch;
-    gap: 16px;
+    gap: 12px;
   }
 
   .consent-buttons-right {
     width: 100%;
     justify-content: space-between;
-    gap: 8px;
+    gap: 6px;
   }
 
   .consent-settings {
-    padding: 16px;
-    margin-bottom: 20px;
+    padding: 12px;
+    margin-bottom: 12px;
   }
 
   .consent-option-card {
-    padding: 12px;
-    margin-bottom: 8px;
+    padding: 10px;
+    margin-bottom: 6px;
   }
 }
 

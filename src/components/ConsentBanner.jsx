@@ -97,19 +97,19 @@ const ConsentBanner = () => {
         right: 0,
         zIndex: 9999,
         backgroundColor: '#fff',
-        borderTop: '3px solid #0E4649',
-        borderRadius: '16px 16px 0 0',
-        padding: { xs: 2, sm: 3 },
-        boxShadow: '0 -4px 20px rgba(14, 70, 73, 0.15)',
+        borderTop: '2px solid #0E4649',
+        borderRadius: '12px 12px 0 0',
+        padding: { xs: 1.5, sm: 2 },
+        boxShadow: '0 -2px 12px rgba(14, 70, 73, 0.12)',
       }}
     >
       <Box sx={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1.5 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
             <Box
               sx={{
-                width: 8,
-                height: 8,
+                width: 6,
+                height: 6,
                 borderRadius: '50%',
                 backgroundColor: '#0E4649',
                 animation: 'pulse 2s infinite',
@@ -126,7 +126,7 @@ const ConsentBanner = () => {
               sx={{
                 fontWeight: 600,
                 color: '#0E4649',
-                fontSize: { xs: '1.1rem', sm: '1.25rem' }
+                fontSize: { xs: '1rem', sm: '1.1rem' }
               }}
             >
               Privacy & Cookies
@@ -151,39 +151,39 @@ const ConsentBanner = () => {
           variant="body2"
           color="text.secondary"
           sx={{
-            mb: 3,
-            lineHeight: 1.6,
-            fontSize: { xs: '0.875rem', sm: '0.9rem' }
+            mb: 2,
+            lineHeight: 1.5,
+            fontSize: { xs: '0.8rem', sm: '0.85rem' }
           }}
         >
-          We use cookies to enhance your experience, analyze site usage, and provide personalized content.
-          Your privacy matters to us - choose your preferences below.
+          We use cookies to enhance your experience and analyze site usage. Choose your preferences below.
         </Typography>
 
         <Collapse in={showSettings}>
           <Box sx={{
-            mb: 3,
-            p: 3,
+            mb: 2,
+            p: 2,
             backgroundColor: '#f8f9fa',
-            borderRadius: 2,
+            borderRadius: 1.5,
             border: '1px solid #e0e0e0'
           }}>
             <Typography
-              variant="subtitle1"
+              variant="subtitle2"
               sx={{
                 fontWeight: 600,
-                mb: 2,
-                color: '#0E4649'
+                mb: 1.5,
+                color: '#0E4649',
+                fontSize: { xs: '0.9rem', sm: '1rem' }
               }}
             >
               Customize Your Privacy Settings
             </Typography>
 
-            <Stack spacing={2.5}>
+            <Stack spacing={1.5}>
               <Box sx={{
-                p: 2,
+                p: 1.5,
                 backgroundColor: 'white',
-                borderRadius: 1.5,
+                borderRadius: 1,
                 border: '1px solid #0E4649',
                 borderColor: 'rgba(14, 70, 73, 0.2)'
               }}>
@@ -193,16 +193,16 @@ const ConsentBanner = () => {
                       checked={consents.analytics}
                       onChange={handleConsentChange('analytics')}
                       color="primary"
-                      size="medium"
+                      size="small"
                     />
                   }
                   label={
-                    <Box sx={{ ml: 1 }}>
-                      <Typography variant="body1" fontWeight="medium" color="text.primary">
+                    <Box sx={{ ml: 0.5 }}>
+                      <Typography variant="body2" fontWeight="medium" color="text.primary" sx={{ fontSize: '0.85rem' }}>
                         📊 Analytics & Performance
                       </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                        Help us understand how visitors use our website to improve your experience
+                      <Typography variant="caption" color="text.secondary" sx={{ mt: 0.2, fontSize: '0.75rem' }}>
+                        Help us understand how visitors use our website
                       </Typography>
                     </Box>
                   }
@@ -211,9 +211,9 @@ const ConsentBanner = () => {
               </Box>
 
               <Box sx={{
-                p: 2,
+                p: 1.5,
                 backgroundColor: 'white',
-                borderRadius: 1.5,
+                borderRadius: 1,
                 border: '1px solid #FFB61D',
                 borderColor: 'rgba(255, 182, 29, 0.3)'
               }}>
@@ -223,16 +223,16 @@ const ConsentBanner = () => {
                       checked={consents.advertising}
                       onChange={handleConsentChange('advertising')}
                       color="primary"
-                      size="medium"
+                      size="small"
                     />
                   }
                   label={
-                    <Box sx={{ ml: 1 }}>
-                      <Typography variant="body1" fontWeight="medium" color="text.primary">
+                    <Box sx={{ ml: 0.5 }}>
+                      <Typography variant="body2" fontWeight="medium" color="text.primary" sx={{ fontSize: '0.85rem' }}>
                         🎯 Advertising & Marketing
                       </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                        Show you relevant ads and measure advertising effectiveness
+                      <Typography variant="caption" color="text.secondary" sx={{ mt: 0.2, fontSize: '0.75rem' }}>
+                        Show you relevant ads and measure effectiveness
                       </Typography>
                     </Box>
                   }
@@ -241,9 +241,9 @@ const ConsentBanner = () => {
               </Box>
 
               <Box sx={{
-                p: 2,
+                p: 1.5,
                 backgroundColor: 'white',
-                borderRadius: 1.5,
+                borderRadius: 1,
                 border: '1px solid #2E8B57',
                 borderColor: 'rgba(46, 139, 87, 0.3)'
               }}>
@@ -253,16 +253,16 @@ const ConsentBanner = () => {
                       checked={consents.personalization}
                       onChange={handleConsentChange('personalization')}
                       color="primary"
-                      size="medium"
+                      size="small"
                     />
                   }
                   label={
-                    <Box sx={{ ml: 1 }}>
-                      <Typography variant="body1" fontWeight="medium" color="text.primary">
+                    <Box sx={{ ml: 0.5 }}>
+                      <Typography variant="body2" fontWeight="medium" color="text.primary" sx={{ fontSize: '0.85rem' }}>
                         ✨ Personalization
                       </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                        Customize content and recommendations based on your preferences
+                      <Typography variant="caption" color="text.secondary" sx={{ mt: 0.2, fontSize: '0.75rem' }}>
+                        Customize content based on your preferences
                       </Typography>
                     </Box>
                   }
@@ -275,7 +275,7 @@ const ConsentBanner = () => {
 
         <Stack
           direction={{ xs: 'column', sm: 'row' }}
-          spacing={2}
+          spacing={1.5}
           justifyContent="space-between"
           alignItems={{ xs: 'stretch', sm: 'center' }}
         >
@@ -283,27 +283,31 @@ const ConsentBanner = () => {
             startIcon={<SettingsIcon />}
             onClick={() => setShowSettings(!showSettings)}
             variant="text"
+            size="small"
             sx={{
               color: '#0E4649',
               fontWeight: 500,
+              fontSize: '0.8rem',
               '&:hover': {
                 backgroundColor: 'rgba(14, 70, 73, 0.08)'
               }
             }}
           >
-            {showSettings ? 'Hide Options' : 'Customize Settings'}
+            {showSettings ? 'Hide Options' : 'Customize'}
           </Button>
 
-          <Stack direction="row" spacing={1.5}>
+          <Stack direction="row" spacing={1}>
             <Button
               onClick={handleRejectAll}
               variant="outlined"
+              size="small"
               className="consent-decline-button"
               sx={{
                 borderColor: '#DC3545',
                 color: '#DC3545',
                 fontWeight: 500,
-                px: 3,
+                px: 2,
+                fontSize: '0.8rem',
                 textTransform: 'none',
                 '&:hover': {
                   borderColor: '#DC3545',
@@ -318,28 +322,32 @@ const ConsentBanner = () => {
               <Button
                 onClick={handleSavePreferences}
                 variant="contained"
+                size="small"
                 className="consent-save-button"
                 sx={{
                   backgroundColor: '#0E4649',
                   fontWeight: 500,
-                  px: 3,
+                  px: 2,
+                  fontSize: '0.8rem',
                   textTransform: 'none',
                   '&:hover': {
                     backgroundColor: '#1A5C60'
                   }
                 }}
               >
-                Save My Choices
+                Save Choices
               </Button>
             ) : (
               <Button
                 onClick={handleAcceptAll}
                 variant="contained"
+                size="small"
                 className="consent-accept-button"
                 sx={{
                   backgroundColor: '#2E8B57',
                   fontWeight: 500,
-                  px: 3,
+                  px: 2,
+                  fontSize: '0.8rem',
                   textTransform: 'none',
                   '&:hover': {
                     backgroundColor: '#236B43'
