@@ -11,6 +11,14 @@ import {
   IconButton,
 } from '@mui/material';
 import { Close as CloseIcon, Settings as SettingsIcon } from '@mui/icons-material';
+import {
+  shouldShowBanner,
+  updateConsentMode,
+  trackConsentEvent,
+  storeConsent,
+  getStoredConsent,
+  getUserRegion
+} from '../utils/consentMode';
 import './ConsentBanner.css';
 
 const ConsentBanner = () => {
@@ -23,27 +31,24 @@ const ConsentBanner = () => {
   });
 
   useEffect(() => {
-    // Check if user has already made consent choices
-    const consentGiven = localStorage.getItem('consent-preferences');
-    if (!consentGiven) {
-      setShowBanner(true);
-    } else {
-      // Load saved preferences
-      const savedConsents = JSON.parse(consentGiven);
-      setConsents(savedConsents);
-      updateGoogleConsent(savedConsents);
+    // Check if banner should be shown based on region and stored consent
+    const shouldShow = shouldShowBanner();
+    setShowBanner(shouldShow);
+
+    // Load stored preferences if they exist
+    const storedConsents = getStoredConsent();
+    if (storedConsents) {
+      setConsents(storedConsents);
+      updateConsentMode(storedConsents);
     }
+
+    // Log region info for debugging
+    console.log('Consent Banner - User Region:', getUserRegion(), 'Show Banner:', shouldShow);
   }, []);
 
   const updateGoogleConsent = (consentChoices) => {
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('consent', 'update', {
-        'analytics_storage': consentChoices.analytics ? 'granted' : 'denied',
-        'ad_storage': consentChoices.advertising ? 'granted' : 'denied',
-        'ad_user_data': consentChoices.advertising ? 'granted' : 'denied',
-        'ad_personalization': consentChoices.personalization ? 'granted' : 'denied',
-      });
-    }
+    // Use the utility function for proper consent mode v2 implementation
+    updateConsentMode(consentChoices);
   };
 
   const handleAcceptAll = () => {
@@ -54,8 +59,11 @@ const ConsentBanner = () => {
     };
     setConsents(allConsents);
     updateGoogleConsent(allConsents);
-    localStorage.setItem('consent-preferences', JSON.stringify(allConsents));
+    storeConsent(allConsents);
     setShowBanner(false);
+
+    // Track acceptance event using utility function
+    trackConsentEvent('consent_granted_all', allConsents, 'accept_all_button');
   };
 
   const handleRejectAll = () => {
@@ -66,15 +74,21 @@ const ConsentBanner = () => {
     };
     setConsents(noConsents);
     updateGoogleConsent(noConsents);
-    localStorage.setItem('consent-preferences', JSON.stringify(noConsents));
+    storeConsent(noConsents);
     setShowBanner(false);
+
+    // Track rejection event using utility function
+    trackConsentEvent('consent_denied_all', noConsents, 'decline_all_button');
   };
 
   const handleSavePreferences = () => {
     updateGoogleConsent(consents);
-    localStorage.setItem('consent-preferences', JSON.stringify(consents));
+    storeConsent(consents);
     setShowBanner(false);
     setShowSettings(false);
+
+    // Track custom preferences event using utility function
+    trackConsentEvent('consent_custom_preferences', consents, 'save_custom_preferences');
   };
 
   const handleConsentChange = (type) => (event) => {

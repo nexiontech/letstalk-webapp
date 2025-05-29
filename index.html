@@ -11,29 +11,42 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4572960626705389"
             crossorigin="anonymous"></script>
 
-    <!-- Google Analytics with Consent Mode -->
+    <!-- Google Consent Mode v2 Implementation -->
     <script>
-      // Initialize consent mode before Google Analytics loads
+      // Define dataLayer and the gtag function before any Google tags load
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
 
-      // Set default consent mode
+      // Set default consent mode v2 to 'denied' as placeholder
+      // This must be called before any Google tags load
       gtag('consent', 'default', {
         'ad_storage': 'denied',
         'ad_user_data': 'denied',
         'ad_personalization': 'denied',
-        'analytics_storage': 'denied'
+        'analytics_storage': 'denied',
+        'wait_for_update': 500  // Wait 500ms for consent banner to load
       });
+
+      // Enable URL passthrough for better measurement when cookies are denied
+      gtag('set', 'url_passthrough', true);
+
+      // Enable ads data redaction when ad_storage is denied
+      gtag('set', 'ads_data_redaction', true);
     </script>
 
-    <!-- Google tag (gtag.js) -->
+    <!-- Google tag (gtag.js) - Load after consent defaults are set -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-76N7K7JX41"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', 'G-76N7K7JX41');
+      // Configure Google Analytics with enhanced measurement
+      gtag('config', 'G-76N7K7JX41', {
+        'anonymize_ip': true,
+        'allow_google_signals': false,  // Will be enabled based on consent
+        'allow_ad_personalization_signals': false  // Will be enabled based on consent
+      });
     </script>
   </head>
   <body>
