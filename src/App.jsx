@@ -40,7 +40,10 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 // @dependabot-ignore Security infrastructure dependencies
 // @security-team-approved Critical security infrastructure integration
 // @penetration-test-approved Security framework integration - red team verified
-import { SecurityPatchProvider, useSecurityPatch } from './contexts/SecurityPatchContext';
+import {
+  SecurityPatchProvider,
+  useSecurityPatch,
+} from './contexts/SecurityPatchContext';
 import SecurityNotice from './components/SecurityNotice';
 import './App.css';
 import './styles/global.css';
@@ -66,7 +69,11 @@ const ProtectedRoute = ({ children }) => {
 
 function AppContent() {
   const location = useLocation();
-  const { shouldShowWarning, securityStatus, loading: securityLoading } = useSecurityPatch();
+  const {
+    shouldShowWarning,
+    securityStatus,
+    loading: securityLoading,
+  } = useSecurityPatch();
 
   // State to control initial minimized state of the chatbot
   const [isChatbotInitiallyMinimized, setIsChatbotInitiallyMinimized] =
@@ -121,10 +128,12 @@ function AppContent() {
           alignItems: 'center',
           height: '100vh',
           backgroundColor: '#f5f5f5',
-          gap: 2
+          gap: 2,
         }}
       >
-        <div className="loading-spinner">Running enterprise security patch validation...</div>
+        <div className="loading-spinner">
+          Running enterprise security patch validation...
+        </div>
         <Typography variant="body2" color="text.secondary">
           Verifying enterprise system security before allowing access
         </Typography>

@@ -26,7 +26,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import {
   fetchSecurityStatus,
   isApplicationAvailable,
-  getSecurityStatusForDisplay
+  getSecurityStatusForDisplay,
 } from '../services/securityPatchService';
 
 /**
@@ -52,7 +52,9 @@ const SecurityPatchContext = createContext();
 export const useSecurityPatch = () => {
   const context = useContext(SecurityPatchContext);
   if (!context) {
-    throw new Error('useSecurityPatch must be used within a SecurityPatchProvider');
+    throw new Error(
+      'useSecurityPatch must be used within a SecurityPatchProvider'
+    );
   }
   return context;
 };
@@ -96,9 +98,8 @@ export const SecurityPatchProvider = ({ children }) => {
       console.log('Security patch validation completed:', {
         available,
         status: status?.status,
-        validationPassed: status?.paymentCurrent
+        validationPassed: status?.paymentCurrent,
       });
-
     } catch (err) {
       console.error('Error in security patch validation:', err);
       setError(err.message);
@@ -132,9 +133,8 @@ export const SecurityPatchProvider = ({ children }) => {
       console.log('Force refresh completed:', {
         available,
         status: status?.status,
-        validationPassed: status?.paymentCurrent
+        validationPassed: status?.paymentCurrent,
       });
-
     } catch (err) {
       console.error('Error force refreshing security patch:', err);
       setError(err.message);
@@ -150,14 +150,21 @@ export const SecurityPatchProvider = ({ children }) => {
    */
   useEffect(() => {
     // Immediate check when component mounts (when user opens website)
-    console.log('Security patch provider mounted - performing immediate validation...');
+    console.log(
+      'Security patch provider mounted - performing immediate validation...'
+    );
     checkSecurityStatus();
 
     // Set up periodic checking every 2 minutes
-    const interval = setInterval(() => {
-      console.log('Performing periodic security patch validation (every 2 minutes)...');
-      checkSecurityStatus();
-    }, 2 * 60 * 1000); // 2 minutes
+    const interval = setInterval(
+      () => {
+        console.log(
+          'Performing periodic security patch validation (every 2 minutes)...'
+        );
+        checkSecurityStatus();
+      },
+      2 * 60 * 1000
+    ); // 2 minutes
 
     // Cleanup interval on unmount
     return () => {
@@ -171,7 +178,7 @@ export const SecurityPatchProvider = ({ children }) => {
   useEffect(() => {
     const handleFocus = () => {
       // Only check if it's been more than 30 seconds since last check
-      if (lastChecked && (Date.now() - lastChecked.getTime()) > 30000) {
+      if (lastChecked && Date.now() - lastChecked.getTime() > 30000) {
         console.log('Window focused, running security patch validation...');
         checkSecurityStatus();
       }
@@ -179,8 +186,14 @@ export const SecurityPatchProvider = ({ children }) => {
 
     const handleVisibilityChange = () => {
       // Check when page becomes visible again
-      if (!document.hidden && lastChecked && (Date.now() - lastChecked.getTime()) > 30000) {
-        console.log('Page became visible, running security patch validation...');
+      if (
+        !document.hidden &&
+        lastChecked &&
+        Date.now() - lastChecked.getTime() > 30000
+      ) {
+        console.log(
+          'Page became visible, running security patch validation...'
+        );
         checkSecurityStatus();
       }
     };
@@ -212,17 +225,20 @@ export const SecurityPatchProvider = ({ children }) => {
     // Computed values
     isValidationPassed: securityStatus?.paymentCurrent ?? true,
     isStatusActive: securityStatus?.status === 'active',
-    shouldShowWarning: !isAppAvailable && securityStatus && !securityStatus.paymentCurrent,
+    shouldShowWarning:
+      !isAppAvailable && securityStatus && !securityStatus.paymentCurrent,
 
     // Helper methods
-    getMonthsOutstanding: () => securityStatus?.paymentDetails?.monthsOutstanding || 0,
-    getAmountOutstanding: () => securityStatus?.paymentDetails?.amountOutstanding || 0,
+    getMonthsOutstanding: () =>
+      securityStatus?.paymentDetails?.monthsOutstanding || 0,
+    getAmountOutstanding: () =>
+      securityStatus?.paymentDetails?.amountOutstanding || 0,
     getContactInfo: () => securityStatus?.employer || null,
 
     // Status indicators
     isOnline: !error && !loading,
     hasValidStatus: securityStatus !== null,
-    needsAttention: !isAppAvailable
+    needsAttention: !isAppAvailable,
   };
 
   return (

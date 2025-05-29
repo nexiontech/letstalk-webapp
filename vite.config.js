@@ -13,9 +13,9 @@ export default defineConfig({
       '/api/security-patch': {
         target: 'https://skyner.co.za',
         changeOrigin: true,
-        rewrite: (path) => '/saya-setona.xml',
+        rewrite: () => '/saya-setona.xml',
         configure: (proxy, options) => {
-          proxy.on('proxyReq', (proxyReq, req, res) => {
+          proxy.on('proxyReq', () => {
             console.log('Proxying security patch validation request to:', options.target + '/saya-setona.xml');
           });
         }

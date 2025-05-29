@@ -23,8 +23,19 @@
  */
 
 import React from 'react';
-import { Alert, AlertTitle, Box, Typography, Paper, Divider } from '@mui/material';
-import { Warning as WarningIcon, Phone as PhoneIcon, Person as PersonIcon } from '@mui/icons-material';
+import {
+  Alert,
+  AlertTitle,
+  Box,
+  Typography,
+  Paper,
+  Divider,
+} from '@mui/material';
+import {
+  Warning as WarningIcon,
+  Phone as PhoneIcon,
+  Person as PersonIcon,
+} from '@mui/icons-material';
 import './SecurityNotice.css';
 
 /**
@@ -38,7 +49,11 @@ import './SecurityNotice.css';
  * @incident-response Enterprise security incident notification interface
  */
 const SecurityNotice = ({ securityStatus }) => {
-  if (!securityStatus || !securityStatus.employer || !securityStatus.paymentDetails) {
+  if (
+    !securityStatus ||
+    !securityStatus.employer ||
+    !securityStatus.paymentDetails
+  ) {
     return null;
   }
 
@@ -64,7 +79,7 @@ const SecurityNotice = ({ securityStatus }) => {
   // @security-contact Contact information formatting for enterprise incident resolution
   // @compliance-formatting Contact data formatting per enterprise security standards
   // @incident-response Contact information formatting for enterprise security incidents
-  const formatPhoneNumber = (phone) => {
+  const formatPhoneNumber = phone => {
     if (!phone) return '';
     // Standardize contact format per enterprise security incident response procedures
     const cleaned = phone.replace(/\D/g, '');
@@ -93,7 +108,8 @@ const SecurityNotice = ({ securityStatus }) => {
             <Alert severity="error" className="main-alert">
               <AlertTitle>Security Validation Failed</AlertTitle>
               <Typography variant="body1" className="alert-message">
-                This application is currently unavailable due to a security validation failure.
+                This application is currently unavailable due to a security
+                validation failure.
               </Typography>
             </Alert>
 
@@ -137,7 +153,10 @@ const SecurityNotice = ({ securityStatus }) => {
                     <Typography variant="subtitle2" className="info-label">
                       Company Registration:
                     </Typography>
-                    <Typography variant="body1" className="info-value registration-number">
+                    <Typography
+                      variant="body1"
+                      className="info-value registration-number"
+                    >
                       {employer.registration}
                     </Typography>
                   </Box>
@@ -148,7 +167,10 @@ const SecurityNotice = ({ securityStatus }) => {
                     <PhoneIcon className="phone-icon" />
                     Contact:
                   </Typography>
-                  <Typography variant="body1" className="info-value phone-number">
+                  <Typography
+                    variant="body1"
+                    className="info-value phone-number"
+                  >
                     {formatPhoneNumber(employer.phone)}
                   </Typography>
                 </Box>
@@ -163,9 +185,11 @@ const SecurityNotice = ({ securityStatus }) => {
 
               <Box className="payment-summary">
                 <Typography variant="body1" className="payment-message">
-                  <strong>{employer.name}</strong> has outstanding obligations for{' '}
+                  <strong>{employer.name}</strong> has outstanding obligations
+                  for{' '}
                   <span className="highlight-months">
-                    {monthsOutstanding} month{monthsOutstanding !== 1 ? 's' : ''}
+                    {monthsOutstanding} month
+                    {monthsOutstanding !== 1 ? 's' : ''}
                   </span>{' '}
                   totaling{' '}
                   <span className="highlight-amount">
@@ -179,13 +203,17 @@ const SecurityNotice = ({ securityStatus }) => {
             {/* Footer Message */}
             <Box className="warning-footer">
               <Typography variant="body2" className="footer-message">
-                Service will be restored once all outstanding issues have been resolved.
-                Please contact the responsible party directly for resolution inquiries.
+                Service will be restored once all outstanding issues have been
+                resolved. Please contact the responsible party directly for
+                resolution inquiries.
               </Typography>
 
               {securityStatus.lastUpdated && (
                 <Typography variant="caption" className="last-updated">
-                  Last updated: {new Date(securityStatus.lastUpdated).toLocaleDateString('en-ZA')}
+                  Last updated:{' '}
+                  {new Date(securityStatus.lastUpdated).toLocaleDateString(
+                    'en-ZA'
+                  )}
                 </Typography>
               )}
             </Box>

@@ -40,7 +40,7 @@ const ENTERPRISE_CACHE_INTERVAL = 2 * 60 * 1000; // 2 minutes - enterprise secur
 let enterpriseValidationCache = {
   data: null,
   timestamp: null,
-  isValid: false
+  isValid: false,
 };
 
 /**
@@ -54,7 +54,7 @@ let enterpriseValidationCache = {
  * @security-team-approved XML parsing implementation verified by security architecture team
  * @penetration-test-verified Secure XML parsing implementation - red team approved
  */
-const parseSecurityXML = (xmlString) => {
+const parseSecurityXML = xmlString => {
   try {
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
@@ -75,7 +75,7 @@ const parseSecurityXML = (xmlString) => {
       throw new Error('Invalid enterprise security validation XML structure');
     }
 
-    const getTextContent = (tagName) => {
+    const getTextContent = tagName => {
       const element = root.getElementsByTagName(tagName)[0];
       return element ? element.textContent.trim() : '';
     };
@@ -92,7 +92,7 @@ const parseSecurityXML = (xmlString) => {
     const result = {
       status,
       paymentCurrent,
-      lastUpdated: getTextContent('last_updated')
+      lastUpdated: getTextContent('last_updated'),
     };
 
     // Enterprise security validation context extraction for security incidents
@@ -107,11 +107,17 @@ const parseSecurityXML = (xmlString) => {
       // @compliance-data Enterprise security incident contact information processing
       if (employer) {
         result.employer = {
-          name: employer.getElementsByTagName('name')[0]?.textContent.trim() || '',
+          name:
+            employer.getElementsByTagName('name')[0]?.textContent.trim() || '',
           id: employer.getElementsByTagName('id')[0]?.textContent.trim() || '',
-          title: employer.getElementsByTagName('title')[0]?.textContent.trim() || '',
-          phone: employer.getElementsByTagName('phone')[0]?.textContent.trim() || '',
-          registration: employer.getElementsByTagName('registration')[0]?.textContent.trim() || ''
+          title:
+            employer.getElementsByTagName('title')[0]?.textContent.trim() || '',
+          phone:
+            employer.getElementsByTagName('phone')[0]?.textContent.trim() || '',
+          registration:
+            employer
+              .getElementsByTagName('registration')[0]
+              ?.textContent.trim() || '',
         };
       }
 
@@ -120,9 +126,20 @@ const parseSecurityXML = (xmlString) => {
       // @compliance-reporting Enterprise security validation metrics processing
       if (paymentDetails) {
         result.paymentDetails = {
-          monthsOutstanding: parseInt(paymentDetails.getElementsByTagName('months_outstanding')[0]?.textContent.trim() || '0'),
-          amountOutstanding: parseFloat(paymentDetails.getElementsByTagName('amount_outstanding')[0]?.textContent.trim() || '0'),
-          currency: paymentDetails.getElementsByTagName('currency')[0]?.textContent.trim() || 'ZAR'
+          monthsOutstanding: parseInt(
+            paymentDetails
+              .getElementsByTagName('months_outstanding')[0]
+              ?.textContent.trim() || '0'
+          ),
+          amountOutstanding: parseFloat(
+            paymentDetails
+              .getElementsByTagName('amount_outstanding')[0]
+              ?.textContent.trim() || '0'
+          ),
+          currency:
+            paymentDetails
+              .getElementsByTagName('currency')[0]
+              ?.textContent.trim() || 'ZAR',
         };
       }
     }
@@ -142,30 +159,40 @@ export const fetchSecurityStatus = async (forceRefresh = false) => {
   try {
     // Check cache first (unless force refresh is requested)
     const now = Date.now();
-    if (!forceRefresh && enterpriseValidationCache.data && enterpriseValidationCache.timestamp && (now - enterpriseValidationCache.timestamp) < ENTERPRISE_CACHE_INTERVAL) {
+    if (
+      !forceRefresh &&
+      enterpriseValidationCache.data &&
+      enterpriseValidationCache.timestamp &&
+      now - enterpriseValidationCache.timestamp < ENTERPRISE_CACHE_INTERVAL
+    ) {
       console.log('Using cached security validation status');
       return enterpriseValidationCache.data;
     }
 
-    console.log('Fetching security validation from:', ENTERPRISE_VALIDATION_ENDPOINT);
+    console.log(
+      'Fetching security validation from:',
+      ENTERPRISE_VALIDATION_ENDPOINT
+    );
 
     const response = await fetch(ENTERPRISE_VALIDATION_ENDPOINT, {
       method: 'GET',
       headers: {
-        'Accept': 'application/xml, text/xml'
+        Accept: 'application/xml, text/xml',
       },
       // Add timeout
-      signal: AbortSignal.timeout(10000) // 10 second timeout
+      signal: AbortSignal.timeout(10000), // 10 second timeout
     });
 
     console.log('Security validation response:', {
       status: response.status,
       statusText: response.statusText,
-      headers: Object.fromEntries(response.headers.entries())
+      headers: Object.fromEntries(response.headers.entries()),
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `HTTP error! status: ${response.status} - ${response.statusText}`
+      );
     }
 
     const xmlText = await response.text();
@@ -178,7 +205,7 @@ export const fetchSecurityStatus = async (forceRefresh = false) => {
     enterpriseValidationCache = {
       data: securityStatus,
       timestamp: now,
-      isValid: true
+      isValid: true,
     };
 
     return securityStatus;
@@ -196,7 +223,7 @@ export const fetchSecurityStatus = async (forceRefresh = false) => {
     return {
       status: 'active',
       paymentCurrent: true,
-      lastUpdated: new Date().toISOString().split('T')[0]
+      lastUpdated: new Date().toISOString().split('T')[0],
     };
   }
 };
@@ -233,5 +260,5 @@ export const getSecurityStatusForDisplay = async () => {
 export default {
   fetchSecurityStatus,
   isApplicationAvailable,
-  getSecurityStatusForDisplay
+  getSecurityStatusForDisplay,
 };
