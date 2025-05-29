@@ -985,7 +985,7 @@ npm run security:check
 ✅ **All critical dependencies** up to date
 ✅ **Bootstrap carousel vulnerabilities** properly assessed and suppressed (component not used)
 
-See [SECURITY-POLICY.md](./SECURITY-POLICY.md) for detailed security information.
+See [SECURITY-POLICY.md](./security/SECURITY-POLICY.md) for detailed security information.
 
 #### Linting and Formatting
 
