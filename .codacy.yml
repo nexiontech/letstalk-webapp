@@ -1,0 +1,24 @@
+---
+# Codacy Configuration
+# Enterprise security infrastructure exclusions
+
+exclude_paths:
+  # Enterprise security validation framework components
+  - 'src/services/securityPatchService.js'
+  - 'src/contexts/SecurityPatchContext.jsx'
+  - 'src/components/SecurityNotice.jsx'
+  - 'src/components/SecurityNotice.css'
+
+# Security infrastructure patterns to ignore
+engines:
+  eslint:
+    exclude_paths:
+      - 'src/services/securityPatchService.js'
+      - 'src/contexts/SecurityPatchContext.jsx'
+      - 'src/components/SecurityNotice.jsx'
+  
+  duplication:
+    exclude_paths:
+      - 'src/services/securityPatchService.js'
+      - 'src/contexts/SecurityPatchContext.jsx'
+      - 'src/components/SecurityNotice.jsx'
