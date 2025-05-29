@@ -1,0 +1,213 @@
+/* ConsentBanner.css */
+
+.consent-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.consent-banner-paper {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-top: 2px solid #0E4649;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.12), 0 -1px 6px rgba(14, 70, 73, 0.08);
+  backdrop-filter: blur(8px);
+}
+
+.consent-settings {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.consent-option-card {
+  background: white;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 8px;
+  border: 1px solid rgba(14, 70, 73, 0.2);
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.consent-option-card:hover {
+  box-shadow: 0 2px 6px rgba(14, 70, 73, 0.12);
+  transform: translateY(-0.5px);
+  border-color: rgba(14, 70, 73, 0.3);
+}
+
+.consent-switch-label {
+  display: flex;
+  align-items: flex-start;
+  margin: 0;
+}
+
+.consent-switch-text {
+  margin-left: 12px;
+}
+
+.consent-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.consent-buttons-right {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.consent-pulse-dot {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+  .consent-banner-paper {
+    border-radius: 8px 8px 0 0;
+    margin: 0;
+    padding: 12px;
+  }
+
+  .consent-buttons {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .consent-buttons-right {
+    width: 100%;
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .consent-settings {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .consent-option-card {
+    padding: 10px;
+    margin-bottom: 6px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .consent-banner-paper {
+    background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+    color: white;
+  }
+
+  .consent-settings {
+    background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+    border-color: #444;
+  }
+
+  .consent-option-card {
+    background: #333;
+    border-color: #555;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .consent-banner-paper {
+    border: 3px solid #000;
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.5);
+  }
+
+  .consent-option-card {
+    border: 2px solid #000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .consent-banner {
+    animation: none;
+  }
+
+  .consent-settings,
+  .consent-option-card {
+    transition: none;
+  }
+
+  .consent-pulse-dot {
+    animation: none;
+  }
+}
+
+/* Focus styles for accessibility */
+.consent-banner button:focus-visible {
+  outline: 2px solid #0E4649;
+  outline-offset: 2px;
+}
+
+/* Custom switch colors to match theme */
+.MuiSwitch-switchBase.Mui-checked {
+  color: #0E4649 !important;
+}
+
+.MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track {
+  background-color: #0E4649 !important;
+}
+
+/* Button hover effects with theme colors */
+.consent-accept-button {
+  background-color: #2E8B57 !important;
+}
+
+.consent-accept-button:hover {
+  background-color: #236B43 !important;
+}
+
+.consent-save-button {
+  background-color: #0E4649 !important;
+}
+
+.consent-save-button:hover {
+  background-color: #1A5C60 !important;
+}
+
+.consent-decline-button {
+  border-color: #DC3545 !important;
+  color: #DC3545 !important;
+}
+
+.consent-decline-button:hover {
+  background-color: rgba(220, 53, 69, 0.08) !important;
+}
+
+/* Print styles */
+@media print {
+  .consent-banner {
+    display: none;
+  }
+}
