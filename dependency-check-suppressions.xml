@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+    
+    <!-- Bootstrap Carousel XSS Vulnerabilities -->
+    <!-- These vulnerabilities affect the Bootstrap carousel component which is not used in this application -->
+    <!-- Risk Assessment: LOW - Application does not use carousel component -->
+    <!-- Verified: No usage of carousel, data-slide, or data-slide-to attributes in codebase -->
+    
+    <suppress>
+        <notes><![CDATA[
+        CVE-2024-6484: Bootstrap carousel XSS vulnerability
+        - Affects: Bootstrap carousel component data-slide and data-slide-to attributes
+        - Risk Level: LOW for this application
+        - Justification: Application does not use Bootstrap carousel component
+        - Verification: Codebase search confirms no carousel usage
+        - Mitigation: Component not imported or used anywhere in application
+        ]]></notes>
+        <packageUrl regex="true">^pkg:npm/bootstrap@.*$</packageUrl>
+        <cve>CVE-2024-6484</cve>
+    </suppress>
+    
+    <suppress>
+        <notes><![CDATA[
+        CVE-2024-6531: Bootstrap carousel XSS vulnerability
+        - Affects: Bootstrap carousel component data-slide and data-slide-to attributes
+        - Risk Level: LOW for this application
+        - Justification: Application does not use Bootstrap carousel component
+        - Verification: Codebase search confirms no carousel usage
+        - Mitigation: Component not imported or used anywhere in application
+        ]]></notes>
+        <packageUrl regex="true">^pkg:npm/bootstrap@.*$</packageUrl>
+        <cve>CVE-2024-6531</cve>
+    </suppress>
+    
+</suppressions>

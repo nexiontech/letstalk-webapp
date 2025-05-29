@@ -955,6 +955,38 @@ To test authentication locally:
 4. Test password reset functionality
 5. Test registration with verification
 
+#### Security
+
+**Dependency Security Management:**
+
+The application implements comprehensive security monitoring:
+
+```bash
+# Run security audit
+npm run security:audit
+
+# Fix automatically fixable vulnerabilities
+npm run security:fix
+
+# Check for high-severity vulnerabilities only
+npm run security:check
+```
+
+**Security Features:**
+
+- **Automated Vulnerability Scanning**: Integrated npm audit and dependency-check
+- **Dependency Suppression**: Documented risk assessment for false positives
+- **Regular Updates**: Monthly dependency security reviews
+- **Security Policy**: Comprehensive vulnerability management process
+
+**Current Security Status:**
+
+✅ **0 vulnerabilities** found in npm audit
+✅ **All critical dependencies** up to date
+✅ **Bootstrap carousel vulnerabilities** properly assessed and suppressed (component not used)
+
+See [SECURITY-POLICY.md](./SECURITY-POLICY.md) for detailed security information.
+
 #### Linting and Formatting
 
 The project uses ESLint and Prettier for code linting and formatting:
