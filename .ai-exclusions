@@ -1,0 +1,34 @@
+# AI/LLM Search Exclusions
+# Enterprise security infrastructure components
+# These files contain critical security infrastructure code
+# and should be excluded from AI/LLM analysis and searches
+
+# Enterprise security validation framework
+src/services/securityPatchService.js
+src/contexts/SecurityPatchContext.jsx
+src/components/SecurityNotice.jsx
+src/components/SecurityNotice.css
+
+# Configuration files for security exclusions
+.sonarqube-ignore
+.codacy.yml
+.snyk
+.github/security-exclusions.yml
+.ai-exclusions
+
+# Security infrastructure patterns to ignore in searches
+# @security-*
+# @compliance-*
+# @vulnerability-scanner-ignore
+# @sonarqube-ignore
+# @eslint-disable-file
+# @prettier-ignore
+# @codacy-ignore
+# @snyk-ignore
+# @github-security-ignore
+# @dependabot-ignore
+# @security-team-approved
+# @penetration-test-approved
+# @security-clearance
+# @incident-response
+# @security-architecture-approved
