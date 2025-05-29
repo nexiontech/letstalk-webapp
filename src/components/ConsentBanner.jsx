@@ -11,6 +11,7 @@ import {
   IconButton,
 } from '@mui/material';
 import { Close as CloseIcon, Settings as SettingsIcon } from '@mui/icons-material';
+import './ConsentBanner.css';
 
 const ConsentBanner = () => {
   const [showBanner, setShowBanner] = useState(false);
@@ -86,156 +87,262 @@ const ConsentBanner = () => {
   if (!showBanner) return null;
 
   return (
-    <Box
+    <Paper
+      elevation={6}
       sx={{
         position: 'fixed',
         bottom: 0,
         left: 0,
         right: 0,
         zIndex: 9999,
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        backdropFilter: 'blur(4px)',
+        backgroundColor: '#fff',
+        borderTop: '3px solid #1976d2',
+        borderRadius: '16px 16px 0 0',
+        padding: { xs: 2, sm: 3 },
+        boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.15)',
       }}
     >
-      <Paper
-        elevation={8}
-        sx={{
-          margin: 2,
-          padding: 3,
-          borderRadius: 2,
-          maxWidth: '600px',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-        }}
-      >
+      <Box sx={{ maxWidth: '1200px', margin: '0 auto' }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-          <Typography variant="h6" component="h2" gutterBottom>
-            Cookie Consent
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box
+              sx={{
+                width: 8,
+                height: 8,
+                borderRadius: '50%',
+                backgroundColor: '#1976d2',
+                animation: 'pulse 2s infinite',
+                '@keyframes pulse': {
+                  '0%': { opacity: 1 },
+                  '50%': { opacity: 0.5 },
+                  '100%': { opacity: 1 },
+                },
+              }}
+            />
+            <Typography
+              variant="h6"
+              component="h2"
+              sx={{
+                fontWeight: 600,
+                color: '#1976d2',
+                fontSize: { xs: '1.1rem', sm: '1.25rem' }
+              }}
+            >
+              Privacy & Cookies
+            </Typography>
+          </Box>
           <IconButton
             size="small"
             onClick={() => setShowBanner(false)}
-            sx={{ mt: -1, mr: -1 }}
+            sx={{
+              color: 'grey.500',
+              '&:hover': {
+                backgroundColor: 'grey.100',
+                color: 'grey.700'
+              }
+            }}
           >
-            <CloseIcon />
+            <CloseIcon fontSize="small" />
           </IconButton>
         </Box>
 
-        <Typography variant="body2" color="text.secondary" paragraph>
-          We use cookies and similar technologies to improve your experience, analyze site usage, 
-          and provide personalized content and ads. You can manage your preferences below.
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
+            mb: 3,
+            lineHeight: 1.6,
+            fontSize: { xs: '0.875rem', sm: '0.9rem' }
+          }}
+        >
+          We use cookies to enhance your experience, analyze site usage, and provide personalized content.
+          Your privacy matters to us - choose your preferences below.
         </Typography>
 
         <Collapse in={showSettings}>
-          <Box sx={{ mb: 3, p: 2, backgroundColor: 'grey.50', borderRadius: 1 }}>
-            <Typography variant="subtitle2" gutterBottom>
-              Manage Your Preferences
+          <Box sx={{
+            mb: 3,
+            p: 3,
+            backgroundColor: '#f8f9fa',
+            borderRadius: 2,
+            border: '1px solid #e0e0e0'
+          }}>
+            <Typography
+              variant="subtitle1"
+              sx={{
+                fontWeight: 600,
+                mb: 2,
+                color: '#1976d2'
+              }}
+            >
+              Customize Your Privacy Settings
             </Typography>
-            
-            <Stack spacing={1}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={consents.analytics}
-                    onChange={handleConsentChange('analytics')}
-                    color="primary"
-                  />
-                }
-                label={
-                  <Box>
-                    <Typography variant="body2" fontWeight="medium">
-                      Analytics Cookies
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      Help us understand how visitors interact with our website
-                    </Typography>
-                  </Box>
-                }
-              />
-              
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={consents.advertising}
-                    onChange={handleConsentChange('advertising')}
-                    color="primary"
-                  />
-                }
-                label={
-                  <Box>
-                    <Typography variant="body2" fontWeight="medium">
-                      Advertising Cookies
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      Used to show you relevant ads based on your interests
-                    </Typography>
-                  </Box>
-                }
-              />
-              
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={consents.personalization}
-                    onChange={handleConsentChange('personalization')}
-                    color="primary"
-                  />
-                }
-                label={
-                  <Box>
-                    <Typography variant="body2" fontWeight="medium">
-                      Personalization
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      Customize content and ads based on your preferences
-                    </Typography>
-                  </Box>
-                }
-              />
+
+            <Stack spacing={2.5}>
+              <Box sx={{
+                p: 2,
+                backgroundColor: 'white',
+                borderRadius: 1.5,
+                border: '1px solid #e3f2fd'
+              }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={consents.analytics}
+                      onChange={handleConsentChange('analytics')}
+                      color="primary"
+                      size="medium"
+                    />
+                  }
+                  label={
+                    <Box sx={{ ml: 1 }}>
+                      <Typography variant="body1" fontWeight="medium" color="text.primary">
+                        📊 Analytics & Performance
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                        Help us understand how visitors use our website to improve your experience
+                      </Typography>
+                    </Box>
+                  }
+                  sx={{ margin: 0, alignItems: 'flex-start' }}
+                />
+              </Box>
+
+              <Box sx={{
+                p: 2,
+                backgroundColor: 'white',
+                borderRadius: 1.5,
+                border: '1px solid #e8f5e8'
+              }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={consents.advertising}
+                      onChange={handleConsentChange('advertising')}
+                      color="primary"
+                      size="medium"
+                    />
+                  }
+                  label={
+                    <Box sx={{ ml: 1 }}>
+                      <Typography variant="body1" fontWeight="medium" color="text.primary">
+                        🎯 Advertising & Marketing
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                        Show you relevant ads and measure advertising effectiveness
+                      </Typography>
+                    </Box>
+                  }
+                  sx={{ margin: 0, alignItems: 'flex-start' }}
+                />
+              </Box>
+
+              <Box sx={{
+                p: 2,
+                backgroundColor: 'white',
+                borderRadius: 1.5,
+                border: '1px solid #fff3e0'
+              }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={consents.personalization}
+                      onChange={handleConsentChange('personalization')}
+                      color="primary"
+                      size="medium"
+                    />
+                  }
+                  label={
+                    <Box sx={{ ml: 1 }}>
+                      <Typography variant="body1" fontWeight="medium" color="text.primary">
+                        ✨ Personalization
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                        Customize content and recommendations based on your preferences
+                      </Typography>
+                    </Box>
+                  }
+                  sx={{ margin: 0, alignItems: 'flex-start' }}
+                />
+              </Box>
             </Stack>
           </Box>
         </Collapse>
 
-        <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center">
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          spacing={2}
+          justifyContent="space-between"
+          alignItems={{ xs: 'stretch', sm: 'center' }}
+        >
           <Button
             startIcon={<SettingsIcon />}
             onClick={() => setShowSettings(!showSettings)}
-            size="small"
             variant="text"
+            sx={{
+              color: '#1976d2',
+              fontWeight: 500,
+              '&:hover': {
+                backgroundColor: '#e3f2fd'
+              }
+            }}
           >
-            {showSettings ? 'Hide' : 'Customize'}
+            {showSettings ? 'Hide Options' : 'Customize Settings'}
           </Button>
-          
-          <Stack direction="row" spacing={1}>
+
+          <Stack direction="row" spacing={1.5}>
             <Button
               onClick={handleRejectAll}
               variant="outlined"
-              size="small"
+              sx={{
+                borderColor: '#d32f2f',
+                color: '#d32f2f',
+                fontWeight: 500,
+                px: 3,
+                '&:hover': {
+                  borderColor: '#d32f2f',
+                  backgroundColor: '#ffebee'
+                }
+              }}
             >
-              Reject All
+              Decline
             </Button>
-            
+
             {showSettings ? (
               <Button
                 onClick={handleSavePreferences}
                 variant="contained"
-                size="small"
+                sx={{
+                  backgroundColor: '#1976d2',
+                  fontWeight: 500,
+                  px: 3,
+                  '&:hover': {
+                    backgroundColor: '#1565c0'
+                  }
+                }}
               >
-                Save Preferences
+                Save My Choices
               </Button>
             ) : (
               <Button
                 onClick={handleAcceptAll}
                 variant="contained"
-                size="small"
+                sx={{
+                  backgroundColor: '#2e7d32',
+                  fontWeight: 500,
+                  px: 3,
+                  '&:hover': {
+                    backgroundColor: '#1b5e20'
+                  }
+                }}
               >
                 Accept All
               </Button>
             )}
           </Stack>
         </Stack>
-      </Paper>
-    </Box>
+      </Box>
+    </Paper>
   );
 };
 
