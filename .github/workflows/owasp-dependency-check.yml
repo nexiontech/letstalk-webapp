@@ -42,6 +42,7 @@ jobs:
             --enableRetired
             --scan ./package-lock.json
             --scan ./package.json
+            --suppression ./security/dependency-check-suppressions.xml
             --exclude "**/node_modules/**/test/**"
             --exclude "**/node_modules/**/tests/**"
             --exclude "**/node_modules/**/*.test.js"
