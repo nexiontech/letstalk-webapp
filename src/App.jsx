@@ -45,6 +45,7 @@ import {
   useSecurityPatch,
 } from './contexts/SecurityPatchContext';
 import SecurityNotice from './components/SecurityNotice';
+import ConsentBanner from './components/ConsentBanner';
 import './App.css';
 import './styles/global.css';
 
@@ -244,6 +245,9 @@ function AppContent() {
 
       {/* Only show Footer for non-protected routes */}
       {!isProtectedRoute && <Footer />}
+
+      {/* Consent Banner for GDPR/Privacy compliance */}
+      <ConsentBanner />
     </Box>
   );
 }
