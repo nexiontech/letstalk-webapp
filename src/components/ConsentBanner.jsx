@@ -89,6 +89,7 @@ const ConsentBanner = () => {
   return (
     <Paper
       elevation={6}
+      className="consent-banner"
       sx={{
         position: 'fixed',
         bottom: 0,
@@ -96,10 +97,10 @@ const ConsentBanner = () => {
         right: 0,
         zIndex: 9999,
         backgroundColor: '#fff',
-        borderTop: '3px solid #1976d2',
+        borderTop: '3px solid #0E4649',
         borderRadius: '16px 16px 0 0',
         padding: { xs: 2, sm: 3 },
-        boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.15)',
+        boxShadow: '0 -4px 20px rgba(14, 70, 73, 0.15)',
       }}
     >
       <Box sx={{ maxWidth: '1200px', margin: '0 auto' }}>
@@ -110,7 +111,7 @@ const ConsentBanner = () => {
                 width: 8,
                 height: 8,
                 borderRadius: '50%',
-                backgroundColor: '#1976d2',
+                backgroundColor: '#0E4649',
                 animation: 'pulse 2s infinite',
                 '@keyframes pulse': {
                   '0%': { opacity: 1 },
@@ -124,7 +125,7 @@ const ConsentBanner = () => {
               component="h2"
               sx={{
                 fontWeight: 600,
-                color: '#1976d2',
+                color: '#0E4649',
                 fontSize: { xs: '1.1rem', sm: '1.25rem' }
               }}
             >
@@ -172,7 +173,7 @@ const ConsentBanner = () => {
               sx={{
                 fontWeight: 600,
                 mb: 2,
-                color: '#1976d2'
+                color: '#0E4649'
               }}
             >
               Customize Your Privacy Settings
@@ -183,7 +184,8 @@ const ConsentBanner = () => {
                 p: 2,
                 backgroundColor: 'white',
                 borderRadius: 1.5,
-                border: '1px solid #e3f2fd'
+                border: '1px solid #0E4649',
+                borderColor: 'rgba(14, 70, 73, 0.2)'
               }}>
                 <FormControlLabel
                   control={
@@ -212,7 +214,8 @@ const ConsentBanner = () => {
                 p: 2,
                 backgroundColor: 'white',
                 borderRadius: 1.5,
-                border: '1px solid #e8f5e8'
+                border: '1px solid #FFB61D',
+                borderColor: 'rgba(255, 182, 29, 0.3)'
               }}>
                 <FormControlLabel
                   control={
@@ -241,7 +244,8 @@ const ConsentBanner = () => {
                 p: 2,
                 backgroundColor: 'white',
                 borderRadius: 1.5,
-                border: '1px solid #fff3e0'
+                border: '1px solid #2E8B57',
+                borderColor: 'rgba(46, 139, 87, 0.3)'
               }}>
                 <FormControlLabel
                   control={
@@ -280,10 +284,10 @@ const ConsentBanner = () => {
             onClick={() => setShowSettings(!showSettings)}
             variant="text"
             sx={{
-              color: '#1976d2',
+              color: '#0E4649',
               fontWeight: 500,
               '&:hover': {
-                backgroundColor: '#e3f2fd'
+                backgroundColor: 'rgba(14, 70, 73, 0.08)'
               }
             }}
           >
@@ -294,14 +298,16 @@ const ConsentBanner = () => {
             <Button
               onClick={handleRejectAll}
               variant="outlined"
+              className="consent-decline-button"
               sx={{
-                borderColor: '#d32f2f',
-                color: '#d32f2f',
+                borderColor: '#DC3545',
+                color: '#DC3545',
                 fontWeight: 500,
                 px: 3,
+                textTransform: 'none',
                 '&:hover': {
-                  borderColor: '#d32f2f',
-                  backgroundColor: '#ffebee'
+                  borderColor: '#DC3545',
+                  backgroundColor: 'rgba(220, 53, 69, 0.08)'
                 }
               }}
             >
@@ -312,12 +318,14 @@ const ConsentBanner = () => {
               <Button
                 onClick={handleSavePreferences}
                 variant="contained"
+                className="consent-save-button"
                 sx={{
-                  backgroundColor: '#1976d2',
+                  backgroundColor: '#0E4649',
                   fontWeight: 500,
                   px: 3,
+                  textTransform: 'none',
                   '&:hover': {
-                    backgroundColor: '#1565c0'
+                    backgroundColor: '#1A5C60'
                   }
                 }}
               >
@@ -327,12 +335,14 @@ const ConsentBanner = () => {
               <Button
                 onClick={handleAcceptAll}
                 variant="contained"
+                className="consent-accept-button"
                 sx={{
-                  backgroundColor: '#2e7d32',
+                  backgroundColor: '#2E8B57',
                   fontWeight: 500,
                   px: 3,
+                  textTransform: 'none',
                   '&:hover': {
-                    backgroundColor: '#1b5e20'
+                    backgroundColor: '#236B43'
                   }
                 }}
               >
