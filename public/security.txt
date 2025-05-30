@@ -1,0 +1,16 @@
+# Security Policy for Let's Talk Platform (letstalkbi.co.za)
+# Built by Saya-Setona (saya-setona.co.za)
+
+Contact: security@saya-setona.co.za
+Contact: https://saya-setona.co.za/security
+Expires: 2025-12-31T23:59:59.000Z
+Encryption: https://saya-setona.co.za/pgp-key.txt
+Acknowledgments: https://saya-setona.co.za/security/acknowledgments
+Policy: https://saya-setona.co.za/security/policy
+Hiring: https://saya-setona.co.za/careers
+
+# Preferred Languages
+Preferred-Languages: en, af
+
+# Canonical URL
+Canonical: https://letstalkbi.co.za/.well-known/security.txt

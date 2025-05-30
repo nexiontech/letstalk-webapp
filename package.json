@@ -16,7 +16,11 @@
     "test:watch": "jest --watch",
     "security:audit": "npm audit",
     "security:fix": "npm audit fix",
-    "security:check": "npm audit --audit-level=high"
+    "security:check": "npm audit --audit-level=high",
+    "seo:verify": "node scripts/verify-seo-assets.js",
+    "seo:build": "npm run seo:verify && npm run build",
+    "sitemap:test": "node scripts/test-sitemap.js",
+    "sitemap:test:prod": "node scripts/test-sitemap.js --production"
   },
   "dependencies": {
     "@aws-amplify/auth": "^6.12.3",
