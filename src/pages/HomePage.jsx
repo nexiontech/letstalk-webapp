@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAuth } from '../contexts/AuthContext';
+import SEOHead, { generatePageStructuredData } from '../components/SEOHead';
+import { generateSEOKeywords } from '../utils/seoUtils';
 import {
   faWater,
   faBolt,
@@ -77,8 +79,44 @@ function HomePage() {
     },
   ];
 
+  // SEO data for homepage
+  const seoData = {
+    title: isAuthenticated && firstName && greeting
+      ? `${greeting}, ${firstName}! - Let's Talk Platform`
+      : "Let's Talk - South Africa's Premier Citizen Engagement Platform",
+    description: "Connect with municipal services, report issues, access government services, and engage with your community. South Africa's premier citizen engagement platform built by Saya-Setona for seamless citizen-government interaction.",
+    keywords: generateSEOKeywords([
+      'citizen engagement platform',
+      'municipal services South Africa',
+      'government services online',
+      'community platform',
+      'service reporting',
+      'local government',
+      'public services',
+      'civic engagement',
+      'digital government',
+      'smart city solutions'
+    ], 'home'),
+    type: 'website',
+    structuredData: generatePageStructuredData('home', {
+      title: "Let's Talk - South Africa's Premier Citizen Engagement Platform",
+      description: "Connect with municipal services, report issues, access government services, and engage with your community.",
+      path: '/',
+      services: services.map(service => ({
+        name: service.title,
+        description: service.description,
+        type: 'Municipal Service'
+      })),
+      features: features.map(feature => ({
+        name: feature.title,
+        description: feature.description
+      }))
+    })
+  };
+
   return (
     <div className="homepage">
+      <SEOHead {...seoData} />
       <div className="hero-container">
         <div className="hero-content">
           {isAuthenticated && firstName && greeting ? (

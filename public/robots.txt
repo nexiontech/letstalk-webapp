@@ -1,0 +1,117 @@
+# Robots.txt for Let's Talk Platform (letstalkbi.co.za)
+# Built by Saya-Setona (saya-setona.co.za)
+# South Africa's Premier Citizen Engagement Platform
+
+User-agent: *
+Allow: /
+
+# Allow important public pages
+Allow: /
+Allow: /about-us
+Allow: /our-services
+Allow: /faq
+Allow: /press-releases
+Allow: /privacy-policy
+Allow: /terms-of-service
+Allow: /cookie-policy
+Allow: /register
+
+# Allow static assets
+Allow: /assets/
+Allow: /images/
+Allow: /favicon.png
+Allow: /logo.png
+Allow: /og-image.jpg
+Allow: /twitter-card.jpg
+Allow: /app-screenshot.jpg
+Allow: /site.webmanifest
+Allow: /browserconfig.xml
+
+# Disallow private/protected areas
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /service-issues
+Disallow: /report-issue
+Disallow: /services
+Disallow: /CommunityHub
+Disallow: /utilities
+
+# Disallow authentication pages from indexing
+Disallow: /login
+Disallow: /forgot-password
+
+# Disallow admin and development files
+Disallow: /admin/
+Disallow: /api/
+Disallow: /.env
+Disallow: /config/
+Disallow: /src/
+Disallow: /node_modules/
+Disallow: /dist/
+Disallow: /.git/
+Disallow: /.github/
+Disallow: /security/
+
+# Disallow search and filter parameters
+Disallow: /*?search=*
+Disallow: /*?filter=*
+Disallow: /*?sort=*
+Disallow: /*?page=*
+Disallow: /*?utm_*
+
+# Sitemap location
+Sitemap: https://letstalkbi.co.za/sitemap.xml
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1
+
+# Specific bot configurations
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+# Slower crawl for aggressive bots
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Crawl-delay: 10
+
+User-agent: DotBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+# Block problematic bots
+User-agent: SiteAuditBot
+Disallow: /
+
+User-agent: MegaIndex
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+# Allow important crawlers for SEO tools
+User-agent: ScreamingFrogSEOSpider
+Allow: /
+
+User-agent: SiteImprove
+Allow: /
