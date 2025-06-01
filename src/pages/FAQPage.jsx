@@ -16,6 +16,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SEOHead, { generatePageStructuredData } from '../components/SEOHead';
 import { generateSEOKeywords, generateFAQStructuredData } from '../utils/seoUtils';
+import AdSenseAd from '../components/AdSenseAd';
 import {
   faChevronDown,
   faSearch,
@@ -400,6 +401,14 @@ const FAQPage = () => {
           ))}
         </Container>
       </div>
+
+      {/* AdSense Ad - After FAQ Sections */}
+      <AdSenseAd
+        slot="1234567893"
+        format="auto"
+        minContentLength={800}
+        style={{ margin: '4rem 0' }}
+      />
 
       {/* Still Have Questions Section */}
       <div className="faq-contact-section">

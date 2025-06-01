@@ -11,6 +11,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SEOHead, { generatePageStructuredData } from '../components/SEOHead';
 import { generateSEOKeywords } from '../utils/seoUtils';
+import AdSenseAd from '../components/AdSenseAd';
 import {
   faHandshake,
   faLightbulb,
@@ -190,6 +191,14 @@ const AboutUsPage = () => {
           </Grid>
         </Container>
       </div>
+
+      {/* AdSense Ad - After Mission/Vision Section */}
+      <AdSenseAd
+        slot="1234567892"
+        format="auto"
+        minContentLength={600}
+        style={{ margin: '4rem 0' }}
+      />
 
       {/* Core Values Section with Animated Cards */}
       <div className="about-values-section">

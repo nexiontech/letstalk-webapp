@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAuth } from '../contexts/AuthContext';
 import SEOHead, { generatePageStructuredData } from '../components/SEOHead';
 import { generateSEOKeywords } from '../utils/seoUtils';
+import AdSenseAd from '../components/AdSenseAd';
 import {
   faWater,
   faBolt,
@@ -186,6 +187,14 @@ function HomePage() {
             </Link>
           ))}
         </div>
+
+        {/* AdSense Ad - Services Section */}
+        <AdSenseAd
+          slot="1234567890"
+          format="auto"
+          minContentLength={500}
+          style={{ margin: '3rem 0' }}
+        />
       </div>
 
       <div className="features-section">
@@ -242,6 +251,14 @@ function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* AdSense Ad - Before CTA Section */}
+      <AdSenseAd
+        slot="1234567891"
+        format="rectangle"
+        minContentLength={400}
+        style={{ margin: '4rem 0' }}
+      />
 
       <div className="cta-section">
         <div className="cta-content">
