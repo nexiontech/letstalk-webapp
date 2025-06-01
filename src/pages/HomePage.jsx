@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAuth } from '../contexts/AuthContext';
 import SEOHead, { generatePageStructuredData } from '../components/SEOHead';
 import { generateSEOKeywords } from '../utils/seoUtils';
+import AdSenseAd from '../components/AdSenseAd';
 import {
   faWater,
   faBolt,
@@ -81,37 +82,43 @@ function HomePage() {
 
   // SEO data for homepage
   const seoData = {
-    title: isAuthenticated && firstName && greeting
-      ? `${greeting}, ${firstName}! - Let's Talk Platform`
-      : "Let's Talk - South Africa's Premier Citizen Engagement Platform",
-    description: "Connect with municipal services, report issues, access government services, and engage with your community. South Africa's premier citizen engagement platform built by Saya-Setona for seamless citizen-government interaction.",
-    keywords: generateSEOKeywords([
-      'citizen engagement platform',
-      'municipal services South Africa',
-      'government services online',
-      'community platform',
-      'service reporting',
-      'local government',
-      'public services',
-      'civic engagement',
-      'digital government',
-      'smart city solutions'
-    ], 'home'),
+    title:
+      isAuthenticated && firstName && greeting
+        ? `${greeting}, ${firstName}! - Let's Talk Platform`
+        : "Let's Talk - South Africa's Premier Citizen Engagement Platform",
+    description:
+      "Connect with municipal services, report issues, access government services, and engage with your community. South Africa's premier citizen engagement platform built by Saya-Setona for seamless citizen-government interaction.",
+    keywords: generateSEOKeywords(
+      [
+        'citizen engagement platform',
+        'municipal services South Africa',
+        'government services online',
+        'community platform',
+        'service reporting',
+        'local government',
+        'public services',
+        'civic engagement',
+        'digital government',
+        'smart city solutions',
+      ],
+      'home'
+    ),
     type: 'website',
     structuredData: generatePageStructuredData('home', {
       title: "Let's Talk - South Africa's Premier Citizen Engagement Platform",
-      description: "Connect with municipal services, report issues, access government services, and engage with your community.",
+      description:
+        'Connect with municipal services, report issues, access government services, and engage with your community.',
       path: '/',
       services: services.map(service => ({
         name: service.title,
         description: service.description,
-        type: 'Municipal Service'
+        type: 'Municipal Service',
       })),
       features: features.map(feature => ({
         name: feature.title,
-        description: feature.description
-      }))
-    })
+        description: feature.description,
+      })),
+    }),
   };
 
   return (
@@ -186,6 +193,14 @@ function HomePage() {
             </Link>
           ))}
         </div>
+
+        {/* AdSense Ad - Services Section */}
+        <AdSenseAd
+          slot="1234567890"
+          format="auto"
+          minContentLength={500}
+          style={{ margin: '3rem 0' }}
+        />
       </div>
 
       <div className="features-section">
@@ -242,6 +257,14 @@ function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* AdSense Ad - Before CTA Section */}
+      <AdSenseAd
+        slot="1234567891"
+        format="rectangle"
+        minContentLength={400}
+        style={{ margin: '4rem 0' }}
+      />
 
       <div className="cta-section">
         <div className="cta-content">

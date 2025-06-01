@@ -5,9 +5,37 @@
 
 // Regions where consent banners are required (EEA + UK)
 const CONSENT_REQUIRED_REGIONS = [
-  'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 
-  'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 
-  'SE', 'IS', 'LI', 'NO', 'GB'
+  'AT',
+  'BE',
+  'BG',
+  'HR',
+  'CY',
+  'CZ',
+  'DK',
+  'EE',
+  'FI',
+  'FR',
+  'DE',
+  'GR',
+  'HU',
+  'IE',
+  'IT',
+  'LV',
+  'LT',
+  'LU',
+  'MT',
+  'NL',
+  'PL',
+  'PT',
+  'RO',
+  'SK',
+  'SI',
+  'ES',
+  'SE',
+  'IS',
+  'LI',
+  'NO',
+  'GB',
 ];
 
 /**
@@ -40,26 +68,26 @@ export const setRegionalConsentDefaults = () => {
   if (typeof window === 'undefined' || !window.gtag) return;
 
   const userRegion = getUserRegion();
-  
+
   if (CONSENT_REQUIRED_REGIONS.includes(userRegion)) {
     // For EEA/UK regions - deny by default, require explicit consent
     window.gtag('consent', 'default', {
-      'ad_storage': 'denied',
-      'ad_user_data': 'denied',
-      'ad_personalization': 'denied',
-      'analytics_storage': 'denied',
-      'region': [userRegion],
-      'wait_for_update': 500
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      analytics_storage: 'denied',
+      region: [userRegion],
+      wait_for_update: 500,
     });
   } else {
     // For other regions - can grant by default if your privacy policy allows
     // This is just an example - adjust based on your organization's policy
     window.gtag('consent', 'default', {
-      'ad_storage': 'granted',
-      'ad_user_data': 'granted',
-      'ad_personalization': 'granted',
-      'analytics_storage': 'granted',
-      'region': [userRegion]
+      ad_storage: 'granted',
+      ad_user_data: 'granted',
+      ad_personalization: 'granted',
+      analytics_storage: 'granted',
+      region: [userRegion],
     });
   }
 };
@@ -67,21 +95,21 @@ export const setRegionalConsentDefaults = () => {
 /**
  * Update consent mode with proper v2 parameters
  */
-export const updateConsentMode = (consents) => {
+export const updateConsentMode = consents => {
   if (typeof window === 'undefined' || !window.gtag) return;
 
   window.gtag('consent', 'update', {
-    'ad_storage': consents.advertising ? 'granted' : 'denied',
-    'ad_user_data': consents.advertising ? 'granted' : 'denied',
-    'ad_personalization': consents.personalization ? 'granted' : 'denied',
-    'analytics_storage': consents.analytics ? 'granted' : 'denied'
+    ad_storage: consents.advertising ? 'granted' : 'denied',
+    ad_user_data: consents.advertising ? 'granted' : 'denied',
+    ad_personalization: consents.personalization ? 'granted' : 'denied',
+    analytics_storage: consents.analytics ? 'granted' : 'denied',
   });
 
   // Update Google Analytics configuration based on consent
   if (consents.analytics) {
     window.gtag('config', 'G-76N7K7JX41', {
-      'allow_google_signals': consents.advertising,
-      'allow_ad_personalization_signals': consents.personalization
+      allow_google_signals: consents.advertising,
+      allow_ad_personalization_signals: consents.personalization,
     });
   }
 };
@@ -93,13 +121,13 @@ export const trackConsentEvent = (eventName, consents, method = 'unknown') => {
   if (typeof window === 'undefined' || !window.gtag) return;
 
   window.gtag('event', eventName, {
-    'event_category': 'consent',
-    'event_label': method,
-    'analytics_consent': consents.analytics ? 'granted' : 'denied',
-    'advertising_consent': consents.advertising ? 'granted' : 'denied',
-    'personalization_consent': consents.personalization ? 'granted' : 'denied',
-    'user_region': getUserRegion(),
-    'consent_timestamp': new Date().toISOString()
+    event_category: 'consent',
+    event_label: method,
+    analytics_consent: consents.analytics ? 'granted' : 'denied',
+    advertising_consent: consents.advertising ? 'granted' : 'denied',
+    personalization_consent: consents.personalization ? 'granted' : 'denied',
+    user_region: getUserRegion(),
+    consent_timestamp: new Date().toISOString(),
   });
 };
 
@@ -114,7 +142,7 @@ export const isConsentExpired = () => {
   const consentDate = new Date(consentTimestamp);
   const now = new Date();
   const daysSinceConsent = (now - consentDate) / (1000 * 60 * 60 * 24);
-  
+
   // Re-ask for consent after 365 days (adjust based on your policy)
   return daysSinceConsent > 365;
 };
@@ -135,7 +163,7 @@ export const getStoredConsent = () => {
 /**
  * Store consent preferences with timestamp
  */
-export const storeConsent = (consents) => {
+export const storeConsent = consents => {
   try {
     localStorage.setItem('consent-preferences', JSON.stringify(consents));
     localStorage.setItem('consent-timestamp', new Date().toISOString());
@@ -155,7 +183,7 @@ export const initializeConsentMode = () => {
 
   // Check for stored consent
   const storedConsent = getStoredConsent();
-  
+
   if (storedConsent && !isConsentExpired()) {
     // Apply stored consent
     updateConsentMode(storedConsent);
@@ -174,7 +202,7 @@ export const shouldShowBanner = () => {
     const storedConsent = getStoredConsent();
     return !storedConsent || isConsentExpired();
   }
-  
+
   // For other regions, only show if explicitly requested or no stored consent
   return false;
 };
@@ -184,13 +212,13 @@ export const shouldShowBanner = () => {
  */
 export const debugConsentState = () => {
   if (typeof window === 'undefined') return;
-  
+
   console.log('Consent Debug Info:', {
     userRegion: getUserRegion(),
     shouldShowBanner: shouldShowBanner(),
     storedConsent: getStoredConsent(),
     consentExpired: isConsentExpired(),
     gtagAvailable: !!window.gtag,
-    dataLayerLength: window.dataLayer ? window.dataLayer.length : 0
+    dataLayerLength: window.dataLayer ? window.dataLayer.length : 0,
   });
 };

@@ -11,6 +11,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SEOHead, { generatePageStructuredData } from '../components/SEOHead';
 import { generateSEOKeywords } from '../utils/seoUtils';
+import AdSenseAd from '../components/AdSenseAd';
 import {
   faHandshake,
   faLightbulb,
@@ -88,37 +89,45 @@ const AboutUsPage = () => {
 
   // SEO data for About Us page
   const seoData = {
-    title: 'About Us - Let\'s Talk Platform | Saya-Setona',
-    description: 'Learn about Let\'s Talk, South Africa\'s leading citizen engagement platform built by Saya-Setona. Discover our mission to connect communities with government services through innovative technology.',
-    keywords: generateSEOKeywords([
-      'about Saya-Setona',
-      'citizen engagement platform',
-      'company information',
-      'mission vision values',
-      'South African technology company',
-      'government services platform',
-      'digital transformation',
-      'civic technology',
-      'community engagement',
-      'public service innovation'
-    ], 'about'),
+    title: "About Us - Let's Talk Platform | Saya-Setona",
+    description:
+      "Learn about Let's Talk, South Africa's leading citizen engagement platform built by Saya-Setona. Discover our mission to connect communities with government services through innovative technology.",
+    keywords: generateSEOKeywords(
+      [
+        'about Saya-Setona',
+        'citizen engagement platform',
+        'company information',
+        'mission vision values',
+        'South African technology company',
+        'government services platform',
+        'digital transformation',
+        'civic technology',
+        'community engagement',
+        'public service innovation',
+      ],
+      'about'
+    ),
     type: 'website',
     structuredData: generatePageStructuredData('about', {
-      title: 'About Us - Let\'s Talk Platform',
-      description: 'Learn about Let\'s Talk, South Africa\'s leading citizen engagement platform built by Saya-Setona.',
+      title: "About Us - Let's Talk Platform",
+      description:
+        "Learn about Let's Talk, South Africa's leading citizen engagement platform built by Saya-Setona.",
       path: '/about-us',
       organization: {
         name: 'Saya-Setona',
-        description: 'South African technology company specializing in citizen engagement platforms and government service digitization.',
+        description:
+          'South African technology company specializing in citizen engagement platforms and government service digitization.',
         foundingDate: '2024',
-        mission: 'To empower South African citizens by providing a seamless, accessible platform that facilitates meaningful engagement with government services.',
-        vision: 'A South Africa where every citizen can easily access, monitor, and engage with government services through a unified platform.',
+        mission:
+          'To empower South African citizens by providing a seamless, accessible platform that facilitates meaningful engagement with government services.',
+        vision:
+          'A South Africa where every citizen can easily access, monitor, and engage with government services through a unified platform.',
         values: coreValues.map(value => ({
           name: value.title,
-          description: value.description
-        }))
-      }
-    })
+          description: value.description,
+        })),
+      },
+    }),
   };
 
   return (
@@ -190,6 +199,14 @@ const AboutUsPage = () => {
           </Grid>
         </Container>
       </div>
+
+      {/* AdSense Ad - After Mission/Vision Section */}
+      <AdSenseAd
+        slot="1234567892"
+        format="auto"
+        minContentLength={600}
+        style={{ margin: '4rem 0' }}
+      />
 
       {/* Core Values Section with Animated Cards */}
       <div className="about-values-section">

@@ -5,6 +5,8 @@
  * Tests sitemap and robots.txt accessibility for Let's Talk platform
  */
 
+/* eslint-env node */
+
 import { testSitemapLocally, validateProductionSEO } from '../src/utils/sitemapValidator.js';
 
 const args = process.argv.slice(2);

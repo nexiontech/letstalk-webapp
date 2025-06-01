@@ -71,6 +71,7 @@ The Let's Talk platform aims to:
 - ✅ Thusong AI Chatbot (Rule-based responses)
 - ✅ User Profile Management with ID Information Display
 - ✅ Responsive Design & Navigation
+- ✅ Google AdSense Integration (Policy-compliant, content-aware loading)
 
 **Mock/Prototype Features:**
 - 🔄 Service Issue Reporting (Interface functional, uses mock data)
@@ -108,7 +109,7 @@ Let's Talk is comprehensively optimized for search engines with enterprise-grade
 - Complete meta tag optimization (title, description, keywords, robots)
 - Open Graph and Twitter Card meta tags for social media sharing
 - Structured data (JSON-LD) for rich snippets and enhanced search results
-- XML sitemap with proper priority and change frequency settings
+- XML sitemap with actual application routes (updated January 2025)
 - Robots.txt with comprehensive crawling guidelines
 - Canonical URLs to prevent duplicate content issues
 - Hreflang tags for South African English localization
@@ -142,6 +143,14 @@ Let's Talk is comprehensively optimized for search engines with enterprise-grade
 - SEO performance tracking and reporting
 - User behavior analytics for SEO insights
 - Conversion tracking for government service interactions
+
+**Google AdSense Integration:**
+- Smart content-aware ad loading system (ca-pub-4572960626705389)
+- Policy-compliant ad placement on content-rich pages only
+- Content quality assessment before ad display
+- Minimum 300+ word content requirement for ad loading
+- Intersection Observer for performance optimization
+- Dynamic script loading to prevent policy violations
 
 ### SEO Configuration
 
@@ -1227,6 +1236,59 @@ The project uses GitHub Actions for CI/CD:
 ## Troubleshooting
 
 ### Common Issues
+
+#### Google AdSense Policy Violations (RESOLVED)
+
+**Issue**: "Google-served ads on screens without publisher content"
+**Status**: ✅ **RESOLVED** (December 2024)
+
+**Previous Problem:**
+- AdSense scripts were loading globally on all pages
+- No actual ad units were implemented despite script loading
+- Minimal content pages (404, loading screens) had AdSense scripts but insufficient content
+
+**Solution Implemented:**
+1. **Removed Global Script Loading**: AdSense script no longer loads on all pages
+2. **Smart Content Assessment**: Created `AdSenseAd` component with content quality validation
+3. **Content-Rich Page Enhancement**: Upgraded minimal content pages with substantial, valuable content
+4. **Strategic Ad Placement**: Ads only display on pages with 300+ words of quality content
+
+**Technical Files Modified:**
+- `index.html`: Removed global AdSense script loading
+- `src/components/AdSenseAd.jsx`: Smart ad component with content validation
+- `src/utils/adSenseUtils.js`: Content quality assessment utilities
+- `src/pages/NotFoundPage.jsx`: Enhanced with 500+ words of valuable content
+- `src/pages/ForgotPasswordPage.jsx`: Enhanced with comprehensive help content
+
+**Current Status**: AdSense integration is now policy-compliant and ready for review.
+
+#### XML Sitemap Updated (January 2025)
+
+**Issue**: Sitemap contained non-existent pages and fictional routes
+**Status**: ✅ **RESOLVED** (January 2025)
+
+**Previous Problem:**
+- Sitemap included fictional pages like `/municipal-services`, `/government-services`
+- Listed non-existent location pages (Johannesburg, Cape Town, etc.)
+- Contained routes that don't exist in the actual application
+
+**Solution Implemented:**
+- Updated sitemap to reflect only actual application routes
+- Removed all fictional and non-existent pages
+- Organized routes by category (Public, Authentication, Legal)
+- Set appropriate priorities and change frequencies
+
+**Current Sitemap Structure:**
+- **Public Pages**: Homepage, About Us, Services, FAQ, Press Releases
+- **Authentication Pages**: Login, Register, Forgot Password
+- **Legal Pages**: Privacy Policy, Terms of Service, Cookie Policy
+- **Protected Routes**: Excluded from sitemap (require authentication)
+
+**Technical Details:**
+- Sitemap accessible at `letstalkbi.co.za/sitemap.xml`
+- Only includes publicly accessible routes
+- Protected routes (dashboard, profile, etc.) excluded for security
+- Proper XML formatting with priority and change frequency
 
 #### Authentication Issues
 
