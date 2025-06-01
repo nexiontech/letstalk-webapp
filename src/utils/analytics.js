@@ -89,7 +89,7 @@ export const trackDownload = (file_name, file_extension) => {
  * @param {string} url - The external URL being clicked
  * @param {string} link_text - The text of the link
  */
-export const trackExternalLink = (url) => {
+export const trackExternalLink = url => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'click', {
       event_category: 'outbound',

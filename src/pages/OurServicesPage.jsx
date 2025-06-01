@@ -12,9 +12,7 @@ import {
 } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SEOHead, { generatePageStructuredData } from '../components/SEOHead';
-import {
-  generateSEOKeywords,
-} from '../utils/seoUtils';
+import { generateSEOKeywords } from '../utils/seoUtils';
 import {
   faWater,
   faBolt,
