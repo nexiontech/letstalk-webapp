@@ -82,37 +82,43 @@ function HomePage() {
 
   // SEO data for homepage
   const seoData = {
-    title: isAuthenticated && firstName && greeting
-      ? `${greeting}, ${firstName}! - Let's Talk Platform`
-      : "Let's Talk - South Africa's Premier Citizen Engagement Platform",
-    description: "Connect with municipal services, report issues, access government services, and engage with your community. South Africa's premier citizen engagement platform built by Saya-Setona for seamless citizen-government interaction.",
-    keywords: generateSEOKeywords([
-      'citizen engagement platform',
-      'municipal services South Africa',
-      'government services online',
-      'community platform',
-      'service reporting',
-      'local government',
-      'public services',
-      'civic engagement',
-      'digital government',
-      'smart city solutions'
-    ], 'home'),
+    title:
+      isAuthenticated && firstName && greeting
+        ? `${greeting}, ${firstName}! - Let's Talk Platform`
+        : "Let's Talk - South Africa's Premier Citizen Engagement Platform",
+    description:
+      "Connect with municipal services, report issues, access government services, and engage with your community. South Africa's premier citizen engagement platform built by Saya-Setona for seamless citizen-government interaction.",
+    keywords: generateSEOKeywords(
+      [
+        'citizen engagement platform',
+        'municipal services South Africa',
+        'government services online',
+        'community platform',
+        'service reporting',
+        'local government',
+        'public services',
+        'civic engagement',
+        'digital government',
+        'smart city solutions',
+      ],
+      'home'
+    ),
     type: 'website',
     structuredData: generatePageStructuredData('home', {
       title: "Let's Talk - South Africa's Premier Citizen Engagement Platform",
-      description: "Connect with municipal services, report issues, access government services, and engage with your community.",
+      description:
+        'Connect with municipal services, report issues, access government services, and engage with your community.',
       path: '/',
       services: services.map(service => ({
         name: service.title,
         description: service.description,
-        type: 'Municipal Service'
+        type: 'Municipal Service',
       })),
       features: features.map(feature => ({
         name: feature.title,
-        description: feature.description
-      }))
-    })
+        description: feature.description,
+      })),
+    }),
   };
 
   return (

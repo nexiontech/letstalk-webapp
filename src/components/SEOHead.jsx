@@ -10,9 +10,9 @@ import { useLocation } from 'react-router-dom';
 const SEOHead = ({
   title = "Let's Talk - South Africa's Premier Citizen Engagement Platform",
   description = "Connect with municipal services, report issues, access government services, and engage with your community. South Africa's premier citizen engagement platform built by Saya-Setona.",
-  keywords = "South Africa, municipal services, citizen engagement, government services, community platform, service issues, water services, electricity, local government, Saya-Setona, letstalkbi",
-  image = "https://letstalkbi.co.za/og-image.jpg",
-  type = "website",
+  keywords = 'South Africa, municipal services, citizen engagement, government services, community platform, service issues, water services, electricity, local government, Saya-Setona, letstalkbi',
+  image = 'https://letstalkbi.co.za/og-image.jpg',
+  type = 'website',
   structuredData = null,
   noIndex = false,
   canonical = null,
@@ -42,7 +42,12 @@ const SEOHead = ({
     // Basic meta tags
     updateMetaTag('description', description);
     updateMetaTag('keywords', keywords);
-    updateMetaTag('robots', noIndex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+    updateMetaTag(
+      'robots',
+      noIndex
+        ? 'noindex, nofollow'
+        : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
+    );
 
     // Open Graph tags
     updateMetaTag('og:title', title, true);
@@ -77,7 +82,9 @@ const SEOHead = ({
     // Add structured data if provided
     if (structuredData) {
       // Remove existing structured data for this page
-      const existingScript = document.querySelector('script[data-seo-structured-data]');
+      const existingScript = document.querySelector(
+        'script[data-seo-structured-data]'
+      );
       if (existingScript) {
         existingScript.remove();
       }
@@ -101,7 +108,9 @@ const SEOHead = ({
     hreflangLink.setAttribute('href', currentUrl);
 
     // Add x-default hreflang
-    let defaultHreflangLink = document.querySelector('link[hreflang="x-default"]');
+    let defaultHreflangLink = document.querySelector(
+      'link[hreflang="x-default"]'
+    );
     if (!defaultHreflangLink) {
       defaultHreflangLink = document.createElement('link');
       defaultHreflangLink.setAttribute('rel', 'alternate');
@@ -109,8 +118,17 @@ const SEOHead = ({
       document.head.appendChild(defaultHreflangLink);
     }
     defaultHreflangLink.setAttribute('href', currentUrl);
-
-  }, [title, description, keywords, image, type, currentUrl, canonicalUrl, structuredData, noIndex]);
+  }, [
+    title,
+    description,
+    keywords,
+    image,
+    type,
+    currentUrl,
+    canonicalUrl,
+    structuredData,
+    noIndex,
+  ]);
 
   return null; // This component doesn't render anything
 };
@@ -120,96 +138,95 @@ export default SEOHead;
 // SEO utility functions
 export const generatePageStructuredData = (pageType, pageData) => {
   const baseData = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": pageData.title,
-    "description": pageData.description,
-    "url": `https://letstalkbi.co.za${pageData.path}`,
-    "inLanguage": "en-ZA",
-    "isPartOf": {
-      "@type": "WebSite",
-      "name": "Let's Talk",
-      "url": "https://letstalkbi.co.za"
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: pageData.title,
+    description: pageData.description,
+    url: `https://letstalkbi.co.za${pageData.path}`,
+    inLanguage: 'en-ZA',
+    isPartOf: {
+      '@type': 'WebSite',
+      name: "Let's Talk",
+      url: 'https://letstalkbi.co.za',
     },
-    "author": {
-      "@type": "Organization",
-      "name": "Saya-Setona",
-      "url": "https://saya-setona.co.za"
+    author: {
+      '@type': 'Organization',
+      name: 'Saya-Setona',
+      url: 'https://saya-setona.co.za',
     },
-    "publisher": {
-      "@type": "Organization",
-      "name": "Saya-Setona",
-      "url": "https://saya-setona.co.za"
+    publisher: {
+      '@type': 'Organization',
+      name: 'Saya-Setona',
+      url: 'https://saya-setona.co.za',
     },
-    "datePublished": "2025-01-01",
-    "dateModified": new Date().toISOString().split('T')[0]
+    datePublished: '2025-01-01',
+    dateModified: new Date().toISOString().split('T')[0],
   };
 
   switch (pageType) {
     case 'service':
       return {
         ...baseData,
-        "@type": "Service",
-        "serviceType": pageData.serviceType || "Government Service",
-        "provider": {
-          "@type": "Organization",
-          "name": "Let's Talk Platform"
+        '@type': 'Service',
+        serviceType: pageData.serviceType || 'Government Service',
+        provider: {
+          '@type': 'Organization',
+          name: "Let's Talk Platform",
         },
-        "areaServed": {
-          "@type": "Country",
-          "name": "South Africa"
-        }
+        areaServed: {
+          '@type': 'Country',
+          name: 'South Africa',
+        },
       };
 
     case 'faq':
       return {
         ...baseData,
-        "@type": "FAQPage",
-        "mainEntity": pageData.faqs?.map(faq => ({
-          "@type": "Question",
-          "name": faq.question,
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": faq.answer
-          }
-        })) || []
+        '@type': 'FAQPage',
+        mainEntity:
+          pageData.faqs?.map(faq => ({
+            '@type': 'Question',
+            name: faq.question,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: faq.answer,
+            },
+          })) || [],
       };
 
     case 'contact':
       return {
         ...baseData,
-        "@type": "ContactPage",
-        "mainEntity": {
-          "@type": "Organization",
-          "name": "Saya-Setona",
-          "contactPoint": {
-            "@type": "ContactPoint",
-            "contactType": "customer service",
-            "areaServed": "ZA",
-            "availableLanguage": ["English", "Afrikaans"]
-          }
-        }
+        '@type': 'ContactPage',
+        mainEntity: {
+          '@type': 'Organization',
+          name: 'Saya-Setona',
+          contactPoint: {
+            '@type': 'ContactPoint',
+            contactType: 'customer service',
+            areaServed: 'ZA',
+            availableLanguage: ['English', 'Afrikaans'],
+          },
+        },
       };
 
     case 'about':
       return {
         ...baseData,
-        "@type": "AboutPage",
-        "mainEntity": {
-          "@type": "Organization",
-          "name": "Saya-Setona",
-          "description": pageData.description,
-          "foundingDate": "2024",
-          "areaServed": {
-            "@type": "Country",
-            "name": "South Africa"
-          }
-        }
+        '@type': 'AboutPage',
+        mainEntity: {
+          '@type': 'Organization',
+          name: 'Saya-Setona',
+          description: pageData.description,
+          foundingDate: '2024',
+          areaServed: {
+            '@type': 'Country',
+            name: 'South Africa',
+          },
+        },
       };
 
     default:
       return baseData;
   }
 };
-
-

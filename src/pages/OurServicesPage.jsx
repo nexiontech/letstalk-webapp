@@ -12,7 +12,9 @@ import {
 } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SEOHead, { generatePageStructuredData } from '../components/SEOHead';
-import { generateSEOKeywords, generateServiceStructuredData } from '../utils/seoUtils';
+import {
+  generateSEOKeywords,
+} from '../utils/seoUtils';
 import {
   faWater,
   faBolt,
@@ -147,33 +149,39 @@ const OurServicesPage = () => {
 
   // SEO data for Services page
   const seoData = {
-    title: 'Our Services - Municipal & Government Services | Let\'s Talk Platform',
-    description: 'Discover our comprehensive range of municipal and government services including water services, electricity, community engagement, document services, payments, and more. Access all South African government services in one platform.',
-    keywords: generateSEOKeywords([
-      'municipal services',
-      'government services',
-      'water services',
-      'electricity services',
-      'community engagement',
-      'service delivery',
-      'public services',
-      'document services',
-      'payment services',
-      'emergency alerts',
-      'service tracking',
-      'identity verification',
-      'mobile accessibility',
-      'privacy protection'
-    ], 'services'),
+    title:
+      "Our Services - Municipal & Government Services | Let's Talk Platform",
+    description:
+      'Discover our comprehensive range of municipal and government services including water services, electricity, community engagement, document services, payments, and more. Access all South African government services in one platform.',
+    keywords: generateSEOKeywords(
+      [
+        'municipal services',
+        'government services',
+        'water services',
+        'electricity services',
+        'community engagement',
+        'service delivery',
+        'public services',
+        'document services',
+        'payment services',
+        'emergency alerts',
+        'service tracking',
+        'identity verification',
+        'mobile accessibility',
+        'privacy protection',
+      ],
+      'services'
+    ),
     type: 'website',
     structuredData: generatePageStructuredData('service', {
       title: 'Our Services - Municipal & Government Services',
-      description: 'Comprehensive range of municipal and government services for South African citizens.',
+      description:
+        'Comprehensive range of municipal and government services for South African citizens.',
       path: '/our-services',
       services: allServices.map(service => ({
         name: service.title,
         description: service.description,
-        type: 'Government Service'
+        type: 'Government Service',
       })),
       benefits: [
         'Time-saving access to multiple government services',
@@ -181,9 +189,9 @@ const OurServicesPage = () => {
         'Community engagement and connection',
         '24/7 accessibility from any device',
         'Personalized updates and alerts',
-        'Advanced security measures'
-      ]
-    })
+        'Advanced security measures',
+      ],
+    }),
   };
 
   return (

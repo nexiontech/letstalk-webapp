@@ -16,7 +16,7 @@ export const assessContentQuality = (options = {}) => {
     minParagraphs = 3,
     minHeadings = 2,
     requireImages = false,
-    requireLinks = false
+    requireLinks = false,
   } = options;
 
   const assessment = {
@@ -27,18 +27,24 @@ export const assessContentQuality = (options = {}) => {
     imageCount: 0,
     linkCount: 0,
     issues: [],
-    recommendations: []
+    recommendations: [],
   };
 
   try {
     // Get page content
-    const textContent = document.body.innerText || document.body.textContent || '';
-    const words = textContent.trim().split(/\s+/).filter(word => word.length > 0);
+    const textContent =
+      document.body.innerText || document.body.textContent || '';
+    const words = textContent
+      .trim()
+      .split(/\s+/)
+      .filter(word => word.length > 0);
     assessment.wordCount = words.length;
 
     // Count content elements
     assessment.paragraphCount = document.querySelectorAll('p').length;
-    assessment.headingCount = document.querySelectorAll('h1, h2, h3, h4, h5, h6').length;
+    assessment.headingCount = document.querySelectorAll(
+      'h1, h2, h3, h4, h5, h6'
+    ).length;
     assessment.imageCount = document.querySelectorAll('img').length;
     assessment.linkCount = document.querySelectorAll('a[href]').length;
 
@@ -47,25 +53,25 @@ export const assessContentQuality = (options = {}) => {
       {
         condition: assessment.wordCount >= minWordCount,
         issue: `Content too short (${assessment.wordCount} words, minimum ${minWordCount})`,
-        recommendation: `Add more substantial content to reach at least ${minWordCount} words`
+        recommendation: `Add more substantial content to reach at least ${minWordCount} words`,
       },
       {
         condition: assessment.paragraphCount >= minParagraphs,
         issue: `Not enough paragraphs (${assessment.paragraphCount}, minimum ${minParagraphs})`,
-        recommendation: `Structure content into at least ${minParagraphs} paragraphs`
+        recommendation: `Structure content into at least ${minParagraphs} paragraphs`,
       },
       {
         condition: assessment.headingCount >= minHeadings,
         issue: `Not enough headings (${assessment.headingCount}, minimum ${minHeadings})`,
-        recommendation: `Add at least ${minHeadings} headings to structure content`
-      }
+        recommendation: `Add at least ${minHeadings} headings to structure content`,
+      },
     ];
 
     if (requireImages) {
       checks.push({
         condition: assessment.imageCount > 0,
         issue: 'No images found',
-        recommendation: 'Add relevant images to enhance content quality'
+        recommendation: 'Add relevant images to enhance content quality',
       });
     }
 
@@ -73,7 +79,7 @@ export const assessContentQuality = (options = {}) => {
       checks.push({
         condition: assessment.linkCount > 0,
         issue: 'No links found',
-        recommendation: 'Add relevant internal or external links'
+        recommendation: 'Add relevant internal or external links',
       });
     }
 
@@ -101,7 +107,7 @@ export const assessContentQuality = (options = {}) => {
  * @param {string} pathname - Current page path
  * @returns {boolean} Whether ads should be shown
  */
-export const shouldShowAds = (pathname) => {
+export const shouldShowAds = pathname => {
   // Pages that should never show ads
   const excludedPaths = [
     '/login',
@@ -109,7 +115,7 @@ export const shouldShowAds = (pathname) => {
     '/forgot-password',
     '/404',
     '/error',
-    '/loading'
+    '/loading',
   ];
 
   // Protected routes that might have minimal content
@@ -117,7 +123,7 @@ export const shouldShowAds = (pathname) => {
     '/dashboard',
     '/profile',
     '/service-issues',
-    '/report-issue'
+    '/report-issue',
   ];
 
   // Check if path is excluded
@@ -141,7 +147,7 @@ export const shouldShowAds = (pathname) => {
  * @param {string} pathname - Current page path
  * @returns {Array} Array of ad slot configurations
  */
-export const getAdSlotsForPage = (pathname) => {
+export const getAdSlotsForPage = pathname => {
   const slots = [];
 
   // Homepage ads
@@ -151,24 +157,28 @@ export const getAdSlotsForPage = (pathname) => {
         slot: '1234567890', // Replace with actual slot ID
         format: 'auto',
         position: 'header',
-        minContentLength: 500
+        minContentLength: 500,
       },
       {
         slot: '1234567891', // Replace with actual slot ID
         format: 'rectangle',
         position: 'sidebar',
-        minContentLength: 300
+        minContentLength: 300,
       }
     );
   }
 
   // Content pages
-  if (pathname.includes('/about') || pathname.includes('/services') || pathname.includes('/faq')) {
+  if (
+    pathname.includes('/about') ||
+    pathname.includes('/services') ||
+    pathname.includes('/faq')
+  ) {
     slots.push({
       slot: '1234567892', // Replace with actual slot ID
       format: 'auto',
       position: 'content',
-      minContentLength: 400
+      minContentLength: 400,
     });
   }
 
@@ -179,13 +189,13 @@ export const getAdSlotsForPage = (pathname) => {
         slot: '1234567893', // Replace with actual slot ID
         format: 'auto',
         position: 'article-top',
-        minContentLength: 600
+        minContentLength: 600,
       },
       {
         slot: '1234567894', // Replace with actual slot ID
         format: 'auto',
         position: 'article-bottom',
-        minContentLength: 600
+        minContentLength: 600,
       }
     );
   }
@@ -200,21 +210,25 @@ export const getAdSlotsForPage = (pathname) => {
 export const loadAdSenseScript = () => {
   return new Promise((resolve, reject) => {
     // Check if already loaded
-    if (window.adsbygoogle || document.querySelector('script[src*="adsbygoogle"]')) {
+    if (
+      window.adsbygoogle ||
+      document.querySelector('script[src*="adsbygoogle"]')
+    ) {
       resolve();
       return;
     }
 
     const script = document.createElement('script');
     script.async = true;
-    script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4572960626705389';
+    script.src =
+      'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4572960626705389';
     script.crossOrigin = 'anonymous';
-    
+
     script.onload = () => {
       console.log('AdSense script loaded successfully');
       resolve();
     };
-    
+
     script.onerror = () => {
       console.error('Failed to load AdSense script');
       reject(new Error('Failed to load AdSense script'));
@@ -251,5 +265,5 @@ export default {
   shouldShowAds,
   getAdSlotsForPage,
   loadAdSenseScript,
-  initializeAds
+  initializeAds,
 };

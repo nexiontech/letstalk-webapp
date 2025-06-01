@@ -7,13 +7,13 @@ import { Box, Typography, Paper } from '@mui/material';
  * Only loads and displays ads on pages with substantial content
  * Ensures compliance with Google AdSense policies
  */
-const AdSenseAd = ({ 
-  slot, 
-  format = 'auto', 
-  responsive = true, 
+const AdSenseAd = ({
+  slot,
+  format = 'auto',
+  responsive = true,
   style = {},
   minContentLength = 300,
-  className = ''
+  className = '',
 }) => {
   const [isAdSenseLoaded, setIsAdSenseLoaded] = useState(false);
   const [hasEnoughContent, setHasEnoughContent] = useState(false);
@@ -23,24 +23,25 @@ const AdSenseAd = ({
   useEffect(() => {
     const checkContentLength = () => {
       // Get all text content from the page
-      const textContent = document.body.innerText || document.body.textContent || '';
+      const textContent =
+        document.body.innerText || document.body.textContent || '';
       const contentLength = textContent.trim().length;
-      
+
       // Check if page has enough content
       const hasContent = contentLength >= minContentLength;
       setHasEnoughContent(hasContent);
-      
+
       console.log('AdSense Content Check:', {
         contentLength,
         minRequired: minContentLength,
         hasEnoughContent: hasContent,
-        slot
+        slot,
       });
     };
 
     // Check content length after a short delay to ensure page is fully rendered
     const timer = setTimeout(checkContentLength, 1000);
-    
+
     return () => clearTimeout(timer);
   }, [minContentLength, slot]);
 
@@ -50,7 +51,10 @@ const AdSenseAd = ({
 
     const loadAdSenseScript = () => {
       // Check if script is already loaded
-      if (window.adsbygoogle || document.querySelector('script[src*="adsbygoogle"]')) {
+      if (
+        window.adsbygoogle ||
+        document.querySelector('script[src*="adsbygoogle"]')
+      ) {
         setIsAdSenseLoaded(true);
         return;
       }
@@ -58,14 +62,15 @@ const AdSenseAd = ({
       // Create and load AdSense script
       const script = document.createElement('script');
       script.async = true;
-      script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4572960626705389';
+      script.src =
+        'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4572960626705389';
       script.crossOrigin = 'anonymous';
-      
+
       script.onload = () => {
         setIsAdSenseLoaded(true);
         console.log('AdSense script loaded successfully');
       };
-      
+
       script.onerror = () => {
         console.error('Failed to load AdSense script');
       };
@@ -94,8 +99,8 @@ const AdSenseAd = ({
   // Intersection Observer to only load ads when visible
   useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+      entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
             setIsVisible(true);
             observer.disconnect();
@@ -130,7 +135,7 @@ const AdSenseAd = ({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        ...style
+        ...style,
       }}
     >
       {isAdSenseLoaded && hasEnoughContent ? (
@@ -141,7 +146,7 @@ const AdSenseAd = ({
               display: 'block',
               width: '100%',
               height: 'auto',
-              ...style
+              ...style,
             }}
             data-ad-client="ca-pub-4572960626705389"
             data-ad-slot={slot}
@@ -153,7 +158,7 @@ const AdSenseAd = ({
             sx={{
               mt: 1,
               color: 'text.secondary',
-              fontSize: '0.7rem'
+              fontSize: '0.7rem',
             }}
           >
             Advertisement
@@ -172,14 +177,13 @@ const AdSenseAd = ({
             height: '200px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
           }}
         >
           <Typography variant="body2" color="text.secondary">
-            {!hasEnoughContent 
-              ? 'Content loading...' 
-              : 'Advertisement loading...'
-            }
+            {!hasEnoughContent
+              ? 'Content loading...'
+              : 'Advertisement loading...'}
           </Typography>
         </Paper>
       )}

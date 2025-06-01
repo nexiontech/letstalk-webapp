@@ -22,9 +22,11 @@
 
 .consent-banner-paper {
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  border-top: 2px solid #0E4649;
+  border-top: 2px solid #0e4649;
   border-radius: 12px 12px 0 0;
-  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.12), 0 -1px 6px rgba(14, 70, 73, 0.08);
+  box-shadow:
+    0 -2px 12px rgba(0, 0, 0, 0.12),
+    0 -1px 6px rgba(14, 70, 73, 0.08);
   backdrop-filter: blur(8px);
 }
 
@@ -82,9 +84,15 @@
 }
 
 @keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 /* Mobile responsiveness */
@@ -166,39 +174,39 @@
 
 /* Focus styles for accessibility */
 .consent-banner button:focus-visible {
-  outline: 2px solid #0E4649;
+  outline: 2px solid #0e4649;
   outline-offset: 2px;
 }
 
 /* Custom switch colors to match theme */
 .MuiSwitch-switchBase.Mui-checked {
-  color: #0E4649 !important;
+  color: #0e4649 !important;
 }
 
 .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track {
-  background-color: #0E4649 !important;
+  background-color: #0e4649 !important;
 }
 
 /* Button hover effects with theme colors */
 .consent-accept-button {
-  background-color: #2E8B57 !important;
+  background-color: #2e8b57 !important;
 }
 
 .consent-accept-button:hover {
-  background-color: #236B43 !important;
+  background-color: #236b43 !important;
 }
 
 .consent-save-button {
-  background-color: #0E4649 !important;
+  background-color: #0e4649 !important;
 }
 
 .consent-save-button:hover {
-  background-color: #1A5C60 !important;
+  background-color: #1a5c60 !important;
 }
 
 .consent-decline-button {
-  border-color: #DC3545 !important;
-  color: #DC3545 !important;
+  border-color: #dc3545 !important;
+  color: #dc3545 !important;
 }
 
 .consent-decline-button:hover {
