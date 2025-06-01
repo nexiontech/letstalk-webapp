@@ -5,13 +5,17 @@
  * Validates sitemap accessibility and structure for Let's Talk platform
  */
 
-export const validateSitemapAccess = async (baseUrl = 'https://letstalkbi.co.za') => {
+export const validateSitemapAccess = async (
+  baseUrl = 'https://letstalkbi.co.za'
+) => {
   try {
     const sitemapUrl = `${baseUrl}/sitemap.xml`;
     const response = await fetch(sitemapUrl);
 
     if (!response.ok) {
-      throw new Error(`Sitemap not accessible: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Sitemap not accessible: ${response.status} ${response.statusText}`
+      );
     }
 
     const contentType = response.headers.get('content-type');
@@ -22,7 +26,10 @@ export const validateSitemapAccess = async (baseUrl = 'https://letstalkbi.co.za'
     const sitemapContent = await response.text();
 
     // Basic XML validation
-    if (!sitemapContent.includes('<?xml') || !sitemapContent.includes('<urlset')) {
+    if (
+      !sitemapContent.includes('<?xml') ||
+      !sitemapContent.includes('<urlset')
+    ) {
       throw new Error('Invalid sitemap XML structure');
     }
 
@@ -37,25 +44,28 @@ export const validateSitemapAccess = async (baseUrl = 'https://letstalkbi.co.za'
       urlCount: urlCount,
       size: sitemapContent.length,
       lastModified: response.headers.get('last-modified'),
-      etag: response.headers.get('etag')
+      etag: response.headers.get('etag'),
     };
-
   } catch (error) {
     return {
       accessible: false,
       url: `${baseUrl}/sitemap.xml`,
-      error: error.message
+      error: error.message,
     };
   }
 };
 
-export const validateRobotsAccess = async (baseUrl = 'https://letstalkbi.co.za') => {
+export const validateRobotsAccess = async (
+  baseUrl = 'https://letstalkbi.co.za'
+) => {
   try {
     const robotsUrl = `${baseUrl}/robots.txt`;
     const response = await fetch(robotsUrl);
 
     if (!response.ok) {
-      throw new Error(`Robots.txt not accessible: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Robots.txt not accessible: ${response.status} ${response.statusText}`
+      );
     }
 
     const robotsContent = await response.text();
@@ -70,23 +80,24 @@ export const validateRobotsAccess = async (baseUrl = 'https://letstalkbi.co.za')
       hasSitemapReference: sitemapReference,
       correctSitemapUrl: correctSitemapUrl,
       size: robotsContent.length,
-      content: robotsContent
+      content: robotsContent,
     };
-
   } catch (error) {
     return {
       accessible: false,
       url: `${baseUrl}/robots.txt`,
-      error: error.message
+      error: error.message,
     };
   }
 };
 
-export const validateSEOFiles = async (baseUrl = 'https://letstalkbi.co.za') => {
+export const validateSEOFiles = async (
+  baseUrl = 'https://letstalkbi.co.za'
+) => {
   const results = {
     timestamp: new Date().toISOString(),
     baseUrl: baseUrl,
-    files: {}
+    files: {},
   };
 
   const filesToCheck = [
@@ -97,7 +108,7 @@ export const validateSEOFiles = async (baseUrl = 'https://letstalkbi.co.za') => 
     'logo.png',
     'og-image.jpg',
     'twitter-card.jpg',
-    'app-screenshot.jpg'
+    'app-screenshot.jpg',
   ];
 
   for (const file of filesToCheck) {
@@ -108,12 +119,12 @@ export const validateSEOFiles = async (baseUrl = 'https://letstalkbi.co.za') => 
         status: response.status,
         contentType: response.headers.get('content-type'),
         size: response.headers.get('content-length'),
-        lastModified: response.headers.get('last-modified')
+        lastModified: response.headers.get('last-modified'),
       };
     } catch (error) {
       results.files[file] = {
         accessible: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -143,8 +154,12 @@ export const testSitemapLocally = async (port = 5173) => {
   console.log('\n🤖 Robots.txt Test Results:');
   if (robotsResult.accessible) {
     console.log(`✅ Robots.txt accessible at: ${robotsResult.url}`);
-    console.log(`🗺️  Has sitemap reference: ${robotsResult.hasSitemapReference ? '✅' : '❌'}`);
-    console.log(`🔗 Correct sitemap URL: ${robotsResult.correctSitemapUrl ? '✅' : '❌'}`);
+    console.log(
+      `🗺️  Has sitemap reference: ${robotsResult.hasSitemapReference ? '✅' : '❌'}`
+    );
+    console.log(
+      `🔗 Correct sitemap URL: ${robotsResult.correctSitemapUrl ? '✅' : '❌'}`
+    );
     console.log(`📏 Size: ${robotsResult.size} bytes`);
   } else {
     console.log(`❌ Robots.txt not accessible: ${robotsResult.error}`);
@@ -152,7 +167,7 @@ export const testSitemapLocally = async (port = 5173) => {
 
   return {
     sitemap: sitemapResult,
-    robots: robotsResult
+    robots: robotsResult,
   };
 };
 
@@ -182,5 +197,5 @@ export default {
   validateRobotsAccess,
   validateSEOFiles,
   testSitemapLocally,
-  validateProductionSEO
+  validateProductionSEO,
 };

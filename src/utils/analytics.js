@@ -44,7 +44,7 @@ export const trackEvent = (action, category, label = null, value = null) => {
  * Track user login
  * @param {string} method - Login method (e.g., 'email', 'google', 'facebook')
  */
-export const trackLogin = (method) => {
+export const trackLogin = method => {
   trackEvent('login', 'engagement', method);
 };
 
@@ -52,7 +52,7 @@ export const trackLogin = (method) => {
  * Track user registration
  * @param {string} method - Registration method
  */
-export const trackSignUp = (method) => {
+export const trackSignUp = method => {
   trackEvent('sign_up', 'engagement', method);
 };
 
@@ -60,7 +60,7 @@ export const trackSignUp = (method) => {
  * Track search events
  * @param {string} search_term - The search term used
  */
-export const trackSearch = (search_term) => {
+export const trackSearch = search_term => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'search', {
       search_term,
@@ -75,7 +75,7 @@ export const trackSearch = (search_term) => {
  */
 export const trackDownload = (file_name, file_extension) => {
   trackEvent('file_download', 'engagement', file_name, null);
-  
+
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'file_download', {
       file_name,
@@ -89,7 +89,7 @@ export const trackDownload = (file_name, file_extension) => {
  * @param {string} url - The external URL being clicked
  * @param {string} link_text - The text of the link
  */
-export const trackExternalLink = (url, link_text) => {
+export const trackExternalLink = url => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'click', {
       event_category: 'outbound',
@@ -144,7 +144,7 @@ export const trackVideo = (video_title, action, video_current_time = null) => {
  * Track user engagement time
  * @param {number} engagement_time_msec - Time in milliseconds
  */
-export const trackEngagement = (engagement_time_msec) => {
+export const trackEngagement = engagement_time_msec => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'user_engagement', {
       engagement_time_msec,
@@ -156,7 +156,7 @@ export const trackEngagement = (engagement_time_msec) => {
  * Track scroll depth
  * @param {number} percent_scrolled - Percentage of page scrolled
  */
-export const trackScrollDepth = (percent_scrolled) => {
+export const trackScrollDepth = percent_scrolled => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'scroll', {
       event_category: 'engagement',
@@ -170,7 +170,7 @@ export const trackScrollDepth = (percent_scrolled) => {
  * Set user properties
  * @param {Object} properties - User properties to set
  */
-export const setUserProperties = (properties) => {
+export const setUserProperties = properties => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('config', GA_MEASUREMENT_ID, {
       custom_map: properties,
@@ -199,7 +199,12 @@ export const trackException = (description, fatal = false) => {
  * @param {string} category - Category of the timing event
  * @param {string} label - Optional label
  */
-export const trackTiming = (name, value, category = 'performance', label = null) => {
+export const trackTiming = (
+  name,
+  value,
+  category = 'performance',
+  label = null
+) => {
   const eventParams = {
     event_category: category,
     value,

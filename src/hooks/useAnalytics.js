@@ -28,7 +28,7 @@ export const useAnalytics = () => {
   useEffect(() => {
     const page_title = document.title;
     const page_location = window.location.href;
-    
+
     // Small delay to ensure the page title is updated
     const timeoutId = setTimeout(() => {
       trackPageView(page_title, page_location);
@@ -50,16 +50,16 @@ export const useAnalytics = () => {
     }, []),
 
     // Authentication tracking
-    trackLogin: useCallback((method) => {
+    trackLogin: useCallback(method => {
       trackLogin(method);
     }, []),
 
-    trackSignUp: useCallback((method) => {
+    trackSignUp: useCallback(method => {
       trackSignUp(method);
     }, []),
 
     // Search tracking
-    trackSearch: useCallback((searchTerm) => {
+    trackSearch: useCallback(searchTerm => {
       trackSearch(searchTerm);
     }, []),
 
@@ -84,17 +84,17 @@ export const useAnalytics = () => {
     }, []),
 
     // Engagement tracking
-    trackEngagement: useCallback((engagementTime) => {
+    trackEngagement: useCallback(engagementTime => {
       trackEngagement(engagementTime);
     }, []),
 
     // Scroll tracking
-    trackScrollDepth: useCallback((percentScrolled) => {
+    trackScrollDepth: useCallback(percentScrolled => {
       trackScrollDepth(percentScrolled);
     }, []),
 
     // User properties
-    setUserProperties: useCallback((properties) => {
+    setUserProperties: useCallback(properties => {
       setUserProperties(properties);
     }, []),
 
@@ -116,52 +116,61 @@ export const useAnalytics = () => {
     }, []),
 
     // E-commerce tracking (if needed)
-    trackPurchase: useCallback((transactionId, value, currency = 'ZAR', items = []) => {
-      if (typeof window !== 'undefined' && window.gtag) {
-        window.gtag('event', 'purchase', {
-          transaction_id: transactionId,
-          value: value,
-          currency: currency,
-          items: items,
-        });
-      }
-    }, []),
+    trackPurchase: useCallback(
+      (transactionId, value, currency = 'ZAR', items = []) => {
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'purchase', {
+            transaction_id: transactionId,
+            value: value,
+            currency: currency,
+            items: items,
+          });
+        }
+      },
+      []
+    ),
 
     // Service interaction tracking
-    trackServiceInteraction: useCallback((serviceName, action, details = null) => {
-      const eventParams = {
-        event_category: 'service_interaction',
-        event_label: serviceName,
-        service_name: serviceName,
-        interaction_type: action,
-      };
+    trackServiceInteraction: useCallback(
+      (serviceName, action, details = null) => {
+        const eventParams = {
+          event_category: 'service_interaction',
+          event_label: serviceName,
+          service_name: serviceName,
+          interaction_type: action,
+        };
 
-      if (details) {
-        eventParams.interaction_details = details;
-      }
+        if (details) {
+          eventParams.interaction_details = details;
+        }
 
-      if (typeof window !== 'undefined' && window.gtag) {
-        window.gtag('event', 'service_interaction', eventParams);
-      }
-    }, []),
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'service_interaction', eventParams);
+        }
+      },
+      []
+    ),
 
     // Government service tracking
-    trackGovernmentService: useCallback((serviceName, action, department = null) => {
-      const eventParams = {
-        event_category: 'government_service',
-        event_label: serviceName,
-        service_name: serviceName,
-        action_type: action,
-      };
+    trackGovernmentService: useCallback(
+      (serviceName, action, department = null) => {
+        const eventParams = {
+          event_category: 'government_service',
+          event_label: serviceName,
+          service_name: serviceName,
+          action_type: action,
+        };
 
-      if (department) {
-        eventParams.department = department;
-      }
+        if (department) {
+          eventParams.department = department;
+        }
 
-      if (typeof window !== 'undefined' && window.gtag) {
-        window.gtag('event', 'government_service_access', eventParams);
-      }
-    }, []),
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'government_service_access', eventParams);
+        }
+      },
+      []
+    ),
 
     // Issue reporting tracking
     trackIssueReport: useCallback((issueType, priority, location = null) => {
@@ -182,22 +191,25 @@ export const useAnalytics = () => {
     }, []),
 
     // Community engagement tracking
-    trackCommunityEngagement: useCallback((action, contentType, contentId = null) => {
-      const eventParams = {
-        event_category: 'community_engagement',
-        event_label: action,
-        engagement_type: action,
-        content_type: contentType,
-      };
+    trackCommunityEngagement: useCallback(
+      (action, contentType, contentId = null) => {
+        const eventParams = {
+          event_category: 'community_engagement',
+          event_label: action,
+          engagement_type: action,
+          content_type: contentType,
+        };
 
-      if (contentId) {
-        eventParams.content_id = contentId;
-      }
+        if (contentId) {
+          eventParams.content_id = contentId;
+        }
 
-      if (typeof window !== 'undefined' && window.gtag) {
-        window.gtag('event', 'community_engagement', eventParams);
-      }
-    }, []),
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'community_engagement', eventParams);
+        }
+      },
+      []
+    ),
   };
 
   return analytics;
@@ -215,8 +227,10 @@ export const useScrollTracking = () => {
     const trackedThresholds = new Set();
 
     const handleScroll = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
+      const documentHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
       const scrollPercent = Math.round((scrollTop / documentHeight) * 100);
 
       if (scrollPercent > maxScrollDepth) {
@@ -282,13 +296,13 @@ export const useEngagementTracking = () => {
 // Utility function for throttling
 function throttle(func, limit) {
   let inThrottle;
-  return function() {
+  return function () {
     const args = arguments;
     const context = this;
     if (!inThrottle) {
       func.apply(context, args);
       inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
+      setTimeout(() => (inThrottle = false), limit);
     }
   };
 }
