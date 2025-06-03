@@ -202,7 +202,7 @@ const AboutUsPage = () => {
 
       {/* AdSense Ad - After Mission/Vision Section */}
       <AdSenseAd
-        slot="1234567892"
+        slot="6544714660"
         format="auto"
         minContentLength={600}
         style={{ margin: '4rem 0' }}

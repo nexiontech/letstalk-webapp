@@ -196,7 +196,7 @@ function HomePage() {
 
         {/* AdSense Ad - Services Section */}
         <AdSenseAd
-          slot="1234567890"
+          slot="2059283552"
           format="auto"
           minContentLength={500}
           style={{ margin: '3rem 0' }}
@@ -260,7 +260,7 @@ function HomePage() {
 
       {/* AdSense Ad - Before CTA Section */}
       <AdSenseAd
-        slot="1234567891"
+        slot="4214673608"
         format="rectangle"
         minContentLength={400}
         style={{ margin: '4rem 0' }}
