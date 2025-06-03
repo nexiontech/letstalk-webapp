@@ -411,7 +411,7 @@ const FAQPage = () => {
 
       {/* AdSense Ad - After FAQ Sections */}
       <AdSenseAd
-        slot="1234567893"
+        slot="6544714660"
         format="auto"
         minContentLength={800}
         style={{ margin: '4rem 0' }}

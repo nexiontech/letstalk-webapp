@@ -154,13 +154,13 @@ export const getAdSlotsForPage = pathname => {
   if (pathname === '/') {
     slots.push(
       {
-        slot: 'REPLACE_WITH_REAL_HOMEPAGE_HEADER_SLOT_ID', // TODO: Replace with actual slot ID from AdSense dashboard
+        slot: '2059283552', // [LTB WebApp] Homepage Header Ad
         format: 'auto',
         position: 'header',
         minContentLength: 500,
       },
       {
-        slot: 'REPLACE_WITH_REAL_HOMEPAGE_CONTENT_SLOT_ID', // TODO: Replace with actual slot ID from AdSense dashboard
+        slot: '4214673608', // [LTB WebApp] Homepage Content Ad
         format: 'rectangle',
         position: 'sidebar',
         minContentLength: 300,
@@ -175,7 +175,7 @@ export const getAdSlotsForPage = pathname => {
     pathname.includes('/faq')
   ) {
     slots.push({
-      slot: 'REPLACE_WITH_REAL_CONTENT_PAGES_SLOT_ID', // TODO: Replace with actual slot ID from AdSense dashboard
+      slot: '6544714660', // [LTB WebApp] Content Pages Ad
       format: 'auto',
       position: 'content',
       minContentLength: 400,
