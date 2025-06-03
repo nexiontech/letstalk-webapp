@@ -154,13 +154,13 @@ export const getAdSlotsForPage = pathname => {
   if (pathname === '/') {
     slots.push(
       {
-        slot: '1234567890', // Replace with actual slot ID
+        slot: 'REPLACE_WITH_REAL_HOMEPAGE_HEADER_SLOT_ID', // TODO: Replace with actual slot ID from AdSense dashboard
         format: 'auto',
         position: 'header',
         minContentLength: 500,
       },
       {
-        slot: '1234567891', // Replace with actual slot ID
+        slot: 'REPLACE_WITH_REAL_HOMEPAGE_CONTENT_SLOT_ID', // TODO: Replace with actual slot ID from AdSense dashboard
         format: 'rectangle',
         position: 'sidebar',
         minContentLength: 300,
@@ -175,7 +175,7 @@ export const getAdSlotsForPage = pathname => {
     pathname.includes('/faq')
   ) {
     slots.push({
-      slot: '1234567892', // Replace with actual slot ID
+      slot: 'REPLACE_WITH_REAL_CONTENT_PAGES_SLOT_ID', // TODO: Replace with actual slot ID from AdSense dashboard
       format: 'auto',
       position: 'content',
       minContentLength: 400,
