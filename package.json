@@ -20,7 +20,9 @@
     "seo:verify": "node scripts/verify-seo-assets.js",
     "seo:build": "npm run seo:verify && npm run build",
     "sitemap:test": "node scripts/test-sitemap.js",
-    "sitemap:test:prod": "node scripts/test-sitemap.js --production"
+    "sitemap:test:prod": "node scripts/test-sitemap.js --production",
+    "adsense:validate": "node scripts/validate-adsense.js",
+    "adsense:check": "npm run adsense:validate"
   },
   "dependencies": {
     "@aws-amplify/auth": "^6.12.3",
