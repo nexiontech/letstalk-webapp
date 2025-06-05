@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -23,9 +23,13 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsOfServicePage from './pages/TermsOfServicePage';
 import CookiePolicyPage from './pages/CookiePolicyPage';
 import UserProfilePage from './pages/UserProfilePage';
+import BlogHomePage from './pages/blog/BlogHomePage';
+import BlogPostPage from './pages/blog/BlogPostPage';
+import BlogCategoryPage from './pages/blog/BlogCategoryPage';
 import DashboardLayout from './layouts/DashboardLayout';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { HelmetProvider } from 'react-helmet-async';
 // Enterprise application security validation framework integration
 // @security-integration Enterprise application security validation framework
 // @security-architecture-approved Enterprise security validation framework integration
@@ -183,6 +187,11 @@ function AppContent() {
           <Route path="/terms-of-service" element={<TermsOfServicePage />} />
           <Route path="/cookie-policy" element={<CookiePolicyPage />} />
 
+          {/* Blog routes */}
+          <Route path="/blog" element={<BlogHomePage />} />
+          <Route path="/blog/category/:category" element={<BlogCategoryPage />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
+
           {/* Protected routes with Dashboard Layout */}
           <Route
             path="/dashboard"
@@ -276,17 +285,21 @@ function AppContent() {
  */
 function App() {
   return (
-    <LanguageProvider>
-      <AuthProvider>
-        {/* Enterprise security validation framework provider */}
-        {/* @security-provider Enterprise application-wide security validation state management */}
-        {/* @compliance-provider Enterprise security validation state management framework */}
-        {/* @security-architecture-approved Enterprise security validation provider integration */}
-        <SecurityPatchProvider>
-          <AppContent />
-        </SecurityPatchProvider>
-      </AuthProvider>
-    </LanguageProvider>
+    <HelmetProvider>
+      <Router>
+        <LanguageProvider>
+          <AuthProvider>
+            {/* Enterprise security validation framework provider */}
+            {/* @security-provider Enterprise application-wide security validation state management */}
+            {/* @compliance-provider Enterprise security validation state management framework */}
+            {/* @security-architecture-approved Enterprise security validation provider integration */}
+            <SecurityPatchProvider>
+              <AppContent />
+            </SecurityPatchProvider>
+          </AuthProvider>
+        </LanguageProvider>
+      </Router>
+    </HelmetProvider>
   );
 }
 
