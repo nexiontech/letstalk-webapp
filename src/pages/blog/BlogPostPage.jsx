@@ -1,26 +1,26 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { 
-  Container, 
-  Typography, 
-  Box, 
-  Chip, 
+import {
+  Container,
+  Typography,
+  Box,
+  Chip,
   Avatar,
   Divider,
   Button,
   Grid,
   Card,
-  CardContent
+  CardContent,
 } from '@mui/material';
-import { 
-  CalendarToday, 
-  Person, 
-  AccessTime, 
+import {
+  CalendarToday,
+  Person,
+  AccessTime,
   ArrowBack,
   Share,
   Facebook,
   Twitter,
-  LinkedIn
+  LinkedIn,
 } from '@mui/icons-material';
 import AdSenseAd from '../../components/AdSenseAd';
 import SEOHelmet from '../../components/SEOHelmet';
@@ -29,19 +29,25 @@ const BlogPostPage = () => {
   const { slug } = useParams();
 
   // Blog post data - will be moved to a separate data file or API
-  const getBlogPost = (slug) => {
+  const getBlogPost = slug => {
     const posts = {
       'revolutionizing-municipal-services': {
         id: 1,
         title: "Let's Talk: Revolutionizing Municipal Services in South Africa",
-        excerpt: "Discover how digital transformation is changing the way South African citizens interact with their local government services through innovative technology solutions.",
-        category: "Municipal Services",
+        excerpt:
+          'Discover how digital transformation is changing the way South African citizens interact with their local government services through innovative technology solutions.',
+        category: 'Municipal Services',
         author: "Let's Talk Team",
-        authorAvatar: "/images/authors/letstalk-team.jpg",
-        date: "2025-06-06",
-        image: "/images/blog/municipal-services-hero.jpg",
-        tags: ["municipal services", "digital transformation", "south africa", "government technology"],
-        readTime: "8 min read",
+        authorAvatar: '/images/authors/letstalk-team.jpg',
+        date: '2025-06-06',
+        image: '/images/blog/municipal-services-hero.jpg',
+        tags: [
+          'municipal services',
+          'digital transformation',
+          'south africa',
+          'government technology',
+        ],
+        readTime: '8 min read',
         content: `
           <p>South Africa's municipal landscape is undergoing a revolutionary transformation. As we move deeper into the digital age, local governments across the nation are embracing technology to improve service delivery, enhance citizen engagement, and create more efficient administrative processes.</p>
 
@@ -86,8 +92,8 @@ const BlogPostPage = () => {
           <p>The revolution in South African municipal services is not just about technology – it's about creating better communities, improving quality of life, and building stronger connections between citizens and their local government. As more municipalities adopt digital solutions, we're moving toward a future where efficient, transparent, and accessible government services are the norm rather than the exception.</p>
 
           <p>Join the revolution. Experience the future of municipal services with Let's Talk.</p>
-        `
-      }
+        `,
+      },
     };
     return posts[slug];
   };
@@ -107,12 +113,12 @@ const BlogPostPage = () => {
     );
   }
 
-  const getCategoryColor = (category) => {
+  const getCategoryColor = category => {
     const colors = {
       'Municipal Services': 'primary',
       'Government Guides': 'secondary',
       'Community Stories': 'success',
-      'News Updates': 'info'
+      'News Updates': 'info',
     };
     return colors[category] || 'default';
   };
@@ -130,33 +136,33 @@ const BlogPostPage = () => {
         ogType="article"
         ogImage={post.image}
         structuredData={{
-          "@context": "https://schema.org",
-          "@type": "Article",
-          "headline": post.title,
-          "description": post.excerpt,
-          "image": post.image,
-          "author": {
-            "@type": "Person",
-            "name": post.author
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: post.title,
+          description: post.excerpt,
+          image: post.image,
+          author: {
+            '@type': 'Person',
+            name: post.author,
           },
-          "publisher": {
-            "@type": "Organization",
-            "name": "Let's Talk",
-            "logo": {
-              "@type": "ImageObject",
-              "url": "https://letstalkbi.co.za/logo.png"
-            }
+          publisher: {
+            '@type': 'Organization',
+            name: "Let's Talk",
+            logo: {
+              '@type': 'ImageObject',
+              url: 'https://letstalkbi.co.za/logo.png',
+            },
           },
-          "datePublished": post.date,
-          "dateModified": post.date
+          datePublished: post.date,
+          dateModified: post.date,
         }}
       />
 
       <Container maxWidth="lg" sx={{ py: 4 }}>
         {/* Back Button */}
-        <Button 
-          component={Link} 
-          to="/blog" 
+        <Button
+          component={Link}
+          to="/blog"
           startIcon={<ArrowBack />}
           sx={{ mb: 3 }}
         >
@@ -179,35 +185,51 @@ const BlogPostPage = () => {
             <article>
               {/* Post Header */}
               <Box sx={{ mb: 4 }}>
-                <Chip 
-                  label={post.category} 
+                <Chip
+                  label={post.category}
                   color={getCategoryColor(post.category)}
                   sx={{ mb: 2 }}
                 />
-                
-                <Typography variant="h1" component="h1" gutterBottom sx={{ fontSize: { xs: '2rem', md: '2.5rem' } }}>
+
+                <Typography
+                  variant="h1"
+                  component="h1"
+                  gutterBottom
+                  sx={{ fontSize: { xs: '2rem', md: '2.5rem' } }}
+                >
                   {post.title}
                 </Typography>
-                
-                <Typography variant="h2" component="p" color="text.secondary" sx={{ fontSize: '1.2rem', mb: 3 }}>
+
+                <Typography
+                  variant="h2"
+                  component="p"
+                  color="text.secondary"
+                  sx={{ fontSize: '1.2rem', mb: 3 }}
+                >
                   {post.excerpt}
                 </Typography>
 
                 {/* Author and Meta Info */}
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                <Box
+                  sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}
+                >
                   <Avatar src={post.authorAvatar} alt={post.author} />
                   <Box>
                     <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
                       {post.author}
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      <Box
+                        sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
+                      >
                         <CalendarToday fontSize="small" color="action" />
                         <Typography variant="caption" color="text.secondary">
                           {new Date(post.date).toLocaleDateString()}
                         </Typography>
                       </Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      <Box
+                        sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
+                      >
                         <AccessTime fontSize="small" color="action" />
                         <Typography variant="caption" color="text.secondary">
                           {post.readTime}
@@ -226,41 +248,41 @@ const BlogPostPage = () => {
                     width: '100%',
                     height: 'auto',
                     borderRadius: 2,
-                    mb: 3
+                    mb: 3,
                   }}
                 />
               </Box>
 
               {/* Post Content */}
-              <Box 
-                sx={{ 
-                  '& h2': { 
-                    fontSize: '1.75rem', 
-                    fontWeight: 'bold', 
-                    mt: 4, 
+              <Box
+                sx={{
+                  '& h2': {
+                    fontSize: '1.75rem',
+                    fontWeight: 'bold',
+                    mt: 4,
                     mb: 2,
-                    color: 'primary.main'
+                    color: 'primary.main',
                   },
-                  '& h3': { 
-                    fontSize: '1.5rem', 
-                    fontWeight: 'bold', 
-                    mt: 3, 
-                    mb: 2 
-                  },
-                  '& p': { 
-                    fontSize: '1.1rem', 
-                    lineHeight: 1.7, 
-                    mb: 2 
-                  },
-                  '& ul': { 
-                    fontSize: '1.1rem', 
-                    lineHeight: 1.7, 
+                  '& h3': {
+                    fontSize: '1.5rem',
+                    fontWeight: 'bold',
+                    mt: 3,
                     mb: 2,
-                    pl: 3
                   },
-                  '& li': { 
-                    mb: 1 
-                  }
+                  '& p': {
+                    fontSize: '1.1rem',
+                    lineHeight: 1.7,
+                    mb: 2,
+                  },
+                  '& ul': {
+                    fontSize: '1.1rem',
+                    lineHeight: 1.7,
+                    mb: 2,
+                    pl: 3,
+                  },
+                  '& li': {
+                    mb: 1,
+                  },
                 }}
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
@@ -270,7 +292,11 @@ const BlogPostPage = () => {
                 <AdSenseAd
                   slot="4214673608"
                   format="auto"
-                  style={{ display: 'block', textAlign: 'center', minHeight: '250px' }}
+                  style={{
+                    display: 'block',
+                    textAlign: 'center',
+                    minHeight: '250px',
+                  }}
                   minContentLength={400}
                 />
               </Box>
@@ -281,8 +307,13 @@ const BlogPostPage = () => {
                   Tags
                 </Typography>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                  {post.tags.map((tag) => (
-                    <Chip key={tag} label={tag} variant="outlined" size="small" />
+                  {post.tags.map(tag => (
+                    <Chip
+                      key={tag}
+                      label={tag}
+                      variant="outlined"
+                      size="small"
+                    />
                   ))}
                 </Box>
               </Box>
@@ -334,7 +365,11 @@ const BlogPostPage = () => {
               <AdSenseAd
                 slot="2059283552"
                 format="auto"
-                style={{ display: 'block', textAlign: 'center', minHeight: '600px' }}
+                style={{
+                  display: 'block',
+                  textAlign: 'center',
+                  minHeight: '600px',
+                }}
                 minContentLength={300}
               />
             </Box>
@@ -346,19 +381,42 @@ const BlogPostPage = () => {
                   Related Articles
                 </Typography>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                  <Link to="/blog/bela-bela-municipality-success" style={{ textDecoration: 'none' }}>
-                    <Typography variant="body2" color="primary" sx={{ '&:hover': { textDecoration: 'underline' } }}>
-                      Learning from Bela Bela Municipality's Digital Innovation Success
+                  <Link
+                    to="/blog/bela-bela-municipality-success"
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <Typography
+                      variant="body2"
+                      color="primary"
+                      sx={{ '&:hover': { textDecoration: 'underline' } }}
+                    >
+                      Learning from Bela Bela Municipality's Digital Innovation
+                      Success
                     </Typography>
                   </Link>
-                  <Link to="/blog/digital-municipal-service-guide" style={{ textDecoration: 'none' }}>
-                    <Typography variant="body2" color="primary" sx={{ '&:hover': { textDecoration: 'underline' } }}>
+                  <Link
+                    to="/blog/digital-municipal-service-guide"
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <Typography
+                      variant="body2"
+                      color="primary"
+                      sx={{ '&:hover': { textDecoration: 'underline' } }}
+                    >
                       Complete Guide to Digital Municipal Service Access in 2025
                     </Typography>
                   </Link>
-                  <Link to="/blog/technology-transforming-local-government" style={{ textDecoration: 'none' }}>
-                    <Typography variant="body2" color="primary" sx={{ '&:hover': { textDecoration: 'underline' } }}>
-                      How Technology is Transforming Local Government in South Africa
+                  <Link
+                    to="/blog/technology-transforming-local-government"
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <Typography
+                      variant="body2"
+                      color="primary"
+                      sx={{ '&:hover': { textDecoration: 'underline' } }}
+                    >
+                      How Technology is Transforming Local Government in South
+                      Africa
                     </Typography>
                   </Link>
                 </Box>

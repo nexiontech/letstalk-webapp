@@ -189,7 +189,10 @@ function AppContent() {
 
           {/* Blog routes */}
           <Route path="/blog" element={<BlogHomePage />} />
-          <Route path="/blog/category/:category" element={<BlogCategoryPage />} />
+          <Route
+            path="/blog/category/:category"
+            element={<BlogCategoryPage />}
+          />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
 
           {/* Protected routes with Dashboard Layout */}
