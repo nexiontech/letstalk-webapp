@@ -144,8 +144,8 @@ export const shouldShowAds = pathname => {
   ];
 
   // Check if path is in allowed list
-  const isAllowedPath = allowedPaths.some(path =>
-    pathname === path || (path !== '/' && pathname.startsWith(path))
+  const isAllowedPath = allowedPaths.some(
+    path => pathname === path || (path !== '/' && pathname.startsWith(path))
   );
 
   if (!isAllowedPath) {
@@ -201,7 +201,9 @@ export const getAdSlotsForPage = pathname => {
 
   // Blog/article pages - DISABLED until real slot IDs are created
   // Placeholder slot IDs cause policy violations
-  if (false && (pathname.includes('/press-releases') || pathname.includes('/news'))) {
+  // TODO: Enable when dedicated blog/article ad units are created
+  /*
+  if (pathname.includes('/press-releases') || pathname.includes('/news')) {
     slots.push(
       {
         slot: '6544714660', // Use existing content page slot for now
@@ -211,6 +213,7 @@ export const getAdSlotsForPage = pathname => {
       }
     );
   }
+  */
 
   return slots;
 };
@@ -261,7 +264,7 @@ export const initializeAds = (adElements = []) => {
       return;
     }
 
-    adElements.forEach((element, index) => {
+    adElements.forEach((_, index) => {
       setTimeout(() => {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
         console.log(`AdSense ad ${index + 1} initialized`);
