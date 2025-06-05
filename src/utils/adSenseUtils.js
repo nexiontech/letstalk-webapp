@@ -144,8 +144,8 @@ export const shouldShowAds = pathname => {
   ];
 
   // Check if path is in allowed list
-  const isAllowedPath = allowedPaths.some(path =>
-    pathname === path || (path !== '/' && pathname.startsWith(path))
+  const isAllowedPath = allowedPaths.some(
+    path => pathname === path || (path !== '/' && pathname.startsWith(path))
   );
 
   if (!isAllowedPath) {

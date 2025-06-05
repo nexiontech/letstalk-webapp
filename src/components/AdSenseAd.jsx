@@ -41,12 +41,13 @@ const AdSenseAd = ({
 
       // Additional content quality checks
       const paragraphs = document.querySelectorAll('p').length;
-      const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6').length;
+      const headings = document.querySelectorAll(
+        'h1, h2, h3, h4, h5, h6'
+      ).length;
 
       // Check if page has enough content and structure
-      const hasContent = contentLength >= minContentLength &&
-                        paragraphs >= 3 &&
-                        headings >= 2;
+      const hasContent =
+        contentLength >= minContentLength && paragraphs >= 3 && headings >= 2;
 
       setHasEnoughContent(hasContent);
 
