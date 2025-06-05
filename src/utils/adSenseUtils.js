@@ -199,21 +199,16 @@ export const getAdSlotsForPage = pathname => {
     });
   }
 
-  // Blog/article pages - DISABLED until real slot IDs are created
-  // Placeholder slot IDs cause policy violations
-  // TODO: Enable when dedicated blog/article ad units are created
-  /*
-  if (pathname.includes('/press-releases') || pathname.includes('/news')) {
-    slots.push(
-      {
-        slot: '6544714660', // Use existing content page slot for now
-        format: 'auto',
-        position: 'article-content',
-        minContentLength: 800,
-      }
-    );
+  // Blog/article pages - Currently using existing content slot
+  // Future: Create dedicated blog slot IDs for better targeting
+  if (pathname.includes('/blog')) {
+    slots.push({
+      slot: '6544714660', // Use existing content page slot for now
+      format: 'auto',
+      position: 'article-content',
+      minContentLength: 800,
+    });
   }
-  */
 
   return slots;
 };
