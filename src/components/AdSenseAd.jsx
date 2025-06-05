@@ -1,6 +1,7 @@
 // src/components/AdSenseAd.jsx
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Paper } from '@mui/material';
+import { shouldShowAds } from '../utils/adSenseUtils';
 
 /**
  * AdSense Ad Component
@@ -22,25 +23,46 @@ const AdSenseAd = ({
   // Check if page has enough content to show ads
   useEffect(() => {
     const checkContentLength = () => {
+      // Get current pathname
+      const pathname = window.location.pathname;
+
+      // Use shouldShowAds utility for comprehensive checking
+      const shouldShow = shouldShowAds(pathname);
+      if (!shouldShow) {
+        setHasEnoughContent(false);
+        console.log('AdSense: Ads not allowed on this page:', pathname);
+        return;
+      }
+
       // Get all text content from the page
       const textContent =
         document.body.innerText || document.body.textContent || '';
       const contentLength = textContent.trim().length;
 
-      // Check if page has enough content
-      const hasContent = contentLength >= minContentLength;
+      // Additional content quality checks
+      const paragraphs = document.querySelectorAll('p').length;
+      const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6').length;
+
+      // Check if page has enough content and structure
+      const hasContent = contentLength >= minContentLength &&
+                        paragraphs >= 3 &&
+                        headings >= 2;
+
       setHasEnoughContent(hasContent);
 
       console.log('AdSense Content Check:', {
+        pathname,
         contentLength,
+        paragraphs,
+        headings,
         minRequired: minContentLength,
         hasEnoughContent: hasContent,
         slot,
       });
     };
 
-    // Check content length after a short delay to ensure page is fully rendered
-    const timer = setTimeout(checkContentLength, 1000);
+    // Check content length after a longer delay to ensure page is fully rendered
+    const timer = setTimeout(checkContentLength, 2000);
 
     return () => clearTimeout(timer);
   }, [minContentLength, slot]);
@@ -118,8 +140,8 @@ const AdSenseAd = ({
     return () => observer.disconnect();
   }, [slot]);
 
-  // Don't render if page doesn't have enough content
-  if (!hasEnoughContent) {
+  // Don't render if page doesn't have enough content or ads aren't loaded
+  if (!hasEnoughContent || !isAdSenseLoaded) {
     return null;
   }
 
