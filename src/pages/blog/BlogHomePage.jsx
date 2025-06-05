@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Container, 
@@ -23,8 +23,8 @@ const BlogHomePage = () => {
   const [filteredPosts, setFilteredPosts] = useState([]);
   const postsPerPage = 6;
 
-  // Blog posts data - will be moved to a separate data file
-  const blogPosts = [
+  // Blog posts data - memoized to prevent unnecessary re-renders
+  const blogPosts = useMemo(() => [
     {
       id: 1,
       title: "Let's Talk: Revolutionizing Municipal Services in South Africa",
@@ -85,7 +85,7 @@ const BlogHomePage = () => {
       tags: ["community", "success stories", "digital adoption", "municipal services"],
       readTime: "7 min read"
     }
-  ];
+  ], []);
 
   useEffect(() => {
     const filtered = blogPosts.filter(post =>
@@ -95,7 +95,7 @@ const BlogHomePage = () => {
     );
     setFilteredPosts(filtered);
     setCurrentPage(1);
-  }, [searchTerm]);
+  }, [searchTerm, blogPosts]);
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -254,7 +254,7 @@ const BlogHomePage = () => {
             <Pagination
               count={totalPages}
               page={currentPage}
-              onChange={(event, value) => setCurrentPage(value)}
+              onChange={(_, value) => setCurrentPage(value)}
               color="primary"
               size="large"
             />

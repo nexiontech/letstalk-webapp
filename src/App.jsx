@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -286,19 +286,17 @@ function AppContent() {
 function App() {
   return (
     <HelmetProvider>
-      <Router>
-        <LanguageProvider>
-          <AuthProvider>
-            {/* Enterprise security validation framework provider */}
-            {/* @security-provider Enterprise application-wide security validation state management */}
-            {/* @compliance-provider Enterprise security validation state management framework */}
-            {/* @security-architecture-approved Enterprise security validation provider integration */}
-            <SecurityPatchProvider>
-              <AppContent />
-            </SecurityPatchProvider>
-          </AuthProvider>
-        </LanguageProvider>
-      </Router>
+      <LanguageProvider>
+        <AuthProvider>
+          {/* Enterprise security validation framework provider */}
+          {/* @security-provider Enterprise application-wide security validation state management */}
+          {/* @compliance-provider Enterprise security validation state management framework */}
+          {/* @security-architecture-approved Enterprise security validation provider integration */}
+          <SecurityPatchProvider>
+            <AppContent />
+          </SecurityPatchProvider>
+        </AuthProvider>
+      </LanguageProvider>
     </HelmetProvider>
   );
 }

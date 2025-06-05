@@ -199,9 +199,9 @@ export const getAdSlotsForPage = pathname => {
     });
   }
 
-  // Blog/article pages - DISABLED until real slot IDs are created
-  // Placeholder slot IDs cause policy violations
-  if (false && (pathname.includes('/press-releases') || pathname.includes('/news'))) {
+  // Blog/article pages - Currently using existing content slot
+  // Future: Create dedicated blog slot IDs for better targeting
+  if (pathname.includes('/blog')) {
     slots.push(
       {
         slot: '6544714660', // Use existing content page slot for now
@@ -261,7 +261,7 @@ export const initializeAds = (adElements = []) => {
       return;
     }
 
-    adElements.forEach((element, index) => {
+    adElements.forEach((_, index) => {
       setTimeout(() => {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
         console.log(`AdSense ad ${index + 1} initialized`);

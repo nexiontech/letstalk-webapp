@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { 
   Container, 
@@ -271,7 +271,7 @@ const BlogCategoryPage = () => {
                 <Pagination
                   count={totalPages}
                   page={currentPage}
-                  onChange={(event, value) => setCurrentPage(value)}
+                  onChange={(_, value) => setCurrentPage(value)}
                   color="primary"
                   size="large"
                 />
