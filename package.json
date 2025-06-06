@@ -22,7 +22,12 @@
     "sitemap:test": "node scripts/test-sitemap.js",
     "sitemap:test:prod": "node scripts/test-sitemap.js --production",
     "adsense:validate": "node scripts/validate-adsense.js",
-    "adsense:check": "npm run adsense:validate"
+    "adsense:check": "npm run adsense:validate",
+    "blog:setup-images": "node scripts/setup-blog-images.js",
+    "blog:fetch-images": "node scripts/fetch-municipal-images.js",
+    "blog:integrate-images": "node scripts/integrate-blog-images.js",
+    "blog:test-performance": "node scripts/test-blog-performance.js",
+    "blog:optimize": "npm run blog:setup-images && npm run blog:test-performance"
   },
   "dependencies": {
     "@aws-amplify/auth": "^6.12.3",

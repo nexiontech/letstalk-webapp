@@ -11,6 +11,8 @@ import {
   Chip,
   Button,
   Pagination,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { CalendarToday, Person, ArrowBack } from '@mui/icons-material';
 import AdSenseAd from '../../components/AdSenseAd';
@@ -20,6 +22,79 @@ const BlogCategoryPage = () => {
   const { category } = useParams();
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6;
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  // Enhanced Ad Components for Maximum Revenue
+  const HeaderAd = () => (
+    <Box sx={{ mb: 4, textAlign: 'center' }}>
+      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+        Advertisement
+      </Typography>
+      <AdSenseAd
+        slot="6544714660"
+        format={isMobile ? "auto" : "leaderboard"}
+        style={{
+          display: 'block',
+          textAlign: 'center',
+          minHeight: isMobile ? '50px' : '90px',
+          maxWidth: '100%'
+        }}
+        minContentLength={300}
+      />
+    </Box>
+  );
+
+  const GridAd = ({ index }) => (
+    <Grid item xs={12} md={6} lg={4}>
+      <Box sx={{
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '300px',
+        border: '1px solid #e0e0e0',
+        borderRadius: 2,
+        backgroundColor: '#f9f9f9'
+      }}>
+        <Box sx={{ textAlign: 'center', width: '100%' }}>
+          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+            Advertisement
+          </Typography>
+          <AdSenseAd
+            slot="4214673608"
+            format="auto"
+            style={{
+              display: 'block',
+              textAlign: 'center',
+              minHeight: '250px',
+              maxWidth: '100%'
+            }}
+            minContentLength={200}
+          />
+        </Box>
+      </Box>
+    </Grid>
+  );
+
+  const FooterAd = () => (
+    <Box sx={{ mt: 6, textAlign: 'center' }}>
+      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+        Advertisement
+      </Typography>
+      <AdSenseAd
+        slot="2059283552"
+        format={isMobile ? "auto" : "leaderboard"}
+        style={{
+          display: 'block',
+          textAlign: 'center',
+          minHeight: isMobile ? '50px' : '90px',
+          maxWidth: '100%'
+        }}
+        minContentLength={300}
+      />
+    </Box>
+  );
 
   // Blog posts data filtered by category
   const getAllPosts = () => [
@@ -211,15 +286,8 @@ const BlogCategoryPage = () => {
           </Typography>
         </Box>
 
-        {/* Header Ad */}
-        <Box sx={{ mb: 4 }}>
-          <AdSenseAd
-            slot="6544714660"
-            format="auto"
-            style={{ display: 'block', textAlign: 'center', minHeight: '90px' }}
-            minContentLength={300}
-          />
-        </Box>
+        {/* Header Ad - Maximum Revenue Placement */}
+        <HeaderAd />
 
         {/* Posts Count */}
         <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
@@ -233,7 +301,8 @@ const BlogCategoryPage = () => {
           <>
             <Grid container spacing={4}>
               {currentPosts.map((post, index) => (
-                <Grid item xs={12} md={6} lg={4} key={post.id}>
+                <React.Fragment key={post.id}>
+                  <Grid item xs={12} md={6} lg={4}>
                   <Card
                     sx={{
                       height: '100%',
@@ -331,22 +400,11 @@ const BlogCategoryPage = () => {
                     </CardContent>
                   </Card>
 
-                  {/* In-content Ad after every 2nd post */}
-                  {(index + 1) % 2 === 0 && (
-                    <Box sx={{ mt: 4 }}>
-                      <AdSenseAd
-                        slot="4214673608"
-                        format="auto"
-                        style={{
-                          display: 'block',
-                          textAlign: 'center',
-                          minHeight: '250px',
-                        }}
-                        minContentLength={200}
-                      />
-                    </Box>
-                  )}
-                </Grid>
+                  </Grid>
+
+                  {/* Strategic Ad Placement after every 2nd post */}
+                  {(index + 1) % 2 === 0 && <GridAd index={index} />}
+                </React.Fragment>
               ))}
             </Grid>
 
@@ -378,15 +436,8 @@ const BlogCategoryPage = () => {
           </Box>
         )}
 
-        {/* Footer Ad */}
-        <Box sx={{ mt: 6 }}>
-          <AdSenseAd
-            slot="2059283552"
-            format="auto"
-            style={{ display: 'block', textAlign: 'center', minHeight: '90px' }}
-            minContentLength={300}
-          />
-        </Box>
+        {/* Footer Ad - Maximum Revenue Placement */}
+        <FooterAd />
       </Container>
     </>
   );
