@@ -22,6 +22,7 @@ import {
 } from '@mui/icons-material';
 import AdSenseAd from '../../components/AdSenseAd';
 import SEOHelmet from '../../components/SEOHelmet';
+import { BLOG_IMAGES } from '../../components/BlogImages';
 
 const BlogHomePage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -324,8 +325,8 @@ const BlogHomePage = () => {
                 <CardMedia
                   component="img"
                   height="200"
-                  image={post.image}
-                  alt={post.title}
+                  image={BLOG_IMAGES[post.content.split('/').pop()]?.featuredImage?.url || post.image}
+                  alt={BLOG_IMAGES[post.content.split('/').pop()]?.featuredImage?.alt || post.title}
                   sx={{ objectFit: 'cover' }}
                 />
                 <CardContent

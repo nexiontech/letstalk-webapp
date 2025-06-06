@@ -26,6 +26,7 @@ import {
 } from '@mui/icons-material';
 import AdSenseAd from '../../components/AdSenseAd';
 import SEOHelmet from '../../components/SEOHelmet';
+import { FeaturedImage, ContentImage } from '../../components/BlogImages';
 
 const BlogPostPage = () => {
   const { slug } = useParams();
@@ -343,17 +344,7 @@ const BlogPostPage = () => {
                 </Box>
 
                 {/* Featured Image */}
-                <Box
-                  component="img"
-                  src={post.image}
-                  alt={post.title}
-                  sx={{
-                    width: '100%',
-                    height: 'auto',
-                    borderRadius: 2,
-                    mb: 3,
-                  }}
-                />
+                <FeaturedImage slug={slug} />
               </Box>
 
               {/* Enhanced Post Content with Strategic Ad Placement */}
@@ -393,6 +384,9 @@ const BlogPostPage = () => {
                   {/* Split content for strategic ad insertion */}
                   <div dangerouslySetInnerHTML={{ __html: post.content.split('<h2>')[0] }} />
 
+                  {/* First Content Image */}
+                  <ContentImage slug={slug} index={0} />
+
                   {/* First In-Content Ad after introduction */}
                   <InContentAd index={1} />
 
@@ -400,7 +394,9 @@ const BlogPostPage = () => {
                   {post.content.split('<h2>').slice(1, 3).map((section, index) => (
                     <div key={index}>
                       <div dangerouslySetInnerHTML={{ __html: `<h2>${section}` }} />
+                      {index === 0 && <ContentImage slug={slug} index={1} />}
                       {index === 1 && <InContentAd index={2} />}
+                      {index === 1 && <ContentImage slug={slug} index={2} />}
                     </div>
                   ))}
 

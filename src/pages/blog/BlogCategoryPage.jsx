@@ -17,6 +17,7 @@ import {
 import { CalendarToday, Person, ArrowBack } from '@mui/icons-material';
 import AdSenseAd from '../../components/AdSenseAd';
 import SEOHelmet from '../../components/SEOHelmet';
+import { BLOG_IMAGES, CategoryHeader } from '../../components/BlogImages';
 
 const BlogCategoryPage = () => {
   const { category } = useParams();
@@ -286,6 +287,9 @@ const BlogCategoryPage = () => {
           </Typography>
         </Box>
 
+        {/* Category Header Image */}
+        <CategoryHeader category={category} />
+
         {/* Header Ad - Maximum Revenue Placement */}
         <HeaderAd />
 
@@ -318,8 +322,8 @@ const BlogCategoryPage = () => {
                     <CardMedia
                       component="img"
                       height="200"
-                      image={post.image}
-                      alt={post.title}
+                      image={BLOG_IMAGES[post.content.split('/').pop()]?.featuredImage?.url || post.image}
+                      alt={BLOG_IMAGES[post.content.split('/').pop()]?.featuredImage?.alt || post.title}
                       sx={{ objectFit: 'cover' }}
                     />
                     <CardContent
