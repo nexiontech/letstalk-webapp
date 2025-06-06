@@ -29,37 +29,47 @@ const BlogCategoryPage = () => {
   // Enhanced Ad Components for Maximum Revenue
   const HeaderAd = () => (
     <Box sx={{ mb: 4, textAlign: 'center' }}>
-      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ display: 'block', mb: 1 }}
+      >
         Advertisement
       </Typography>
       <AdSenseAd
         slot="6544714660"
-        format={isMobile ? "auto" : "leaderboard"}
+        format={isMobile ? 'auto' : 'leaderboard'}
         style={{
           display: 'block',
           textAlign: 'center',
           minHeight: isMobile ? '50px' : '90px',
-          maxWidth: '100%'
+          maxWidth: '100%',
         }}
         minContentLength={300}
       />
     </Box>
   );
 
-  const GridAd = ({ index }) => (
+  const GridAd = () => (
     <Grid item xs={12} md={6} lg={4}>
-      <Box sx={{
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '300px',
-        border: '1px solid #e0e0e0',
-        borderRadius: 2,
-        backgroundColor: '#f9f9f9'
-      }}>
+      <Box
+        sx={{
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '300px',
+          border: '1px solid #e0e0e0',
+          borderRadius: 2,
+          backgroundColor: '#f9f9f9',
+        }}
+      >
         <Box sx={{ textAlign: 'center', width: '100%' }}>
-          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ display: 'block', mb: 1 }}
+          >
             Advertisement
           </Typography>
           <AdSenseAd
@@ -69,7 +79,7 @@ const BlogCategoryPage = () => {
               display: 'block',
               textAlign: 'center',
               minHeight: '250px',
-              maxWidth: '100%'
+              maxWidth: '100%',
             }}
             minContentLength={200}
           />
@@ -80,17 +90,21 @@ const BlogCategoryPage = () => {
 
   const FooterAd = () => (
     <Box sx={{ mt: 6, textAlign: 'center' }}>
-      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ display: 'block', mb: 1 }}
+      >
         Advertisement
       </Typography>
       <AdSenseAd
         slot="2059283552"
-        format={isMobile ? "auto" : "leaderboard"}
+        format={isMobile ? 'auto' : 'leaderboard'}
         style={{
           display: 'block',
           textAlign: 'center',
           minHeight: isMobile ? '50px' : '90px',
-          maxWidth: '100%'
+          maxWidth: '100%',
         }}
         minContentLength={300}
       />
@@ -307,107 +321,126 @@ const BlogCategoryPage = () => {
               {currentPosts.map((post, index) => (
                 <React.Fragment key={post.id}>
                   <Grid item xs={12} md={6} lg={4}>
-                  <Card
-                    sx={{
-                      height: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      transition: 'transform 0.2s ease-in-out',
-                      '&:hover': {
-                        transform: 'translateY(-4px)',
-                        boxShadow: 3,
-                      },
-                    }}
-                  >
-                    <CardMedia
-                      component="img"
-                      height="200"
-                      image={BLOG_IMAGES[post.content.split('/').pop()]?.featuredImage?.url || post.image}
-                      alt={BLOG_IMAGES[post.content.split('/').pop()]?.featuredImage?.alt || post.title}
-                      sx={{ objectFit: 'cover' }}
-                    />
-                    <CardContent
+                    <Card
                       sx={{
-                        flexGrow: 1,
+                        height: '100%',
                         display: 'flex',
                         flexDirection: 'column',
+                        transition: 'transform 0.2s ease-in-out',
+                        '&:hover': {
+                          transform: 'translateY(-4px)',
+                          boxShadow: 3,
+                        },
                       }}
                     >
-                      <Box sx={{ mb: 2 }}>
-                        <Chip
-                          label={post.category}
-                          color={getCategoryColor(post.category)}
-                          size="small"
-                          sx={{ mb: 1 }}
-                        />
-                      </Box>
-
-                      <Typography
-                        variant="h3"
-                        component="h2"
-                        gutterBottom
-                        sx={{ fontSize: '1.25rem', lineHeight: 1.3 }}
-                      >
-                        <Link
-                          to={post.content}
-                          style={{
-                            textDecoration: 'none',
-                            color: 'inherit',
-                            '&:hover': { color: 'primary.main' },
-                          }}
-                        >
-                          {post.title}
-                        </Link>
-                      </Typography>
-
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{ mb: 2, flexGrow: 1 }}
-                      >
-                        {post.excerpt}
-                      </Typography>
-
-                      <Box
+                      <CardMedia
+                        component="img"
+                        height="200"
+                        image={
+                          BLOG_IMAGES[post.content.split('/').pop()]
+                            ?.featuredImage?.url || post.image
+                        }
+                        alt={
+                          BLOG_IMAGES[post.content.split('/').pop()]
+                            ?.featuredImage?.alt || post.title
+                        }
+                        sx={{ objectFit: 'cover' }}
+                      />
+                      <CardContent
                         sx={{
+                          flexGrow: 1,
                           display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          mt: 'auto',
+                          flexDirection: 'column',
                         }}
                       >
-                        <Box
-                          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                        >
-                          <Person fontSize="small" color="action" />
-                          <Typography variant="caption" color="text.secondary">
-                            {post.author}
-                          </Typography>
+                        <Box sx={{ mb: 2 }}>
+                          <Chip
+                            label={post.category}
+                            color={getCategoryColor(post.category)}
+                            size="small"
+                            sx={{ mb: 1 }}
+                          />
                         </Box>
-                        <Box
-                          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+
+                        <Typography
+                          variant="h3"
+                          component="h2"
+                          gutterBottom
+                          sx={{ fontSize: '1.25rem', lineHeight: 1.3 }}
                         >
-                          <CalendarToday fontSize="small" color="action" />
-                          <Typography variant="caption" color="text.secondary">
-                            {new Date(post.date).toLocaleDateString()}
-                          </Typography>
+                          <Link
+                            to={post.content}
+                            style={{
+                              textDecoration: 'none',
+                              color: 'inherit',
+                              '&:hover': { color: 'primary.main' },
+                            }}
+                          >
+                            {post.title}
+                          </Link>
+                        </Typography>
+
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ mb: 2, flexGrow: 1 }}
+                        >
+                          {post.excerpt}
+                        </Typography>
+
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            mt: 'auto',
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 1,
+                            }}
+                          >
+                            <Person fontSize="small" color="action" />
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                            >
+                              {post.author}
+                            </Typography>
+                          </Box>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 1,
+                            }}
+                          >
+                            <CalendarToday fontSize="small" color="action" />
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                            >
+                              {new Date(post.date).toLocaleDateString()}
+                            </Typography>
+                          </Box>
                         </Box>
-                      </Box>
 
-                      <Typography
-                        variant="caption"
-                        color="primary"
-                        sx={{ mt: 1 }}
-                      >
-                        {post.readTime}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-
+                        <Typography
+                          variant="caption"
+                          color="primary"
+                          sx={{ mt: 1 }}
+                        >
+                          {post.readTime}
+                        </Typography>
+                      </CardContent>
+                    </Card>
                   </Grid>
 
                   {/* Strategic Ad Placement after every 2nd post */}
-                  {(index + 1) % 2 === 0 && <GridAd index={index} />}
+                  {(index + 1) % 2 === 0 && <GridAd />}
                 </React.Fragment>
               ))}
             </Grid>

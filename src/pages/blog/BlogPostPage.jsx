@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Container,
@@ -32,14 +32,16 @@ const BlogPostPage = () => {
   const { slug } = useParams();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const [contentSections, setContentSections] = useState([]);
+  // Content sections for ad insertion (managed automatically)
 
   // Split content into sections for ad insertion
   useEffect(() => {
     const post = getBlogPost(slug);
     if (post && post.content) {
       // Split content by h2 tags for strategic ad placement
-      const sections = post.content.split('<h2>').filter(section => section.trim());
+      const sections = post.content
+        .split('<h2>')
+        .filter(section => section.trim());
       setContentSections(sections);
     }
   }, [slug]);
@@ -147,21 +149,25 @@ const BlogPostPage = () => {
     <Box sx={{ mb: 4, textAlign: 'center' }}>
       <AdSenseAd
         slot="6544714660"
-        format={isMobile ? "auto" : "leaderboard"}
+        format={isMobile ? 'auto' : 'leaderboard'}
         style={{
           display: 'block',
           textAlign: 'center',
           minHeight: isMobile ? '50px' : '90px',
-          maxWidth: '100%'
+          maxWidth: '100%',
         }}
         minContentLength={400}
       />
     </Box>
   );
 
-  const InContentAd = ({ index }) => (
+  const InContentAd = () => (
     <Box sx={{ my: 4, textAlign: 'center' }}>
-      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ display: 'block', mb: 1 }}
+      >
         Advertisement
       </Typography>
       <AdSenseAd
@@ -172,7 +178,7 @@ const BlogPostPage = () => {
           textAlign: 'center',
           minHeight: '250px',
           maxWidth: '100%',
-          margin: '0 auto'
+          margin: '0 auto',
         }}
         minContentLength={400}
       />
@@ -181,7 +187,11 @@ const BlogPostPage = () => {
 
   const SidebarAd = ({ type = 'skyscraper' }) => (
     <Box sx={{ mb: 4, textAlign: 'center' }}>
-      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ display: 'block', mb: 1 }}
+      >
         Advertisement
       </Typography>
       <AdSenseAd
@@ -191,7 +201,7 @@ const BlogPostPage = () => {
           display: 'block',
           textAlign: 'center',
           minHeight: type === 'skyscraper' ? '600px' : '250px',
-          maxWidth: '100%'
+          maxWidth: '100%',
         }}
         minContentLength={300}
       />
@@ -199,8 +209,14 @@ const BlogPostPage = () => {
   );
 
   const MobileAd = () => (
-    <Box sx={{ my: 3, textAlign: 'center', display: { xs: 'block', md: 'none' } }}>
-      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+    <Box
+      sx={{ my: 3, textAlign: 'center', display: { xs: 'block', md: 'none' } }}
+    >
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ display: 'block', mb: 1 }}
+      >
         Advertisement
       </Typography>
       <AdSenseAd
@@ -211,7 +227,7 @@ const BlogPostPage = () => {
           textAlign: 'center',
           minHeight: '50px',
           maxWidth: '320px',
-          margin: '0 auto'
+          margin: '0 auto',
         }}
         minContentLength={200}
       />
@@ -220,17 +236,21 @@ const BlogPostPage = () => {
 
   const FooterAd = () => (
     <Box sx={{ mt: 6, textAlign: 'center' }}>
-      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ display: 'block', mb: 1 }}
+      >
         Advertisement
       </Typography>
       <AdSenseAd
         slot="6544714660"
-        format={isMobile ? "auto" : "leaderboard"}
+        format={isMobile ? 'auto' : 'leaderboard'}
         style={{
           display: 'block',
           textAlign: 'center',
           minHeight: isMobile ? '50px' : '90px',
-          maxWidth: '100%'
+          maxWidth: '100%',
         }}
         minContentLength={400}
       />
@@ -382,33 +402,47 @@ const BlogPostPage = () => {
                   }}
                 >
                   {/* Split content for strategic ad insertion */}
-                  <div dangerouslySetInnerHTML={{ __html: post.content.split('<h2>')[0] }} />
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: post.content.split('<h2>')[0],
+                    }}
+                  />
 
                   {/* First Content Image */}
                   <ContentImage slug={slug} index={0} />
 
                   {/* First In-Content Ad after introduction */}
-                  <InContentAd index={1} />
+                  <InContentAd />
 
                   {/* Middle content sections with ads */}
-                  {post.content.split('<h2>').slice(1, 3).map((section, index) => (
-                    <div key={index}>
-                      <div dangerouslySetInnerHTML={{ __html: `<h2>${section}` }} />
-                      {index === 0 && <ContentImage slug={slug} index={1} />}
-                      {index === 1 && <InContentAd index={2} />}
-                      {index === 1 && <ContentImage slug={slug} index={2} />}
-                    </div>
-                  ))}
+                  {post.content
+                    .split('<h2>')
+                    .slice(1, 3)
+                    .map((section, index) => (
+                      <div key={index}>
+                        <div
+                          dangerouslySetInnerHTML={{ __html: `<h2>${section}` }}
+                        />
+                        {index === 0 && <ContentImage slug={slug} index={1} />}
+                        {index === 1 && <InContentAd />}
+                        {index === 1 && <ContentImage slug={slug} index={2} />}
+                      </div>
+                    ))}
 
                   {/* Mobile Ad for better mobile revenue */}
                   <MobileAd />
 
                   {/* Remaining content */}
-                  {post.content.split('<h2>').slice(3).map((section, index) => (
-                    <div key={index + 3}>
-                      <div dangerouslySetInnerHTML={{ __html: `<h2>${section}` }} />
-                    </div>
-                  ))}
+                  {post.content
+                    .split('<h2>')
+                    .slice(3)
+                    .map((section, index) => (
+                      <div key={index + 3}>
+                        <div
+                          dangerouslySetInnerHTML={{ __html: `<h2>${section}` }}
+                        />
+                      </div>
+                    ))}
                 </Box>
               </Box>
 
