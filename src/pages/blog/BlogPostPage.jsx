@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Container,
@@ -11,6 +11,8 @@ import {
   Grid,
   Card,
   CardContent,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import {
   CalendarToday,
@@ -24,9 +26,22 @@ import {
 } from '@mui/icons-material';
 import AdSenseAd from '../../components/AdSenseAd';
 import SEOHelmet from '../../components/SEOHelmet';
+import { FeaturedImage, ContentImage } from '../../components/BlogImages';
 
 const BlogPostPage = () => {
   const { slug } = useParams();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  // Content sections for ad insertion (managed automatically)
+
+  // Split content into sections for ad insertion
+  useEffect(() => {
+    const post = getBlogPost(slug);
+    if (post && post.content) {
+      // Content sections are handled automatically in the render
+      // No need to store in state for this implementation
+    }
+  }, [slug]);
 
   // Blog post data - will be moved to a separate data file or API
   const getBlogPost = slug => {
@@ -126,6 +141,119 @@ const BlogPostPage = () => {
   const shareUrl = `https://letstalkbi.co.za/blog/${slug}`;
   const shareTitle = post.title;
 
+  // Enhanced Ad Components for Maximum Revenue
+  const HeaderAd = () => (
+    <Box sx={{ mb: 4, textAlign: 'center' }}>
+      <AdSenseAd
+        slot="6544714660"
+        format={isMobile ? 'auto' : 'leaderboard'}
+        style={{
+          display: 'block',
+          textAlign: 'center',
+          minHeight: isMobile ? '50px' : '90px',
+          maxWidth: '100%',
+        }}
+        minContentLength={400}
+      />
+    </Box>
+  );
+
+  const InContentAd = () => (
+    <Box sx={{ my: 4, textAlign: 'center' }}>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ display: 'block', mb: 1 }}
+      >
+        Advertisement
+      </Typography>
+      <AdSenseAd
+        slot="4214673608"
+        format="auto"
+        style={{
+          display: 'block',
+          textAlign: 'center',
+          minHeight: '250px',
+          maxWidth: '100%',
+          margin: '0 auto',
+        }}
+        minContentLength={400}
+      />
+    </Box>
+  );
+
+  const SidebarAd = ({ type = 'skyscraper' }) => (
+    <Box sx={{ mb: 4, textAlign: 'center' }}>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ display: 'block', mb: 1 }}
+      >
+        Advertisement
+      </Typography>
+      <AdSenseAd
+        slot="2059283552"
+        format="auto"
+        style={{
+          display: 'block',
+          textAlign: 'center',
+          minHeight: type === 'skyscraper' ? '600px' : '250px',
+          maxWidth: '100%',
+        }}
+        minContentLength={300}
+      />
+    </Box>
+  );
+
+  const MobileAd = () => (
+    <Box
+      sx={{ my: 3, textAlign: 'center', display: { xs: 'block', md: 'none' } }}
+    >
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ display: 'block', mb: 1 }}
+      >
+        Advertisement
+      </Typography>
+      <AdSenseAd
+        slot="6544714660"
+        format="auto"
+        style={{
+          display: 'block',
+          textAlign: 'center',
+          minHeight: '50px',
+          maxWidth: '320px',
+          margin: '0 auto',
+        }}
+        minContentLength={200}
+      />
+    </Box>
+  );
+
+  const FooterAd = () => (
+    <Box sx={{ mt: 6, textAlign: 'center' }}>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ display: 'block', mb: 1 }}
+      >
+        Advertisement
+      </Typography>
+      <AdSenseAd
+        slot="6544714660"
+        format={isMobile ? 'auto' : 'leaderboard'}
+        style={{
+          display: 'block',
+          textAlign: 'center',
+          minHeight: isMobile ? '50px' : '90px',
+          maxWidth: '100%',
+        }}
+        minContentLength={400}
+      />
+    </Box>
+  );
+
   return (
     <>
       <SEOHelmet
@@ -169,15 +297,8 @@ const BlogPostPage = () => {
           Back to Blog
         </Button>
 
-        {/* Header Ad */}
-        <Box sx={{ mb: 4 }}>
-          <AdSenseAd
-            slot="6544714660"
-            format="auto"
-            style={{ display: 'block', textAlign: 'center', minHeight: '90px' }}
-            minContentLength={400}
-          />
-        </Box>
+        {/* Header Ad - Maximum Revenue Placement */}
+        <HeaderAd />
 
         <Grid container spacing={4}>
           {/* Main Content */}
@@ -240,65 +361,86 @@ const BlogPostPage = () => {
                 </Box>
 
                 {/* Featured Image */}
-                <Box
-                  component="img"
-                  src={post.image}
-                  alt={post.title}
-                  sx={{
-                    width: '100%',
-                    height: 'auto',
-                    borderRadius: 2,
-                    mb: 3,
-                  }}
-                />
+                <FeaturedImage slug={slug} />
               </Box>
 
-              {/* Post Content */}
-              <Box
-                sx={{
-                  '& h2': {
-                    fontSize: '1.75rem',
-                    fontWeight: 'bold',
-                    mt: 4,
-                    mb: 2,
-                    color: 'primary.main',
-                  },
-                  '& h3': {
-                    fontSize: '1.5rem',
-                    fontWeight: 'bold',
-                    mt: 3,
-                    mb: 2,
-                  },
-                  '& p': {
-                    fontSize: '1.1rem',
-                    lineHeight: 1.7,
-                    mb: 2,
-                  },
-                  '& ul': {
-                    fontSize: '1.1rem',
-                    lineHeight: 1.7,
-                    mb: 2,
-                    pl: 3,
-                  },
-                  '& li': {
-                    mb: 1,
-                  },
-                }}
-                dangerouslySetInnerHTML={{ __html: post.content }}
-              />
-
-              {/* In-Content Ad */}
-              <Box sx={{ my: 4 }}>
-                <AdSenseAd
-                  slot="4214673608"
-                  format="auto"
-                  style={{
-                    display: 'block',
-                    textAlign: 'center',
-                    minHeight: '250px',
+              {/* Enhanced Post Content with Strategic Ad Placement */}
+              <Box sx={{ position: 'relative' }}>
+                {/* First content section */}
+                <Box
+                  sx={{
+                    '& h2': {
+                      fontSize: '1.75rem',
+                      fontWeight: 'bold',
+                      mt: 4,
+                      mb: 2,
+                      color: 'primary.main',
+                    },
+                    '& h3': {
+                      fontSize: '1.5rem',
+                      fontWeight: 'bold',
+                      mt: 3,
+                      mb: 2,
+                    },
+                    '& p': {
+                      fontSize: '1.1rem',
+                      lineHeight: 1.7,
+                      mb: 2,
+                    },
+                    '& ul': {
+                      fontSize: '1.1rem',
+                      lineHeight: 1.7,
+                      mb: 2,
+                      pl: 3,
+                    },
+                    '& li': {
+                      mb: 1,
+                    },
                   }}
-                  minContentLength={400}
-                />
+                >
+                  {/* Split content for strategic ad insertion */}
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: post.content.split('<h2>')[0],
+                    }}
+                  />
+
+                  {/* First Content Image */}
+                  <ContentImage slug={slug} index={0} />
+
+                  {/* First In-Content Ad after introduction */}
+                  <InContentAd />
+
+                  {/* Middle content sections with ads */}
+                  {post.content
+                    .split('<h2>')
+                    .slice(1, 3)
+                    .map((section, index) => (
+                      <div key={index}>
+                        <div
+                          dangerouslySetInnerHTML={{ __html: `<h2>${section}` }}
+                        />
+                        {index === 0 && <ContentImage slug={slug} index={1} />}
+                        {index === 1 && <InContentAd />}
+                        {index === 1 && <ContentImage slug={slug} index={2} />}
+                      </div>
+                    ))}
+
+                  {/* Mobile Ad for better mobile revenue */}
+                  <MobileAd />
+
+                  {/* Remaining content */}
+                  {post.content
+                    .split('<h2>')
+                    .slice(3)
+                    .map((section, index) => (
+                      <div key={index + 3}>
+                        <div
+                          dangerouslySetInnerHTML={{ __html: `<h2>${section}` }}
+                        />
+                      </div>
+                    ))}
+                </Box>
               </Box>
 
               {/* Tags */}
@@ -358,21 +500,13 @@ const BlogPostPage = () => {
             </article>
           </Grid>
 
-          {/* Sidebar */}
+          {/* Enhanced Sidebar with Maximum Ad Revenue */}
           <Grid item xs={12} lg={4}>
-            {/* Sidebar Ad */}
-            <Box sx={{ mb: 4 }}>
-              <AdSenseAd
-                slot="2059283552"
-                format="auto"
-                style={{
-                  display: 'block',
-                  textAlign: 'center',
-                  minHeight: '600px',
-                }}
-                minContentLength={300}
-              />
-            </Box>
+            {/* Primary Sidebar Ad - Skyscraper */}
+            <SidebarAd type="skyscraper" />
+
+            {/* Secondary Sidebar Ad - Rectangle */}
+            <SidebarAd type="rectangle" />
 
             {/* Related Articles */}
             <Card sx={{ mb: 4 }}>
@@ -425,15 +559,8 @@ const BlogPostPage = () => {
           </Grid>
         </Grid>
 
-        {/* Footer Ad */}
-        <Box sx={{ mt: 6 }}>
-          <AdSenseAd
-            slot="6544714660"
-            format="auto"
-            style={{ display: 'block', textAlign: 'center', minHeight: '90px' }}
-            minContentLength={400}
-          />
-        </Box>
+        {/* Footer Ad - Maximum Revenue Placement */}
+        <FooterAd />
       </Container>
     </>
   );
