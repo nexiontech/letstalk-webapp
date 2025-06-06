@@ -108,7 +108,7 @@ export const assessContentQuality = (options = {}) => {
  * @returns {boolean} Whether ads should be shown
  */
 export const shouldShowAds = pathname => {
-  // Pages that should never show ads
+  // Pages that should never show ads (expanded list)
   const excludedPaths = [
     '/login',
     '/register',
@@ -116,29 +116,46 @@ export const shouldShowAds = pathname => {
     '/404',
     '/error',
     '/loading',
-  ];
-
-  // Protected routes that might have minimal content
-  const protectedPaths = [
     '/dashboard',
     '/profile',
     '/service-issues',
     '/report-issue',
+    '/CommunityHub',
+    '/services',
+    '/utilities',
   ];
 
   // Check if path is excluded
   if (excludedPaths.some(path => pathname.includes(path))) {
+    console.log('AdSense: Path excluded from ads:', pathname);
     return false;
   }
 
-  // For protected routes, do additional content checks
-  if (protectedPaths.some(path => pathname.includes(path))) {
-    const assessment = assessContentQuality({ minWordCount: 200 });
-    return assessment.isQualified;
+  // Only allow ads on specific content-rich pages
+  const allowedPaths = [
+    '/',
+    '/about-us',
+    '/faq',
+    '/our-services',
+    '/press-releases',
+    '/privacy-policy',
+    '/terms-of-service',
+    '/cookie-policy',
+  ];
+
+  // Check if path is in allowed list
+  const isAllowedPath = allowedPaths.some(
+    path => pathname === path || (path !== '/' && pathname.startsWith(path))
+  );
+
+  if (!isAllowedPath) {
+    console.log('AdSense: Path not in allowed list:', pathname);
+    return false;
   }
 
-  // For public content pages, do full content assessment
-  const assessment = assessContentQuality();
+  // For allowed pages, do content assessment
+  const assessment = assessContentQuality({ minWordCount: 400 });
+  console.log('AdSense: Content assessment for', pathname, ':', assessment);
   return assessment.isQualified;
 };
 
@@ -182,22 +199,15 @@ export const getAdSlotsForPage = pathname => {
     });
   }
 
-  // Blog/article pages
-  if (pathname.includes('/press-releases') || pathname.includes('/news')) {
-    slots.push(
-      {
-        slot: '1234567893', // Replace with actual slot ID
-        format: 'auto',
-        position: 'article-top',
-        minContentLength: 600,
-      },
-      {
-        slot: '1234567894', // Replace with actual slot ID
-        format: 'auto',
-        position: 'article-bottom',
-        minContentLength: 600,
-      }
-    );
+  // Blog/article pages - Currently using existing content slot
+  // Future: Create dedicated blog slot IDs for better targeting
+  if (pathname.includes('/blog')) {
+    slots.push({
+      slot: '6544714660', // Use existing content page slot for now
+      format: 'auto',
+      position: 'article-content',
+      minContentLength: 800,
+    });
   }
 
   return slots;
@@ -249,7 +259,7 @@ export const initializeAds = (adElements = []) => {
       return;
     }
 
-    adElements.forEach((element, index) => {
+    adElements.forEach((_, index) => {
       setTimeout(() => {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
         console.log(`AdSense ad ${index + 1} initialized`);

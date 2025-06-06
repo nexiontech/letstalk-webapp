@@ -1,5 +1,5 @@
 // src/components/SEOMonitoring.jsx
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 
 /**
@@ -10,53 +10,8 @@ import { useLocation } from 'react-router-dom';
 const SEOMonitoring = () => {
   const location = useLocation();
 
-  useEffect(() => {
-    // Track page views for SEO analytics
-    const trackPageView = () => {
-      // Google Analytics 4 page view tracking
-      if (typeof window !== 'undefined' && window.gtag) {
-        window.gtag('config', 'G-76N7K7JX41', {
-          page_title: document.title,
-          page_location: window.location.href,
-          page_path: location.pathname,
-          content_group1: getContentGroup(location.pathname),
-          content_group2: "Let's Talk Platform",
-          content_group3: 'Saya-Setona',
-        });
-
-        // Custom SEO event tracking
-        window.gtag('event', 'page_view', {
-          event_category: 'SEO',
-          event_label: location.pathname,
-          page_title: document.title,
-          page_location: window.location.href,
-          custom_parameters: {
-            platform: 'web',
-            user_agent: navigator.userAgent,
-            referrer: document.referrer,
-            timestamp: new Date().toISOString(),
-          },
-        });
-      }
-
-      // Track Core Web Vitals for SEO
-      trackCoreWebVitals();
-
-      // Track structured data presence
-      trackStructuredData();
-
-      // Monitor page performance
-      trackPagePerformance();
-    };
-
-    // Delay tracking to ensure page is fully loaded
-    const timer = setTimeout(trackPageView, 100);
-
-    return () => clearTimeout(timer);
-  }, [location]);
-
   // Get content group based on page path
-  const getContentGroup = pathname => {
+  const getContentGroup = useCallback(pathname => {
     if (pathname === '/') return 'Homepage';
     if (pathname.includes('/about')) return 'About';
     if (pathname.includes('/services')) return 'Services';
@@ -66,10 +21,10 @@ const SEOMonitoring = () => {
     if (pathname.includes('/login') || pathname.includes('/register'))
       return 'Authentication';
     return 'Other';
-  };
+  }, []);
 
   // Track Core Web Vitals for SEO performance
-  const trackCoreWebVitals = () => {
+  const trackCoreWebVitals = useCallback(() => {
     if (typeof window !== 'undefined' && 'PerformanceObserver' in window) {
       // Largest Contentful Paint (LCP)
       new PerformanceObserver(entryList => {
@@ -117,10 +72,10 @@ const SEOMonitoring = () => {
         }
       }).observe({ entryTypes: ['layout-shift'] });
     }
-  };
+  }, [location.pathname]);
 
   // Track structured data presence for SEO
-  const trackStructuredData = () => {
+  const trackStructuredData = useCallback(() => {
     if (typeof window !== 'undefined') {
       const structuredDataScripts = document.querySelectorAll(
         'script[type="application/ld+json"]'
@@ -139,10 +94,10 @@ const SEOMonitoring = () => {
         });
       }
     }
-  };
+  }, [location.pathname]);
 
   // Track page performance metrics
-  const trackPagePerformance = () => {
+  const trackPagePerformance = useCallback(() => {
     if (typeof window !== 'undefined' && window.performance) {
       // Wait for page to fully load
       window.addEventListener('load', () => {
@@ -183,7 +138,58 @@ const SEOMonitoring = () => {
         }, 1000);
       });
     }
-  };
+  }, [location.pathname]);
+
+  useEffect(() => {
+    // Track page views for SEO analytics
+    const trackPageView = () => {
+      // Google Analytics 4 page view tracking
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('config', 'G-76N7K7JX41', {
+          page_title: document.title,
+          page_location: window.location.href,
+          page_path: location.pathname,
+          content_group1: getContentGroup(location.pathname),
+          content_group2: "Let's Talk Platform",
+          content_group3: 'Saya-Setona',
+        });
+
+        // Custom SEO event tracking
+        window.gtag('event', 'page_view', {
+          event_category: 'SEO',
+          event_label: location.pathname,
+          page_title: document.title,
+          page_location: window.location.href,
+          custom_parameters: {
+            platform: 'web',
+            user_agent: navigator.userAgent,
+            referrer: document.referrer,
+            timestamp: new Date().toISOString(),
+          },
+        });
+      }
+
+      // Track Core Web Vitals for SEO
+      trackCoreWebVitals();
+
+      // Track structured data presence
+      trackStructuredData();
+
+      // Monitor page performance
+      trackPagePerformance();
+    };
+
+    // Delay tracking to ensure page is fully loaded
+    const timer = setTimeout(trackPageView, 100);
+
+    return () => clearTimeout(timer);
+  }, [
+    location,
+    getContentGroup,
+    trackCoreWebVitals,
+    trackStructuredData,
+    trackPagePerformance,
+  ]);
 
   // Track SEO-related user interactions
   useEffect(() => {
