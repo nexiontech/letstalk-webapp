@@ -17,7 +17,8 @@ import {
 import { CalendarToday, Person, ArrowBack } from '@mui/icons-material';
 import AdSenseAd from '../../components/AdSenseAd';
 import SEOHelmet from '../../components/SEOHelmet';
-import { BLOG_IMAGES, CategoryHeader } from '../../components/BlogImages';
+import { BLOG_IMAGES } from '../../data/blogImagesData';
+import { CategoryHeader } from '../../components/BlogImages';
 
 const BlogCategoryPage = () => {
   const { category } = useParams();

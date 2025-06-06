@@ -1,6 +1,6 @@
 # 📊 Blog Performance Test Report
 
-Generated: 2025-06-06T00:43:50.968Z
+Generated: 2025-06-06T00:54:12.517Z
 
 ## Test Configuration
 
@@ -28,48 +28,48 @@ Generated: 2025-06-06T00:43:50.968Z
 **URL**: /blog
 
 **Performance Metrics**:
-- Load Time: 2755ms
-- First Contentful Paint: 727ms
-- Largest Contentful Paint: 1490ms
-- Cumulative Layout Shift: 0.026
-- Lighthouse Score: 92
+- Load Time: 1313ms
+- First Contentful Paint: 565ms
+- Largest Contentful Paint: 1619ms
+- Cumulative Layout Shift: 0.039
+- Lighthouse Score: 99
 
 **AdSense Metrics**:
-- Ad Count: 5
-- Content Length: 1343 words
-- Content-to-Ad Ratio: 2.7:1
+- Ad Count: 4
+- Content Length: 1584 words
+- Content-to-Ad Ratio: 4.0:1
 
 ### Blog Post ✅ PASS
 
 **URL**: /blog/revolutionizing-municipal-services
 
 **Performance Metrics**:
-- Load Time: 2735ms
-- First Contentful Paint: 1413ms
-- Largest Contentful Paint: 1145ms
-- Cumulative Layout Shift: 0.035
-- Lighthouse Score: 87
+- Load Time: 2253ms
+- First Contentful Paint: 1497ms
+- Largest Contentful Paint: 1433ms
+- Cumulative Layout Shift: 0.012
+- Lighthouse Score: 85
 
 **AdSense Metrics**:
-- Ad Count: 6
-- Content Length: 2100 words
-- Content-to-Ad Ratio: 3.5:1
+- Ad Count: 7
+- Content Length: 1965 words
+- Content-to-Ad Ratio: 2.8:1
 
 ### Category Page ✅ PASS
 
 **URL**: /blog/category/municipal-services
 
 **Performance Metrics**:
-- Load Time: 2127ms
-- First Contentful Paint: 1220ms
-- Largest Contentful Paint: 2391ms
-- Cumulative Layout Shift: 0.042
-- Lighthouse Score: 95
+- Load Time: 1191ms
+- First Contentful Paint: 562ms
+- Largest Contentful Paint: 2131ms
+- Cumulative Layout Shift: 0.012
+- Lighthouse Score: 92
 
 **AdSense Metrics**:
 - Ad Count: 5
-- Content Length: 1340 words
-- Content-to-Ad Ratio: 2.7:1
+- Content Length: 1648 words
+- Content-to-Ad Ratio: 3.3:1
 
 ## Summary
 

@@ -1,9 +1,6 @@
 import React from 'react';
 import { BLOG_IMAGES, CATEGORY_IMAGES } from '../data/blogImagesData';
 
-// Re-export for backward compatibility
-export { BLOG_IMAGES, CATEGORY_IMAGES };
-
 /**
  * BlogImage component for displaying optimized blog images
  */

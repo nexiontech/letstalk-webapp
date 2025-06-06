@@ -22,7 +22,7 @@ import {
 } from '@mui/icons-material';
 import AdSenseAd from '../../components/AdSenseAd';
 import SEOHelmet from '../../components/SEOHelmet';
-import { BLOG_IMAGES } from '../../components/BlogImages';
+import { BLOG_IMAGES } from '../../data/blogImagesData';
 
 const BlogHomePage = () => {
   const [searchTerm, setSearchTerm] = useState('');

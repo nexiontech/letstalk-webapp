@@ -38,11 +38,8 @@ const BlogPostPage = () => {
   useEffect(() => {
     const post = getBlogPost(slug);
     if (post && post.content) {
-      // Split content by h2 tags for strategic ad placement
-      const sections = post.content
-        .split('<h2>')
-        .filter(section => section.trim());
-      setContentSections(sections);
+      // Content sections are handled automatically in the render
+      // No need to store in state for this implementation
     }
   }, [slug]);
 
