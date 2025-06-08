@@ -19,7 +19,7 @@ import { getMaintenanceConfig } from '../utils/envUtils';
 
 /**
  * MaintenanceMode Component
- * 
+ *
  * Displays a full-screen maintenance overlay when the site is under maintenance.
  * Features:
  * - Responsive design for desktop and mobile
@@ -35,15 +35,17 @@ const MaintenanceMode = () => {
 
   // SEO data for maintenance mode
   const seoData = {
-    title: 'Site Under Maintenance - Let\'s Talk',
-    description: 'Let\'s Talk is currently undergoing scheduled maintenance to improve your experience. We\'ll be back online shortly.',
-    keywords: 'maintenance, scheduled maintenance, site down, let\'s talk, saya-setona',
+    title: "Site Under Maintenance - Let's Talk",
+    description:
+      "Let's Talk is currently undergoing scheduled maintenance to improve your experience. We'll be back online shortly.",
+    keywords:
+      "maintenance, scheduled maintenance, site down, let's talk, saya-setona",
     noIndex: true, // Don't index maintenance pages
     structuredData: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
       name: 'Site Under Maintenance',
-      description: 'Let\'s Talk is currently undergoing scheduled maintenance.',
+      description: "Let's Talk is currently undergoing scheduled maintenance.",
       url: 'https://letstalkbi.co.za',
       mainEntity: {
         '@type': 'Organization',

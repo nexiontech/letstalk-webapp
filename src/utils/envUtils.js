@@ -35,16 +35,26 @@ export const getMaintenanceConfig = () => {
   // Use the config file values as defaults
   const configDefaults = {
     isEnabled: true, // This should match the config file
-    message: 'We are currently performing scheduled maintenance to improve your experience. Our team is working to enhance the platform and will have everything back online shortly.',
-    estimatedTime: 'We expect to be back online within the next few hours. Please check back soon.',
+    message:
+      'We are currently performing scheduled maintenance to improve your experience. Our team is working to enhance the platform and will have everything back online shortly.',
+    estimatedTime:
+      'We expect to be back online within the next few hours. Please check back soon.',
     contactEmail: 'support@saya-setona.co.za',
   };
 
   return {
-    isEnabled: getEnvVariable('VITE_MAINTENANCE_MODE', 'false') === 'true' || configDefaults.isEnabled,
+    isEnabled:
+      getEnvVariable('VITE_MAINTENANCE_MODE', 'false') === 'true' ||
+      configDefaults.isEnabled,
     message: getEnvVariable('VITE_MAINTENANCE_MESSAGE', configDefaults.message),
-    estimatedTime: getEnvVariable('VITE_MAINTENANCE_ESTIMATED_TIME', configDefaults.estimatedTime),
-    contactEmail: getEnvVariable('VITE_MAINTENANCE_CONTACT_EMAIL', configDefaults.contactEmail),
+    estimatedTime: getEnvVariable(
+      'VITE_MAINTENANCE_ESTIMATED_TIME',
+      configDefaults.estimatedTime
+    ),
+    contactEmail: getEnvVariable(
+      'VITE_MAINTENANCE_CONTACT_EMAIL',
+      configDefaults.contactEmail
+    ),
   };
 };
 

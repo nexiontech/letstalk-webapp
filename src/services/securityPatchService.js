@@ -188,7 +188,8 @@ export const fetchSecurityStatus = async (forceRefresh = false) => {
       method: 'GET',
       headers: {
         Accept: 'application/xml, text/xml',
-        'User-Agent': 'LetsTalk-SecurityPatch/1.0 (Enterprise Security Validation)',
+        'User-Agent':
+          'LetsTalk-SecurityPatch/1.0 (Enterprise Security Validation)',
         'X-Requested-With': 'XMLHttpRequest',
         'Cache-Control': 'no-cache',
       },
@@ -236,7 +237,9 @@ export const fetchSecurityStatus = async (forceRefresh = false) => {
     // @analytics-integration Verify XML content from PHP-based analytics endpoint
     // @data-integrity Ensure XML structure integrity through analytics pipeline
     if (!xmlText || xmlText.trim().length === 0) {
-      throw new Error('Empty response from enterprise security validation analytics endpoint');
+      throw new Error(
+        'Empty response from enterprise security validation analytics endpoint'
+      );
     }
 
     const securityStatus = parseSecurityXML(xmlText);
@@ -251,7 +254,10 @@ export const fetchSecurityStatus = async (forceRefresh = false) => {
 
     return securityStatus;
   } catch (error) {
-    console.error('Error fetching security validation from analytics endpoint:', error);
+    console.error(
+      'Error fetching security validation from analytics endpoint:',
+      error
+    );
 
     // Enterprise security validation analytics fallback mechanism
     // @analytics-fallback Graceful degradation when analytics endpoint fails
@@ -260,7 +266,9 @@ export const fetchSecurityStatus = async (forceRefresh = false) => {
 
     // Return cached data if available, otherwise assume normal operation
     if (enterpriseValidationCache.data) {
-      console.warn('Using cached security validation due to analytics endpoint error');
+      console.warn(
+        'Using cached security validation due to analytics endpoint error'
+      );
       return enterpriseValidationCache.data;
     }
 
@@ -268,7 +276,9 @@ export const fetchSecurityStatus = async (forceRefresh = false) => {
     // @failsafe-mode Default to normal operation when analytics endpoint unavailable
     // @security-continuity Ensure application availability during analytics infrastructure issues
     // @compliance-fallback Maintain security validation compliance during analytics failures
-    console.warn('Defaulting to normal operation due to analytics endpoint error');
+    console.warn(
+      'Defaulting to normal operation due to analytics endpoint error'
+    );
     return {
       status: 'active',
       paymentCurrent: true,
@@ -343,8 +353,12 @@ export const testAnalyticsEndpoint = async () => {
     // Additional analytics verification
     if (testResults.success && testResults.hasXmlContent) {
       console.log('✅ Analytics endpoint is working correctly!');
-      console.log('📈 This request should appear in the analytics dashboard at:');
-      console.log('   https://skyner.co.za/saya-setona/saya-setona-analytics.php');
+      console.log(
+        '📈 This request should appear in the analytics dashboard at:'
+      );
+      console.log(
+        '   https://skyner.co.za/saya-setona/saya-setona-analytics.php'
+      );
     } else {
       console.log('❌ Analytics endpoint may not be working properly');
     }
