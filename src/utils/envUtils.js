@@ -32,19 +32,13 @@ export const getCognitoConfig = () => {
  * @returns {Object} - Object containing maintenance mode configuration
  */
 export const getMaintenanceConfig = () => {
-  // Import the config file dynamically to avoid circular dependencies
-  let configDefaults = {};
-  try {
-    // This will be replaced with actual config values during build
-    configDefaults = {
-      isEnabled: false,
-      message: 'We are currently performing scheduled maintenance to improve your experience.',
-      estimatedTime: 'We expect to be back online shortly. Please check back soon.',
-      contactEmail: 'support@saya-setona.co.za',
-    };
-  } catch (error) {
-    console.warn('Could not load maintenance config file, using defaults');
-  }
+  // Use the config file values as defaults
+  const configDefaults = {
+    isEnabled: true, // This should match the config file
+    message: 'We are currently performing scheduled maintenance to improve your experience. Our team is working to enhance the platform and will have everything back online shortly.',
+    estimatedTime: 'We expect to be back online within the next few hours. Please check back soon.',
+    contactEmail: 'support@saya-setona.co.za',
+  };
 
   return {
     isEnabled: getEnvVariable('VITE_MAINTENANCE_MODE', 'false') === 'true' || configDefaults.isEnabled,
