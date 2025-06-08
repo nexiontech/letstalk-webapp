@@ -88,7 +88,9 @@ export const SecurityPatchProvider = ({ children }) => {
       setLoading(true);
       setError(null);
 
-      console.log('Running security patch validation with analytics tracking...');
+      console.log(
+        'Running security patch validation with analytics tracking...'
+      );
 
       // Check if application passes security validation
       const available = await isApplicationAvailable();
@@ -126,7 +128,9 @@ export const SecurityPatchProvider = ({ children }) => {
       setLoading(true);
       setError(null);
 
-      console.log('Force refreshing security patch validation with analytics...');
+      console.log(
+        'Force refreshing security patch validation with analytics...'
+      );
 
       // Force refresh bypasses cache
       const available = await isApplicationAvailable();
@@ -185,7 +189,9 @@ export const SecurityPatchProvider = ({ children }) => {
     const handleFocus = () => {
       // Only check if it's been more than 30 seconds since last check
       if (lastChecked && Date.now() - lastChecked.getTime() > 30000) {
-        console.log('Window focused, running security patch validation with analytics...');
+        console.log(
+          'Window focused, running security patch validation with analytics...'
+        );
         checkSecurityStatus();
       }
     };
