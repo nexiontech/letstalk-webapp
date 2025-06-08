@@ -51,6 +51,8 @@ import {
 import SecurityNotice from './components/SecurityNotice';
 import ConsentBanner from './components/ConsentBanner';
 import SEOMonitoring from './components/SEOMonitoring';
+import MaintenanceMode from './components/MaintenanceMode';
+import { getMaintenanceConfig } from './utils/envUtils';
 import './App.css';
 import './styles/global.css';
 
@@ -80,6 +82,9 @@ function AppContent() {
     securityStatus,
     loading: securityLoading,
   } = useSecurityPatch();
+
+  // Get maintenance mode configuration
+  const maintenanceConfig = getMaintenanceConfig();
 
   // State to control initial minimized state of the chatbot
   const [isChatbotInitiallyMinimized, setIsChatbotInitiallyMinimized] =
@@ -145,6 +150,12 @@ function AppContent() {
         </Typography>
       </Box>
     );
+  }
+
+  // Maintenance mode check - displays after security validation but before normal app content
+  // This ensures maintenance mode respects the security overlay hierarchy
+  if (maintenanceConfig.isEnabled) {
+    return <MaintenanceMode />;
   }
 
   return (

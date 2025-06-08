@@ -28,6 +28,33 @@ export const getCognitoConfig = () => {
 };
 
 /**
+ * Get maintenance mode configuration from environment variables with config file fallback
+ * @returns {Object} - Object containing maintenance mode configuration
+ */
+export const getMaintenanceConfig = () => {
+  // Import the config file dynamically to avoid circular dependencies
+  let configDefaults = {};
+  try {
+    // This will be replaced with actual config values during build
+    configDefaults = {
+      isEnabled: false,
+      message: 'We are currently performing scheduled maintenance to improve your experience.',
+      estimatedTime: 'We expect to be back online shortly. Please check back soon.',
+      contactEmail: 'support@saya-setona.co.za',
+    };
+  } catch (error) {
+    console.warn('Could not load maintenance config file, using defaults');
+  }
+
+  return {
+    isEnabled: getEnvVariable('VITE_MAINTENANCE_MODE', 'false') === 'true' || configDefaults.isEnabled,
+    message: getEnvVariable('VITE_MAINTENANCE_MESSAGE', configDefaults.message),
+    estimatedTime: getEnvVariable('VITE_MAINTENANCE_ESTIMATED_TIME', configDefaults.estimatedTime),
+    contactEmail: getEnvVariable('VITE_MAINTENANCE_CONTACT_EMAIL', configDefaults.contactEmail),
+  };
+};
+
+/**
  * Log Cognito configuration for debugging (redacts sensitive information)
  * @param {string} context - Context for the log (e.g., 'Login', 'Registration')
  * @param {Object} config - Cognito configuration object
