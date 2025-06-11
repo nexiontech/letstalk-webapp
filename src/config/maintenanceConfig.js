@@ -15,7 +15,7 @@
 export const maintenanceConfig = {
   // Set to true to enable maintenance mode
   // This will be overridden by VITE_MAINTENANCE_MODE environment variable
-  isEnabled: true,
+  isEnabled: false,
 
   // Main maintenance message displayed to users
   // This will be overridden by VITE_MAINTENANCE_MESSAGE environment variable

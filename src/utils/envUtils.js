@@ -34,7 +34,7 @@ export const getCognitoConfig = () => {
 export const getMaintenanceConfig = () => {
   // Use the config file values as defaults
   const configDefaults = {
-    isEnabled: true, // This should match the config file
+    isEnabled: false, // This should match the config file
     message:
       'We are currently performing scheduled maintenance to improve your experience. Our team is working to enhance the platform and will have everything back online shortly.',
     estimatedTime:
