@@ -191,7 +191,7 @@ jobs:
 
       - name: Comment bundle analysis on PR
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -207,7 +207,7 @@ jobs:
 
       - name: Create bundle size tracking issue
         if: github.event_name == 'pull_request' && steps.size-comparison.outputs.size_status == 'alert'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |

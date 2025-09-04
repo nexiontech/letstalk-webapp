@@ -73,7 +73,7 @@ jobs:
 
       - name: Create issue if vulnerabilities found
         if: steps.audit.outputs.audit_status == 'vulnerabilities'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
