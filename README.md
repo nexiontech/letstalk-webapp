@@ -89,13 +89,19 @@ The Let's Talk platform aims to:
 
 - **Frontend Framework**: React 18.3.1 with Vite 6.3.3
 - **UI Library**: Material UI 7.0.2 with custom theming
-- **State Management**: Redux Toolkit 2.7.0
 - **Routing**: React Router DOM 7.5.1
-- **Authentication**: AWS Cognito with Amplify 6.14.3
-- **Backend Services**: AWS (API Gateway, Lambda, DynamoDB) - *In Development*
-- **Deployment**: AWS Amplify - *Configured*
+- **Authentication**: Simple dummy credentials for MVP
 - **Testing**: Jest 29.7.0 with React Testing Library 14.3.1
 - **Styling**: CSS with Material UI components, Bootstrap 5.3.6, and FontAwesome 6.7.2
+
+### 🚀 MVP Demo Credentials
+
+For testing the MVP, use these dummy credentials:
+
+- **ID Number**: `9001010001088`
+- **Password**: `demo123`
+
+These credentials are displayed on the login page for easy reference.
 
 ---
 
@@ -942,22 +948,18 @@ npm install
 Create a `.env.local` file in the root directory with the following variables:
 
 ```bash
-# AWS Cognito Configuration
-VITE_COGNITO_REGION=us-east-1
-VITE_COGNITO_USER_POOL_ID=us-east-1_xxxxxxxx
-VITE_COGNITO_USER_POOL_WEB_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxx
-VITE_COGNITO_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-VITE_COGNITO_IDENTITY_POOL_ID=us-east-1:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-
-# API Configuration
-VITE_API_URL=https://api.example.com
-VITE_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+# White Label Configuration (Optional)
+VITE_WL_PRIMARY_COLOR=#0E4649
+VITE_WL_SECONDARY_COLOR=#ffffff
+VITE_WL_ACCENT_COLOR=#007bff
+VITE_WL_ORGANIZATION_NAME="Your Organization"
+VITE_WL_PLATFORM_NAME="Your Platform"
 
 # Other Configuration
 VITE_APP_STAGE=development
 ```
 
-Contact the development team lead to obtain the actual values for these environment variables.
+These environment variables are optional for MVP deployment. The application will use default values if not provided.
 
 **4. Start the Development Server**
 
@@ -968,41 +970,20 @@ npm run dev
 
 The application will be available at `http://localhost:5173`.
 
-#### AWS Configuration
+#### MVP Configuration
 
-**AWS Cognito Setup:**
+**For MVP deployment:**
 
-To set up AWS Cognito for the application:
+The application is configured to use dummy data and mock authentication. No external services are required.
 
-1. Create a User Pool in the AWS Console
-2. Configure the User Pool with the following attributes:
-   - Username: ID Number (custom:idNumber)
-   - Required attributes: email, name
-   - Custom attributes: custom:idNumber, custom:address
-3. Create an App Client for the User Pool
-4. Create an Identity Pool and link it to the User Pool
-5. Update the environment variables with the Cognito configuration
-
-**AWS Amplify Setup:**
-
-To deploy the application using AWS Amplify:
+Simply run:
 
 ```bash
-# Install the AWS Amplify CLI
-npm install -g @aws-amplify/cli
-
-# Configure the Amplify CLI
-amplify configure
-
-# Initialize Amplify in the project
-amplify init
-
-# Add authentication to the project
-amplify add auth
-
-# Push the configuration to AWS
-amplify push
+npm install
+npm run dev
 ```
+
+The application will be available at `http://localhost:5173` with demo credentials displayed on the login page.
 
 #### Testing
 

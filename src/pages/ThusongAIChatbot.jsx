@@ -24,13 +24,22 @@ const ThusongAIChatbot = ({ initiallyMinimized = false }) => {
   ]);
   const [userInput, setUserInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [isChatMinimized, setIsChatMinimized] = useState(initiallyMinimized);
+
+  // Initialize minimized state from localStorage or prop
+  const [isChatMinimized, setIsChatMinimized] = useState(() => {
+    const savedState = localStorage.getItem('thusong-chat-minimized');
+    if (savedState !== null) {
+      return JSON.parse(savedState);
+    }
+    return initiallyMinimized;
+  });
+
   const messagesEndRef = useRef(null);
 
-  // Update minimized state if initiallyMinimized prop changes
+  // Save minimized state to localStorage whenever it changes
   useEffect(() => {
-    setIsChatMinimized(initiallyMinimized);
-  }, [initiallyMinimized]);
+    localStorage.setItem('thusong-chat-minimized', JSON.stringify(isChatMinimized));
+  }, [isChatMinimized]);
 
   // Sample suggested questions
   const suggestedQuestions = [

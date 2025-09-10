@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { getAppShortName } from '../config/whiteLabelConfig';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faTachometerAlt,
@@ -125,7 +126,7 @@ const DashboardLayout = ({ children }) => {
         className={`dashboard-sidebar ${mobileMenuOpen ? 'mobile-open' : ''}`}
       >
         <div className="sidebar-header">
-          <h2 className="dashboard-heading">LetsTalk</h2>
+          <h2 className="dashboard-heading">{getAppShortName()}</h2>
           <div className="sidebar-close-mobile" onClick={toggleMobileMenu}>
             <FontAwesomeIcon icon={faTimes} />
           </div>

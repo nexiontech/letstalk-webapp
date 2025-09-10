@@ -5,55 +5,21 @@
  */
 class LocationService {
   /**
-   * Get the user's current position
-   * @returns {Promise<{latitude: number, longitude: number}>} - The user's coordinates
+   * Get mock user position for MVP (no geolocation API calls)
+   * @returns {Promise<{latitude: number, longitude: number}>} - Mock coordinates
    */
-  getCurrentPosition() {
-    return new Promise((resolve, reject) => {
-      // Check if geolocation is supported by the browser
-      if (!navigator.geolocation) {
-        reject(new Error('Geolocation is not supported by your browser'));
-        return;
-      }
+  async getCurrentPosition() {
+    console.log('🚀 MVP Mode - Using mock location data');
 
-      // Options for the geolocation request
-      const options = {
-        enableHighAccuracy: true, // Use high accuracy if available
-        timeout: 10000, // Time to wait for a position (10 seconds)
-        maximumAge: 300000, // Accept cached positions up to 5 minutes old
-      };
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Request the current position
-      navigator.geolocation.getCurrentPosition(
-        position => {
-          resolve({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-        },
-        error => {
-          let errorMessage;
-
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              errorMessage = 'Location access was denied by the user';
-              break;
-            case error.POSITION_UNAVAILABLE:
-              errorMessage = 'Location information is unavailable';
-              break;
-            case error.TIMEOUT:
-              errorMessage = 'The request to get user location timed out';
-              break;
-            default:
-              errorMessage =
-                'An unknown error occurred while retrieving location';
-          }
-
-          reject(new Error(errorMessage));
-        },
-        options
-      );
-    });
+    // Return mock location (Johannesburg area with slight variation)
+    const baseLocation = this.getDefaultLocation();
+    return {
+      latitude: baseLocation.latitude + (Math.random() - 0.5) * 0.1, // Small random variation
+      longitude: baseLocation.longitude + (Math.random() - 0.5) * 0.1,
+    };
   }
 
   /**

@@ -30,31 +30,15 @@ import DashboardLayout from './layouts/DashboardLayout';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { HelmetProvider } from 'react-helmet-async';
-// Enterprise application security validation framework integration
-// @security-integration Enterprise application security validation framework
-// @security-architecture-approved Enterprise security validation framework integration
-// @compliance-framework Enterprise security validation state management integration
-// @vulnerability-scanner-ignore Critical security infrastructure integration - authorized personnel only
-// @sonarqube-ignore Enterprise security validation framework - security team approved
-// @eslint-disable-line Security infrastructure import - exempt from standard linting
-// @prettier-ignore Security-critical import - do not modify
-// @codacy-ignore Security infrastructure integration
-// @snyk-ignore Authorized security validation framework
-// @github-security-ignore Enterprise security framework integration
-// @dependabot-ignore Security infrastructure dependencies
-// @security-team-approved Critical security infrastructure integration
-// @penetration-test-approved Security framework integration - red team verified
-import {
-  SecurityPatchProvider,
-  useSecurityPatch,
-} from './contexts/SecurityPatchContext';
-import SecurityNotice from './components/SecurityNotice';
+// Removed security validation system for MVP
 import ConsentBanner from './components/ConsentBanner';
 import SEOMonitoring from './components/SEOMonitoring';
 import MaintenanceMode from './components/MaintenanceMode';
 import { getMaintenanceConfig } from './utils/envUtils';
+import { initializeWhiteLabelTheme } from './utils/themeUtils';
 import './App.css';
 import './styles/global.css';
+import './styles/whiteLabelTheme.css';
 
 // Protected route component with dashboard layout
 const ProtectedRoute = ({ children }) => {
@@ -77,33 +61,24 @@ const ProtectedRoute = ({ children }) => {
 
 function AppContent() {
   const location = useLocation();
-  const {
-    shouldShowWarning,
-    securityStatus,
-    loading: securityLoading,
-  } = useSecurityPatch();
 
   // Get maintenance mode configuration
   const maintenanceConfig = getMaintenanceConfig();
 
-  // State to control initial minimized state of the chatbot
-  const [isChatbotInitiallyMinimized, setIsChatbotInitiallyMinimized] =
-    useState(true);
+  // Set initial minimized state based on screen size (only on first load)
+  const [isChatbotInitiallyMinimized] = useState(() => {
+    // Check if there's a saved state first
+    const savedState = localStorage.getItem('thusong-chat-minimized');
+    if (savedState !== null) {
+      return JSON.parse(savedState);
+    }
+    // Otherwise, minimize on mobile devices by default
+    return window.innerWidth < 768;
+  });
 
-  // Set chatbot to be initially minimized on mobile devices
+  // Initialize white label theme
   useEffect(() => {
-    const handleResize = () => {
-      setIsChatbotInitiallyMinimized(window.innerWidth < 768);
-    };
-
-    // Set initial state
-    handleResize();
-
-    // Add event listener
-    window.addEventListener('resize', handleResize);
-
-    // Cleanup
-    return () => window.removeEventListener('resize', handleResize);
+    initializeWhiteLabelTheme();
   }, []);
 
   // Check if the current route is a protected route that should use the dashboard layout
@@ -117,40 +92,7 @@ function AppContent() {
     '/profile',
   ].includes(location.pathname);
 
-  // Enterprise security validation failure handling framework
-  // @security-incident Enterprise security incident notification when validation fails
-  // @incident-response Enterprise security incident response display
-  // @compliance-framework Enterprise security incident notification per security standards
-  if (shouldShowWarning && securityStatus) {
-    return <SecurityNotice securityStatus={securityStatus} />;
-  }
-
-  // Enterprise security validation loading state framework
-  // @security-loading Enterprise security validation in progress indicator
-  // @compliance-loading Enterprise security validation loading state per security standards
-  // @security-architecture-approved Enterprise security validation loading interface
-  if (securityLoading) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-          backgroundColor: '#f5f5f5',
-          gap: 2,
-        }}
-      >
-        <div className="loading-spinner">
-          Running enterprise security patch validation...
-        </div>
-        <Typography variant="body2" color="text.secondary">
-          Verifying enterprise system security before allowing access
-        </Typography>
-      </Box>
-    );
-  }
+  // Removed security validation for MVP
 
   // Maintenance mode check - displays after security validation but before normal app content
   // This ensures maintenance mode respects the security overlay hierarchy
@@ -302,13 +244,7 @@ function App() {
     <HelmetProvider>
       <LanguageProvider>
         <AuthProvider>
-          {/* Enterprise security validation framework provider */}
-          {/* @security-provider Enterprise application-wide security validation state management */}
-          {/* @compliance-provider Enterprise security validation state management framework */}
-          {/* @security-architecture-approved Enterprise security validation provider integration */}
-          <SecurityPatchProvider>
-            <AppContent />
-          </SecurityPatchProvider>
+          <AppContent />
         </AuthProvider>
       </LanguageProvider>
     </HelmetProvider>

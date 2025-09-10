@@ -18,6 +18,18 @@ import {
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../contexts/AuthContext';
+import {
+  getAppName,
+  getAppTagline,
+  getAppDescription,
+  getCompanyFullName,
+  getLogoPath,
+  getWhiteLabelConfig,
+  getSupportEmail,
+  getContactPhone,
+  getPrimaryDomain,
+  getCompanyDomain,
+} from '../config/whiteLabelConfig';
 import letsTalkLogo from '../assets/images/lets-talk-logo.png';
 import ComingSoonModal from './ComingSoonModal';
 import './Footer.css';
@@ -47,14 +59,13 @@ const Footer = () => {
         <div className="footer-top">
           <div className="footer-brand">
             <img
-              src={letsTalkLogo}
-              alt="Let's Talk Logo"
+              src={getLogoPath().startsWith('http') ? getLogoPath() : letsTalkLogo}
+              alt={`${getAppName()} Logo`}
               className="footer-logo"
             />
-            <p className="footer-tagline">Your community service platform</p>
+            <p className="footer-tagline">{getAppTagline()}</p>
             <p className="footer-description">
-              Stay connected with essential services in your community. Report
-              issues, track resolutions, and engage with your local government.
+              {getAppDescription()}
             </p>
 
             <div className="footer-social">
@@ -281,29 +292,27 @@ const Footer = () => {
                     className="contact-icon"
                   />
                   <span>
-                    41 Juta Street, Braamfontein
-                    <br />
-                    Johannesburg, South Africa
+                    {getWhiteLabelConfig('contact', 'address', '41 Juta Street, Braamfontein, Johannesburg, South Africa')}
                   </span>
                 </li>
                 <li>
                   <FontAwesomeIcon icon={faPhone} className="contact-icon" />
-                  <span>+27 11 123 4567</span>
+                  <span>{getContactPhone()}</span>
                 </li>
                 <li>
                   <FontAwesomeIcon icon={faEnvelope} className="contact-icon" />
-                  <a href="mailto:info@saya-setona.co.za">
-                    info@saya-setona.co.za
+                  <a href={`mailto:${getWhiteLabelConfig('contact', 'email', getSupportEmail())}`}>
+                    {getWhiteLabelConfig('contact', 'email', getSupportEmail())}
                   </a>
                 </li>
                 <li>
                   <FontAwesomeIcon icon={faGlobe} className="contact-icon" />
                   <a
-                    href="https://www.saya-setona.co.za"
+                    href={getWhiteLabelConfig('domains', 'company', getCompanyDomain())}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    www.saya-setona.co.za
+                    {getWhiteLabelConfig('domains', 'company', getCompanyDomain()).replace('https://', 'www.')}
                   </a>
                 </li>
               </ul>
@@ -314,7 +323,7 @@ const Footer = () => {
         <div className="footer-bottom">
           <div className="footer-copyright">
             <p>
-              &copy; {currentYear} Saya Setona Innovations. All Rights Reserved.
+              &copy; {currentYear} {getCompanyFullName()}. All Rights Reserved.
             </p>
           </div>
           <div className="footer-legal-links">

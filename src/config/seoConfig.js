@@ -1,121 +1,107 @@
 // src/config/seoConfig.js
 
 /**
- * Comprehensive SEO Configuration for Let's Talk Platform
- * Centralized SEO settings for letstalkbi.co.za
- * Built by Saya-Setona (saya-setona.co.za)
+ * White Label SEO Configuration
+ * Centralized SEO settings with white label support
+ * Uses white label configuration for dynamic branding
  */
+
+import {
+  getAppName,
+  getAppFullName,
+  getPrimaryDomain,
+  getAppDescription,
+  getCompanyName,
+  getCompanyDomain,
+  getCountry,
+  getCountryName,
+  getLanguage,
+  getWhiteLabelConfig,
+  getLogoPath,
+} from './whiteLabelConfig';
 
 export const SEO_CONFIG = {
   // Site Information
   site: {
-    name: "Let's Talk",
-    fullName: "Let's Talk - South Africa's Premier Citizen Engagement Platform",
-    domain: 'https://letstalkbi.co.za',
-    description:
-      "Connect with municipal services, report issues, access government services, and engage with your community. South Africa's premier citizen engagement platform built by Saya-Setona.",
-    keywords: [
-      'South Africa',
-      'citizen engagement',
-      'municipal services',
-      'government services',
-      'community platform',
-      'service delivery',
-      'local government',
-      'public services',
-      'Saya-Setona',
-      'letstalkbi',
-    ],
-    language: 'en-ZA',
-    country: 'ZA',
-    region: 'South Africa',
+    name: getAppName(),
+    fullName: getAppFullName(),
+    domain: getPrimaryDomain(),
+    description: getAppDescription(),
+    keywords: getWhiteLabelConfig('seo', 'keywords'),
+    language: getLanguage(),
+    country: getCountry(),
+    region: getCountryName(),
   },
 
   // Company Information
   company: {
-    name: 'Saya-Setona',
-    url: 'https://saya-setona.co.za',
-    logo: 'https://letstalkbi.co.za/logo.png',
-    foundingDate: '2024',
-    description:
-      'South African technology company specializing in citizen engagement platforms and government service digitization.',
+    name: getCompanyName(),
+    url: getCompanyDomain(),
+    logo: `${getPrimaryDomain()}${getLogoPath()}`,
+    foundingDate: getWhiteLabelConfig('company', 'foundingYear'),
+    description: getWhiteLabelConfig('company', 'description'),
   },
 
   // Social Media
   social: {
-    twitter: '@SayaSetona',
-    facebook: 'SayaSetona',
-    linkedin: 'company/saya-setona',
-    youtube: 'SayaSetona',
+    twitter: `@${getWhiteLabelConfig('social', 'twitter')}`,
+    facebook: getWhiteLabelConfig('social', 'facebook'),
+    linkedin: getWhiteLabelConfig('social', 'linkedin'),
+    youtube: getWhiteLabelConfig('social', 'youtube'),
   },
 
   // Default Meta Tags
   defaultMeta: {
-    title:
-      "Let's Talk - South Africa's Premier Citizen Engagement Platform | Saya-Setona",
-    description:
-      "Connect with municipal services, report issues, access government services, and engage with your community. South Africa's premier citizen engagement platform built by Saya-Setona for seamless citizen-government interaction.",
-    keywords:
-      'South Africa, citizen engagement, municipal services, government services, community platform, service delivery, local government, public services, Saya-Setona, letstalkbi',
-    image: 'https://letstalkbi.co.za/og-image.jpg',
-    appScreenshot: 'https://letstalkbi.co.za/app-screenshot.jpg',
-    twitterCard: 'https://letstalkbi.co.za/twitter-card.jpg',
+    title: `${getAppFullName()} | ${getCompanyName()}`,
+    description: getAppDescription(),
+    keywords: getWhiteLabelConfig('seo', 'keywords').join(', '),
+    image: `${getPrimaryDomain()}${getWhiteLabelConfig('branding', 'ogImagePath')}`,
+    appScreenshot: `${getPrimaryDomain()}${getWhiteLabelConfig('branding', 'appScreenshotPath')}`,
+    twitterCard: `${getPrimaryDomain()}${getWhiteLabelConfig('branding', 'twitterCardPath')}`,
     type: 'website',
   },
 
   // Page-specific SEO configurations
   pages: {
     home: {
-      title: "Let's Talk - South Africa's Premier Citizen Engagement Platform",
-      description:
-        "Connect with municipal services, report issues, access government services, and engage with your community. South Africa's premier citizen engagement platform.",
-      keywords:
-        'citizen engagement platform, municipal services South Africa, government services online, community platform, service reporting, local government, public services, civic engagement, digital government, smart city solutions',
+      title: getAppFullName(),
+      description: getAppDescription(),
+      keywords: getWhiteLabelConfig('seo', 'keywords').join(', '),
       priority: 1.0,
       changefreq: 'daily',
     },
     about: {
-      title: "About Us - Let's Talk Platform | Saya-Setona",
-      description:
-        "Learn about Let's Talk, South Africa's leading citizen engagement platform built by Saya-Setona. Discover our mission to connect communities with government services.",
-      keywords:
-        'about Saya-Setona, citizen engagement platform, company information, mission vision values, South African technology company, government services platform, digital transformation, civic technology',
+      title: `About Us - ${getAppName()} Platform | ${getCompanyName()}`,
+      description: `Learn about ${getAppName()}, ${getCountryName()}'s leading citizen engagement platform built by ${getCompanyName()}. Discover our mission to connect communities with government services.`,
+      keywords: `about ${getCompanyName()}, citizen engagement platform, company information, mission vision values, ${getCountryName()} technology company, government services platform, digital transformation, civic technology`,
       priority: 0.8,
       changefreq: 'monthly',
     },
     services: {
-      title:
-        "Our Services - Municipal & Government Services | Let's Talk Platform",
-      description:
-        'Discover our comprehensive range of municipal and government services including water services, electricity, community engagement, document services, payments, and more.',
-      keywords:
-        'municipal services, government services, water services, electricity services, community engagement, service delivery, public services, document services, payment services, emergency alerts, service tracking',
+      title: `Our Services - Municipal & Government Services | ${getAppName()} Platform`,
+      description: 'Discover our comprehensive range of municipal and government services including water services, electricity, community engagement, document services, payments, and more.',
+      keywords: 'municipal services, government services, water services, electricity services, community engagement, service delivery, public services, document services, payment services, emergency alerts, service tracking',
       priority: 0.9,
       changefreq: 'weekly',
     },
     faq: {
-      title:
-        "Frequently Asked Questions - Let's Talk Help Center | Saya-Setona",
-      description:
-        "Find answers to common questions about using Let's Talk platform, municipal services, account management, payments, security, and technical support.",
-      keywords:
-        'FAQ, help center, support, questions and answers, user guide, platform help, municipal services help, account support, payment help, security questions, troubleshooting',
+      title: `Frequently Asked Questions - ${getAppName()} Help Center | ${getCompanyName()}`,
+      description: `Find answers to common questions about using ${getAppName()} platform, municipal services, account management, payments, security, and technical support.`,
+      keywords: 'FAQ, help center, support, questions and answers, user guide, platform help, municipal services help, account support, payment help, security questions, troubleshooting',
       priority: 0.7,
       changefreq: 'monthly',
     },
     login: {
-      title: "Sign In - Let's Talk Platform",
-      description:
-        "Sign in to your Let's Talk account to access municipal services, report issues, and engage with your community.",
+      title: `Sign In - ${getAppName()} Platform`,
+      description: `Sign in to your ${getAppName()} account to access municipal services, report issues, and engage with your community.`,
       keywords: 'login, sign in, user account, authentication, access platform',
       priority: 0.5,
       changefreq: 'yearly',
       noIndex: true,
     },
     register: {
-      title: "Create Account - Join Let's Talk Platform",
-      description:
-        "Create your free Let's Talk account to start accessing municipal services, reporting issues, and engaging with your community.",
+      title: `Create Account - Join ${getAppName()} Platform`,
+      description: `Create your free ${getAppName()} account to start accessing municipal services, reporting issues, and engaging with your community.`,
       keywords: 'register, sign up, create account, join platform, new user',
       priority: 0.6,
       changefreq: 'yearly',

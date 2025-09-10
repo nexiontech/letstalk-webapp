@@ -6,6 +6,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from '../translations';
 import LanguageSelector from './LanguageSelector';
+import { getAppName, getLogoPath, getPrimaryDomain } from '../config/whiteLabelConfig';
 import letsTalkLogo from '../assets/images/lets-talk-logo.png';
 import './NavigationBar.css';
 
@@ -67,8 +68,8 @@ function NavigationBar() {
         <div className="nav-left">
           <Link to="/" className="nav-logo">
             <img
-              src={letsTalkLogo}
-              alt="Let's Talk Logo"
+              src={getLogoPath().startsWith('http') ? getLogoPath() : letsTalkLogo}
+              alt={`${getAppName()} Logo`}
               className="logo-image"
             />
           </Link>

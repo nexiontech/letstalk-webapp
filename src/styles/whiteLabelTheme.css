@@ -1,0 +1,149 @@
+/* src/styles/whiteLabelTheme.css */
+
+/**
+ * White Label Theme Variables
+ * 
+ * This file defines CSS custom properties (variables) that can be dynamically
+ * updated based on white label configuration. These variables should be used
+ * throughout the application instead of hardcoded colors.
+ */
+
+:root {
+  /* Primary Brand Colors */
+  --wl-primary-color: #0E4649;
+  --wl-primary-light: #1a6b70;
+  --wl-primary-dark: #0a3336;
+  
+  /* Secondary Colors */
+  --wl-secondary-color: #ffffff;
+  --wl-secondary-light: #f8f9fa;
+  --wl-secondary-dark: #e9ecef;
+  
+  /* Accent Colors */
+  --wl-accent-color: #007bff;
+  --wl-accent-light: #66b3ff;
+  --wl-accent-dark: #0056b3;
+  
+  /* Status Colors */
+  --wl-success-color: #28a745;
+  --wl-warning-color: #ffc107;
+  --wl-error-color: #dc3545;
+  --wl-info-color: #17a2b8;
+  
+  /* Text Colors */
+  --wl-text-primary: #212529;
+  --wl-text-secondary: #6c757d;
+  --wl-text-muted: #868e96;
+  --wl-text-light: #ffffff;
+  
+  /* Background Colors */
+  --wl-bg-primary: #ffffff;
+  --wl-bg-secondary: #f8f9fa;
+  --wl-bg-dark: #343a40;
+  --wl-bg-light: #f1f3f4;
+  
+  /* Border Colors */
+  --wl-border-color: #dee2e6;
+  --wl-border-light: #e9ecef;
+  --wl-border-dark: #adb5bd;
+  
+  /* Shadow Colors */
+  --wl-shadow-light: rgba(0, 0, 0, 0.1);
+  --wl-shadow-medium: rgba(0, 0, 0, 0.15);
+  --wl-shadow-dark: rgba(0, 0, 0, 0.25);
+  
+  /* Gradient Colors */
+  --wl-gradient-primary: linear-gradient(135deg, var(--wl-primary-color), var(--wl-primary-light));
+  --wl-gradient-secondary: linear-gradient(135deg, var(--wl-secondary-color), var(--wl-secondary-light));
+  --wl-gradient-accent: linear-gradient(135deg, var(--wl-accent-color), var(--wl-accent-light));
+  
+  /* Component-specific Colors */
+  --wl-navbar-bg: var(--wl-primary-color);
+  --wl-navbar-text: var(--wl-text-light);
+  --wl-sidebar-bg: var(--wl-bg-secondary);
+  --wl-sidebar-text: var(--wl-text-primary);
+  --wl-footer-bg: var(--wl-bg-dark);
+  --wl-footer-text: var(--wl-text-light);
+  
+  /* Button Colors */
+  --wl-btn-primary-bg: var(--wl-primary-color);
+  --wl-btn-primary-text: var(--wl-text-light);
+  --wl-btn-primary-hover: var(--wl-primary-dark);
+  --wl-btn-secondary-bg: var(--wl-secondary-color);
+  --wl-btn-secondary-text: var(--wl-text-primary);
+  --wl-btn-secondary-hover: var(--wl-secondary-dark);
+  
+  /* Form Colors */
+  --wl-input-bg: var(--wl-bg-primary);
+  --wl-input-border: var(--wl-border-color);
+  --wl-input-focus: var(--wl-accent-color);
+  --wl-input-text: var(--wl-text-primary);
+  
+  /* Card Colors */
+  --wl-card-bg: var(--wl-bg-primary);
+  --wl-card-border: var(--wl-border-light);
+  --wl-card-shadow: var(--wl-shadow-light);
+  
+  /* Dashboard Colors */
+  --wl-dashboard-bg: var(--wl-bg-light);
+  --wl-dashboard-sidebar: var(--wl-bg-primary);
+  --wl-dashboard-content: var(--wl-bg-primary);
+  
+  /* Spacing and Layout */
+  --wl-border-radius: 8px;
+  --wl-border-radius-sm: 4px;
+  --wl-border-radius-lg: 12px;
+  
+  /* Typography */
+  --wl-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  --wl-font-size-base: 16px;
+  --wl-line-height-base: 1.5;
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --wl-bg-primary: #1a1a1a;
+    --wl-bg-secondary: #2d2d2d;
+    --wl-bg-light: #333333;
+    --wl-text-primary: #ffffff;
+    --wl-text-secondary: #cccccc;
+    --wl-text-muted: #999999;
+    --wl-border-color: #444444;
+    --wl-border-light: #555555;
+    --wl-card-bg: #2d2d2d;
+    --wl-input-bg: #333333;
+    --wl-dashboard-bg: #1a1a1a;
+    --wl-dashboard-sidebar: #2d2d2d;
+    --wl-dashboard-content: #2d2d2d;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --wl-border-color: #000000;
+    --wl-text-primary: #000000;
+    --wl-text-secondary: #333333;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --wl-transition-duration: 0s;
+  }
+}
+
+/* Utility classes for white label theming */
+.wl-primary-bg { background-color: var(--wl-primary-color) !important; }
+.wl-secondary-bg { background-color: var(--wl-secondary-color) !important; }
+.wl-accent-bg { background-color: var(--wl-accent-color) !important; }
+
+.wl-primary-text { color: var(--wl-primary-color) !important; }
+.wl-secondary-text { color: var(--wl-secondary-color) !important; }
+.wl-accent-text { color: var(--wl-accent-color) !important; }
+
+.wl-primary-border { border-color: var(--wl-primary-color) !important; }
+.wl-secondary-border { border-color: var(--wl-secondary-color) !important; }
+.wl-accent-border { border-color: var(--wl-accent-color) !important; }
