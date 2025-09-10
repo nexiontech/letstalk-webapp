@@ -65,25 +65,16 @@ function AppContent() {
   // Get maintenance mode configuration
   const maintenanceConfig = getMaintenanceConfig();
 
-  // State to control initial minimized state of the chatbot
-  const [isChatbotInitiallyMinimized, setIsChatbotInitiallyMinimized] =
-    useState(true);
-
-  // Set chatbot to be initially minimized on mobile devices
-  useEffect(() => {
-    const handleResize = () => {
-      setIsChatbotInitiallyMinimized(window.innerWidth < 768);
-    };
-
-    // Set initial state
-    handleResize();
-
-    // Add event listener
-    window.addEventListener('resize', handleResize);
-
-    // Cleanup
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  // Set initial minimized state based on screen size (only on first load)
+  const [isChatbotInitiallyMinimized] = useState(() => {
+    // Check if there's a saved state first
+    const savedState = localStorage.getItem('thusong-chat-minimized');
+    if (savedState !== null) {
+      return JSON.parse(savedState);
+    }
+    // Otherwise, minimize on mobile devices by default
+    return window.innerWidth < 768;
+  });
 
   // Initialize white label theme
   useEffect(() => {
