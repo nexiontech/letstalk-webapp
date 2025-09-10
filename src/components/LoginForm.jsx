@@ -220,6 +220,13 @@ function LoginForm() {
       <h1>Log in to your account</h1>
       <p className="subtitle">Welcome back! Please enter your details.</p>
 
+      {/* MVP Demo Credentials Notice */}
+      <Alert severity="info" className="auth-alert" style={{ marginBottom: '1rem' }}>
+        <strong>MVP Demo Credentials:</strong><br />
+        ID Number: <code>9001010001088</code><br />
+        Password: <code>demo123</code>
+      </Alert>
+
       {/* Show error message if there is one */}
       {(loginError || error) && (
         <Alert severity="error" className="auth-alert">

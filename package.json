@@ -30,9 +30,6 @@
     "blog:optimize": "npm run blog:setup-images && npm run blog:test-performance"
   },
   "dependencies": {
-    "@aws-amplify/auth": "^6.12.3",
-    "@aws-amplify/core": "^6.11.3",
-    "@aws-amplify/ui-react": "^6.11.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
@@ -42,13 +39,10 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@mui/icons-material": "^7.0.2",
     "@mui/material": "^7.0.2",
-    "@reduxjs/toolkit": "^2.7.0",
-    "aws-amplify": "^6.14.3",
     "bootstrap": "^5.3.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",
-    "react-redux": "^9.2.0",
     "react-router-dom": "^7.5.1"
   },
   "devDependencies": {

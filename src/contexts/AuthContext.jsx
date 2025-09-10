@@ -19,7 +19,14 @@ export const AuthProvider = ({ children }) => {
     console.log('🚀 MVP Mode - Using mock user:', mockUserData);
   }, []);
 
-  // Simplified login function for MVP (always succeeds with mock data)
+  // Dummy login credentials for MVP
+  const DUMMY_CREDENTIALS = {
+    idNumber: '9001010001088',
+    password: 'demo123',
+    email: 'demo@example.com'
+  };
+
+  // Simplified login function for MVP with dummy credentials
   const login = async (idNumber, password, documentType) => {
     setLoading(true);
     setError(null);
@@ -27,13 +34,18 @@ export const AuthProvider = ({ children }) => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // Always succeed with mock user data
-    const mockUserData = getMockUser();
-    setUser(mockUserData);
-    setLoading(false);
-
-    console.log('🚀 MVP Login successful with mock user:', mockUserData);
-    return { success: true };
+    // Check dummy credentials
+    if (idNumber === DUMMY_CREDENTIALS.idNumber && password === DUMMY_CREDENTIALS.password) {
+      const mockUserData = getMockUser();
+      setUser(mockUserData);
+      setLoading(false);
+      console.log('🚀 MVP Login successful with dummy credentials:', mockUserData);
+      return { success: true };
+    } else {
+      setError('Invalid credentials. Use ID: 9001010001088, Password: demo123');
+      setLoading(false);
+      return { success: false, error: 'Invalid credentials. Use ID: 9001010001088, Password: demo123' };
+    }
   };
 
   // Simplified register function for MVP (always succeeds)

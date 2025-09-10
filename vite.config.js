@@ -15,15 +15,11 @@ export default defineConfig({
           vendor: ['react', 'react-dom'],
           // Material-UI components
           mui: ['@mui/material', '@mui/icons-material'],
-          // AWS Amplify
-          aws: ['aws-amplify'],
           // FontAwesome icons
           fontawesome: [
             '@fortawesome/react-fontawesome',
             '@fortawesome/free-solid-svg-icons'
           ],
-          // Redux
-          redux: ['@reduxjs/toolkit', 'react-redux'],
           // Router
           router: ['react-router-dom']
         }
