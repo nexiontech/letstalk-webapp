@@ -1,6 +1,6 @@
 // src/contexts/AuthContext.jsx
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   checkAuthStatus,
@@ -16,6 +16,7 @@ import {
   clearPasswordResetStatus,
   clearVerificationStatus,
 } from '../services/amplifyAuthService';
+import { isAuthBypassEnabled, getMockUser } from '../utils/envUtils';
 
 // Create the context
 const AuthContext = createContext();
@@ -24,10 +25,22 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const dispatch = useDispatch();
   const auth = useSelector(state => state.auth);
+  const [bypassAuth, setBypassAuth] = useState(false);
+  const [mockUser, setMockUser] = useState(null);
 
-  // Check authentication status on mount
+  // Check if auth bypass is enabled and set up mock auth state
   useEffect(() => {
-    dispatch(checkAuthStatus());
+    const shouldBypass = isAuthBypassEnabled();
+    setBypassAuth(shouldBypass);
+
+    if (shouldBypass) {
+      const mockUserData = getMockUser();
+      setMockUser(mockUserData);
+      console.log('🚀 Auth bypass enabled for development - Mock user:', mockUserData);
+    } else {
+      // Check authentication status normally
+      dispatch(checkAuthStatus());
+    }
   }, [dispatch]);
 
   // Login function
@@ -174,12 +187,12 @@ export const AuthProvider = ({ children }) => {
     dispatch(clearVerificationStatus());
   };
 
-  // Create the context value
+  // Create the context value with bypass support
   const contextValue = {
-    user: auth.user,
-    isAuthenticated: auth.isAuthenticated,
-    loading: auth.loading,
-    error: auth.error,
+    user: bypassAuth ? mockUser : auth.user,
+    isAuthenticated: bypassAuth ? true : auth.isAuthenticated,
+    loading: bypassAuth ? false : auth.loading,
+    error: bypassAuth ? null : auth.error,
     registrationSuccess: auth.registrationSuccess,
     registrationMessage: auth.registrationMessage,
     passwordResetRequested: auth.passwordResetRequested,

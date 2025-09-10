@@ -59,6 +59,28 @@ export const getMaintenanceConfig = () => {
 };
 
 /**
+ * Check if authentication bypass is enabled for development
+ * @returns {boolean} - True if auth bypass is enabled
+ */
+export const isAuthBypassEnabled = () => {
+  return getEnvVariable('VITE_BYPASS_AUTH', 'false') === 'true';
+};
+
+/**
+ * Get mock user data for development auth bypass
+ * @returns {Object} - Mock user object for development
+ */
+export const getMockUser = () => {
+  return {
+    idNumber: '9001010001088',
+    email: 'dev.user@example.com',
+    name: 'Development User',
+    role: 'citizen',
+    documentType: 'idNumber',
+  };
+};
+
+/**
  * Log Cognito configuration for debugging (redacts sensitive information)
  * @param {string} context - Context for the log (e.g., 'Login', 'Registration')
  * @param {Object} config - Cognito configuration object
