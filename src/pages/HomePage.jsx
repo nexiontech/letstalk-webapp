@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAuth } from '../contexts/AuthContext';
 import SEOHead, { generatePageStructuredData } from '../components/SEOHead';
 import { generateSEOKeywords } from '../utils/seoUtils';
+import { getAppName, getAppTagline, getAppDescription } from '../config/whiteLabelConfig';
 import AdSenseAd from '../components/AdSenseAd';
 import {
   faWater,
@@ -131,12 +132,11 @@ function HomePage() {
               {greeting}, {firstName}!
             </h1>
           ) : (
-            <h1 className="hero-title">Let's Talk</h1>
+            <h1 className="hero-title">{getAppName()}</h1>
           )}
-          <h2 className="hero-subtitle">Your community service platform</h2>
+          <h2 className="hero-subtitle">{getAppTagline()}</h2>
           <p className="hero-description">
-            Stay connected with essential services in your community. Report
-            issues, track resolutions, and engage with your local government.
+            {getAppDescription()}
           </p>
 
           <div className="hero-cta">
@@ -272,7 +272,7 @@ function HomePage() {
             <>
               <h2>Ready to get started?</h2>
               <p>
-                Join thousands of community members already using Let's Talk
+                Join thousands of community members already using {getAppName()}
               </p>
               <div className="cta-buttons">
                 <Link to="/register" className="cta-button primary">

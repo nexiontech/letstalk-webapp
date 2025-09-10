@@ -81,6 +81,24 @@ export const getMockUser = () => {
 };
 
 /**
+ * Check if white label mode is enabled
+ * @returns {boolean} - True if white label mode is enabled
+ */
+export const isWhiteLabelEnabled = () => {
+  return getEnvVariable('VITE_WHITE_LABEL_ENABLED', 'false') === 'true';
+};
+
+/**
+ * Get white label environment variable with fallback
+ * @param {string} key - The white label environment variable key (without VITE_WL_ prefix)
+ * @param {string} defaultValue - Default value to return if the key is not found
+ * @returns {string} - The value of the white label environment variable or the default value
+ */
+export const getWhiteLabelEnvVariable = (key, defaultValue = '') => {
+  return getEnvVariable(`VITE_WL_${key}`, defaultValue);
+};
+
+/**
  * Log Cognito configuration for debugging (redacts sensitive information)
  * @param {string} context - Context for the log (e.g., 'Login', 'Registration')
  * @param {Object} config - Cognito configuration object

@@ -53,8 +53,10 @@ import ConsentBanner from './components/ConsentBanner';
 import SEOMonitoring from './components/SEOMonitoring';
 import MaintenanceMode from './components/MaintenanceMode';
 import { getMaintenanceConfig } from './utils/envUtils';
+import { initializeWhiteLabelTheme } from './utils/themeUtils';
 import './App.css';
 import './styles/global.css';
+import './styles/whiteLabelTheme.css';
 
 // Protected route component with dashboard layout
 const ProtectedRoute = ({ children }) => {
@@ -104,6 +106,11 @@ function AppContent() {
 
     // Cleanup
     return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Initialize white label theme
+  useEffect(() => {
+    initializeWhiteLabelTheme();
   }, []);
 
   // Check if the current route is a protected route that should use the dashboard layout

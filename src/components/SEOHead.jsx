@@ -1,29 +1,36 @@
 // src/components/SEOHead.jsx
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import {
+  getAppFullName,
+  getAppDescription,
+  getCompanyName,
+  getPrimaryDomain,
+  getWhiteLabelConfig,
+} from '../config/whiteLabelConfig';
 
 /**
  * SEO Head Component
  * Dynamically updates meta tags, title, and structured data for each page
- * Optimized for South African market and letstalkbi.co.za domain
+ * Uses white label configuration for dynamic branding
  */
 const SEOHead = ({
-  title = "Let's Talk - South Africa's Premier Citizen Engagement Platform",
-  description = "Connect with municipal services, report issues, access government services, and engage with your community. South Africa's premier citizen engagement platform built by Saya-Setona.",
-  keywords = 'South Africa, municipal services, citizen engagement, government services, community platform, service issues, water services, electricity, local government, Saya-Setona, letstalkbi',
-  image = 'https://letstalkbi.co.za/og-image.jpg',
+  title = getAppFullName(),
+  description = getAppDescription(),
+  keywords = getWhiteLabelConfig('seo', 'keywords').join(', '),
+  image = `${getPrimaryDomain()}${getWhiteLabelConfig('branding', 'ogImagePath')}`,
   type = 'website',
   structuredData = null,
   noIndex = false,
   canonical = null,
 }) => {
   const location = useLocation();
-  const currentUrl = `https://letstalkbi.co.za${location.pathname}`;
+  const currentUrl = `${getPrimaryDomain()}${location.pathname}`;
   const canonicalUrl = canonical || currentUrl;
 
   useEffect(() => {
     // Update document title
-    document.title = `${title} | Saya-Setona`;
+    document.title = `${title} | ${getCompanyName()}`;
 
     // Update or create meta tags
     const updateMetaTag = (name, content, property = false) => {

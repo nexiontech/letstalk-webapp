@@ -18,6 +18,14 @@ import {
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../contexts/AuthContext';
+import {
+  getAppName,
+  getAppTagline,
+  getAppDescription,
+  getCompanyFullName,
+  getLogoPath,
+  getWhiteLabelConfig,
+} from '../config/whiteLabelConfig';
 import letsTalkLogo from '../assets/images/lets-talk-logo.png';
 import ComingSoonModal from './ComingSoonModal';
 import './Footer.css';
@@ -47,14 +55,13 @@ const Footer = () => {
         <div className="footer-top">
           <div className="footer-brand">
             <img
-              src={letsTalkLogo}
-              alt="Let's Talk Logo"
+              src={getLogoPath().startsWith('http') ? getLogoPath() : letsTalkLogo}
+              alt={`${getAppName()} Logo`}
               className="footer-logo"
             />
-            <p className="footer-tagline">Your community service platform</p>
+            <p className="footer-tagline">{getAppTagline()}</p>
             <p className="footer-description">
-              Stay connected with essential services in your community. Report
-              issues, track resolutions, and engage with your local government.
+              {getAppDescription()}
             </p>
 
             <div className="footer-social">
@@ -314,7 +321,7 @@ const Footer = () => {
         <div className="footer-bottom">
           <div className="footer-copyright">
             <p>
-              &copy; {currentYear} Saya Setona Innovations. All Rights Reserved.
+              &copy; {currentYear} {getCompanyFullName()}. All Rights Reserved.
             </p>
           </div>
           <div className="footer-legal-links">
