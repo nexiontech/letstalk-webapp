@@ -25,6 +25,10 @@ import {
   getCompanyFullName,
   getLogoPath,
   getWhiteLabelConfig,
+  getSupportEmail,
+  getContactPhone,
+  getPrimaryDomain,
+  getCompanyDomain,
 } from '../config/whiteLabelConfig';
 import letsTalkLogo from '../assets/images/lets-talk-logo.png';
 import ComingSoonModal from './ComingSoonModal';
@@ -288,29 +292,27 @@ const Footer = () => {
                     className="contact-icon"
                   />
                   <span>
-                    41 Juta Street, Braamfontein
-                    <br />
-                    Johannesburg, South Africa
+                    {getWhiteLabelConfig('contact', 'address', '41 Juta Street, Braamfontein, Johannesburg, South Africa')}
                   </span>
                 </li>
                 <li>
                   <FontAwesomeIcon icon={faPhone} className="contact-icon" />
-                  <span>+27 11 123 4567</span>
+                  <span>{getContactPhone()}</span>
                 </li>
                 <li>
                   <FontAwesomeIcon icon={faEnvelope} className="contact-icon" />
-                  <a href="mailto:info@saya-setona.co.za">
-                    info@saya-setona.co.za
+                  <a href={`mailto:${getWhiteLabelConfig('contact', 'email', getSupportEmail())}`}>
+                    {getWhiteLabelConfig('contact', 'email', getSupportEmail())}
                   </a>
                 </li>
                 <li>
                   <FontAwesomeIcon icon={faGlobe} className="contact-icon" />
                   <a
-                    href="https://www.saya-setona.co.za"
+                    href={getWhiteLabelConfig('domains', 'company', getCompanyDomain())}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    www.saya-setona.co.za
+                    {getWhiteLabelConfig('domains', 'company', getCompanyDomain()).replace('https://', 'www.')}
                   </a>
                 </li>
               </ul>

@@ -5,7 +5,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAuth } from '../contexts/AuthContext';
 import SEOHead, { generatePageStructuredData } from '../components/SEOHead';
 import { generateSEOKeywords } from '../utils/seoUtils';
-import { getAppName, getAppTagline, getAppDescription } from '../config/whiteLabelConfig';
+import {
+  getAppName,
+  getAppTagline,
+  getAppDescription,
+  getAppFullName,
+  getCountryName,
+  getCompanyName
+} from '../config/whiteLabelConfig';
 import AdSenseAd from '../components/AdSenseAd';
 import {
   faWater,
@@ -85,14 +92,14 @@ function HomePage() {
   const seoData = {
     title:
       isAuthenticated && firstName && greeting
-        ? `${greeting}, ${firstName}! - Let's Talk Platform`
-        : "Let's Talk - South Africa's Premier Citizen Engagement Platform",
+        ? `${greeting}, ${firstName}! - ${getAppName()} Platform`
+        : `${getAppName()} - ${getCountryName()}'s Premier Citizen Engagement Platform`,
     description:
-      "Connect with municipal services, report issues, access government services, and engage with your community. South Africa's premier citizen engagement platform built by Saya-Setona for seamless citizen-government interaction.",
+      `Connect with municipal services, report issues, access government services, and engage with your community. ${getCountryName()}'s premier citizen engagement platform built by ${getCompanyName()} for seamless citizen-government interaction.`,
     keywords: generateSEOKeywords(
       [
         'citizen engagement platform',
-        'municipal services South Africa',
+        `municipal services ${getCountryName()}`,
         'government services online',
         'community platform',
         'service reporting',
@@ -106,9 +113,8 @@ function HomePage() {
     ),
     type: 'website',
     structuredData: generatePageStructuredData('home', {
-      title: "Let's Talk - South Africa's Premier Citizen Engagement Platform",
-      description:
-        'Connect with municipal services, report issues, access government services, and engage with your community.',
+      title: `${getAppName()} - ${getCountryName()}'s Premier Citizen Engagement Platform`,
+      description: getAppDescription(),
       path: '/',
       services: services.map(service => ({
         name: service.title,
@@ -206,7 +212,7 @@ function HomePage() {
       <div className="features-section">
         <div className="features-content">
           <div className="section-header left-aligned">
-            <h2>Why Choose Let's Talk?</h2>
+            <h2>Why Choose {getAppName()}?</h2>
             <p>
               Our platform provides the tools you need to stay informed and
               engaged
