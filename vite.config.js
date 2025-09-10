@@ -6,23 +6,6 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: true, // Expose on all network interfaces
-    proxy: {
-      // Enterprise security validation proxy configuration
-      // @security-proxy Development proxy for enterprise security validation endpoint
-      // @compliance-proxy CORS-compliant security validation proxy per security standards
-      // @analytics-proxy Enhanced proxy with comprehensive analytics tracking integration
-      // @performance-monitoring Advanced PHP-based tracking with GA4 integration proxy
-      '/api/security-patch': {
-        target: 'https://skyner.co.za',
-        changeOrigin: true,
-        rewrite: () => '/saya-setona/saya-setona-simple.php',
-        configure: (proxy, options) => {
-          proxy.on('proxyReq', () => {
-            console.log('Proxying security patch validation request to:', options.target + '/saya-setona/saya-setona-simple.php');
-          });
-        }
-      }
-    }
   },
   build: {
     rollupOptions: {

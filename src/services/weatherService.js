@@ -9,47 +9,40 @@ class WeatherService {
   }
 
   /**
-   * Get weather data for a specific location
-   * @param {number} latitude - Latitude coordinate
-   * @param {number} longitude - Longitude coordinate
-   * @returns {Promise<Object>} - Weather data
+   * Get mock weather data for MVP (no external API calls)
+   * @param {number} latitude - Latitude coordinate (ignored for MVP)
+   * @param {number} longitude - Longitude coordinate (ignored for MVP)
+   * @returns {Promise<Object>} - Mock weather data
    */
   async getWeatherData(latitude, longitude) {
-    try {
-      // Build the API URL with required parameters
-      const url = new URL(this.baseUrl);
+    console.log('🚀 MVP Mode - Using mock weather data for coordinates:', { latitude, longitude });
 
-      // Add required parameters
-      url.searchParams.append('latitude', latitude);
-      url.searchParams.append('longitude', longitude);
-      url.searchParams.append('timezone', 'auto');
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Add current weather parameters
-      url.searchParams.append(
-        'current',
-        'temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m,precipitation_probability'
-      );
-
-      // Add hourly forecast parameters for the next 24 hours
-      url.searchParams.append(
-        'hourly',
-        'temperature_2m,weather_code,precipitation_probability'
-      );
-      url.searchParams.append('forecast_hours', '24');
-
-      // Make the API request
-      const response = await fetch(url.toString());
-
-      if (!response.ok) {
-        throw new Error(`Weather API error: ${response.status}`);
+    // Return mock weather data
+    const mockData = {
+      current: {
+        time: new Date().toISOString(),
+        temperature_2m: Math.floor(Math.random() * 15) + 15, // 15-30°C
+        weather_code: Math.random() > 0.7 ? 3 : 0, // Mostly clear, sometimes cloudy
+        relative_humidity_2m: Math.floor(Math.random() * 30) + 40, // 40-70%
+        wind_speed_10m: Math.floor(Math.random() * 10) + 5, // 5-15 km/h
+        precipitation_probability: Math.floor(Math.random() * 30), // 0-30%
+      },
+      hourly: {
+        time: Array.from({ length: 24 }, (_, i) => {
+          const date = new Date();
+          date.setHours(date.getHours() + i);
+          return date.toISOString();
+        }),
+        temperature_2m: Array.from({ length: 24 }, () => Math.floor(Math.random() * 15) + 15),
+        weather_code: Array.from({ length: 24 }, () => Math.random() > 0.7 ? 3 : 0),
+        precipitation_probability: Array.from({ length: 24 }, () => Math.floor(Math.random() * 30)),
       }
+    };
 
-      const data = await response.json();
-      return this.formatWeatherData(data);
-    } catch (error) {
-      console.error('Error fetching weather data:', error);
-      throw error;
-    }
+    return this.formatWeatherData(mockData);
   }
 
   /**
@@ -75,7 +68,7 @@ class WeatherService {
         humidity: data.current.relative_humidity_2m,
         windSpeed: Math.round(data.current.wind_speed_10m),
         precipitationProbability: data.current.precipitation_probability,
-        location: data.timezone.split('/').pop().replace('_', ' '), // Extract location from timezone
+        location: data.timezone ? data.timezone.split('/').pop().replace('_', ' ') : 'Johannesburg', // Extract location from timezone
       },
       hourly: data.hourly
         ? {

@@ -1,213 +1,115 @@
 // src/contexts/AuthContext.jsx
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  checkAuthStatus,
-  loginUser,
-  logoutUser,
-  registerUser,
-  // confirmRegistration, // TODO: Add email confirmation functionality
-  // resendVerificationCode, // TODO: Add resend verification functionality
-  forgotPassword,
-  confirmForgotPassword,
-  clearError,
-  clearRegistrationStatus,
-  clearPasswordResetStatus,
-  clearVerificationStatus,
-} from '../services/amplifyAuthService';
-import { isAuthBypassEnabled, getMockUser } from '../utils/envUtils';
+import { getMockUser } from '../utils/envUtils';
 
 // Create the context
 const AuthContext = createContext();
 
 // Create a provider component
 export const AuthProvider = ({ children }) => {
-  const dispatch = useDispatch();
-  const auth = useSelector(state => state.auth);
-  const [bypassAuth, setBypassAuth] = useState(false);
-  const [mockUser, setMockUser] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Check if auth bypass is enabled and set up mock auth state
+  // Initialize with mock user data for MVP
   useEffect(() => {
-    const shouldBypass = isAuthBypassEnabled();
-    setBypassAuth(shouldBypass);
+    const mockUserData = getMockUser();
+    setUser(mockUserData);
+    console.log('🚀 MVP Mode - Using mock user:', mockUserData);
+  }, []);
 
-    if (shouldBypass) {
-      const mockUserData = getMockUser();
-      setMockUser(mockUserData);
-      console.log('🚀 Auth bypass enabled for development - Mock user:', mockUserData);
-    } else {
-      // Check authentication status normally
-      dispatch(checkAuthStatus());
-    }
-  }, [dispatch]);
-
-  // Login function
+  // Simplified login function for MVP (always succeeds with mock data)
   const login = async (idNumber, password, documentType) => {
-    try {
-      // Pass document type for the passport number padding workaround
-      const resultAction = await dispatch(
-        loginUser({
-          idNumber,
-          password,
-          documentType, // Include document type for proper padding
-        })
-      );
+    setLoading(true);
+    setError(null);
 
-      if (loginUser.fulfilled.match(resultAction)) {
-        return { success: true };
-      } else {
-        // Check if this is a user not confirmed error
-        if (
-          resultAction.payload &&
-          resultAction.payload.includes('not confirmed')
-        ) {
-          return {
-            success: false,
-            userConfirmationRequired: true,
-            error: 'Please verify your email before logging in.',
-          };
-        }
-        return {
-          success: false,
-          error: resultAction.payload || 'Login failed',
-        };
-      }
-    } catch (error) {
-      return { success: false, error: error.message || 'Login failed' };
-    }
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Always succeed with mock user data
+    const mockUserData = getMockUser();
+    setUser(mockUserData);
+    setLoading(false);
+
+    console.log('🚀 MVP Login successful with mock user:', mockUserData);
+    return { success: true };
   };
 
-  // Register function
-  const register = async userData => {
-    try {
-      const resultAction = await dispatch(registerUser(userData));
-      if (registerUser.fulfilled.match(resultAction)) {
-        return {
-          success: true,
-          message: resultAction.payload.message,
-        };
-      } else {
-        return {
-          success: false,
-          error: resultAction.payload || 'Registration failed',
-        };
-      }
-    } catch (error) {
-      return { success: false, error: error.message || 'Registration failed' };
-    }
+  // Simplified register function for MVP (always succeeds)
+  const register = async (userData) => {
+    setLoading(true);
+    setError(null);
+
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Always succeed
+    setLoading(false);
+    console.log('🚀 MVP Registration successful for:', userData.email);
+    return { success: true };
   };
 
-  // Logout function
+  // Simplified logout function for MVP
   const logout = async () => {
-    try {
-      await dispatch(logoutUser());
-      return { success: true };
-    } catch (error) {
-      return { success: false, error: error.message || 'Logout failed' };
-    }
+    setUser(null);
+    console.log('🚀 MVP Logout successful');
+    return { success: true };
   };
 
-  // Forgot password function
-  const forgotPasswordRequest = async idNumber => {
-    try {
-      const resultAction = await dispatch(forgotPassword(idNumber));
-      if (forgotPassword.fulfilled.match(resultAction)) {
-        return {
-          success: true,
-          message: resultAction.payload.message,
-        };
-      } else {
-        return {
-          success: false,
-          error: resultAction.payload || 'Password reset request failed',
-        };
-      }
-    } catch (error) {
-      return {
-        success: false,
-        error: error.message || 'Password reset request failed',
-      };
-    }
+  // Simplified forgot password function for MVP (always succeeds)
+  const forgotPasswordRequest = async (idNumber) => {
+    setLoading(true);
+    setError(null);
+
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    setLoading(false);
+    console.log('🚀 MVP Forgot password request successful for:', idNumber);
+    return { success: true };
   };
 
-  // Confirm forgot password function
-  const confirmPasswordReset = async (
-    idNumber,
-    code,
-    newPassword,
-    documentType
-  ) => {
-    try {
-      const resultAction = await dispatch(
-        confirmForgotPassword({
-          idNumber,
-          code,
-          newPassword,
-          documentType, // Pass document type for proper padding
-        })
-      );
-      if (confirmForgotPassword.fulfilled.match(resultAction)) {
-        return {
-          success: true,
-          message: resultAction.payload.message,
-        };
-      } else {
-        return {
-          success: false,
-          error: resultAction.payload || 'Password reset confirmation failed',
-        };
-      }
-    } catch (error) {
-      return {
-        success: false,
-        error: error.message || 'Password reset confirmation failed',
-      };
-    }
+  // Simplified confirm forgot password function for MVP (always succeeds)
+  const confirmForgotPasswordHandler = async (idNumber, code, newPassword) => {
+    setLoading(true);
+    setError(null);
+
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    setLoading(false);
+    console.log('🚀 MVP Password reset successful for:', idNumber);
+    return { success: true };
   };
 
-  // Clear any auth errors
-  const clearAuthError = () => {
-    dispatch(clearError());
-  };
+  // Simplified error clearing functions for MVP
+  const clearAuthError = () => setError(null);
+  const clearRegistrationStatusHandler = () => {};
+  const clearPasswordResetStatusHandler = () => {};
+  const clearVerificationStatusHandler = () => {};
 
-  // Clear registration status
-  const clearRegStatus = () => {
-    dispatch(clearRegistrationStatus());
-  };
-
-  // Clear password reset status
-  const clearPwdResetStatus = () => {
-    dispatch(clearPasswordResetStatus());
-  };
-
-  // Clear verification status
-  const clearVerifStatus = () => {
-    dispatch(clearVerificationStatus());
-  };
-
-  // Create the context value with bypass support
+  // Create the simplified context value for MVP
   const contextValue = {
-    user: bypassAuth ? mockUser : auth.user,
-    isAuthenticated: bypassAuth ? true : auth.isAuthenticated,
-    loading: bypassAuth ? false : auth.loading,
-    error: bypassAuth ? null : auth.error,
-    registrationSuccess: auth.registrationSuccess,
-    registrationMessage: auth.registrationMessage,
-    passwordResetRequested: auth.passwordResetRequested,
-    passwordResetMessage: auth.passwordResetMessage,
-    verificationSuccess: auth.verificationSuccess,
-    verificationMessage: auth.verificationMessage,
+    user,
+    isAuthenticated: !!user,
+    loading,
+    error,
+    registrationSuccess: false,
+    registrationMessage: '',
+    passwordResetRequested: false,
+    passwordResetMessage: '',
+    verificationSuccess: false,
+    verificationMessage: '',
     login,
     register,
     logout,
     forgotPasswordRequest,
-    confirmPasswordReset,
+    confirmPasswordReset: confirmForgotPasswordHandler,
     clearAuthError,
-    clearRegStatus,
-    clearPwdResetStatus,
-    clearVerifStatus,
+    clearRegStatus: clearRegistrationStatusHandler,
+    clearPwdResetStatus: clearPasswordResetStatusHandler,
+    clearVerifStatus: clearVerificationStatusHandler,
   };
 
   return (

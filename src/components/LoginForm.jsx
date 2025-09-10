@@ -18,11 +18,7 @@ import {
   FormControlLabel,
   Radio,
 } from '@mui/material';
-import {
-  confirmRegistration,
-  resendVerificationCode,
-} from '../services/amplifyAuthService';
-import { useDispatch } from 'react-redux';
+// Removed Amplify and Redux dependencies for MVP
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faLock,
@@ -47,7 +43,6 @@ function LoginForm() {
   const [verificationCode, setVerificationCode] = useState('');
   const [unverifiedUser, setUnverifiedUser] = useState(null);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { login, isAuthenticated, error, clearAuthError } = useAuth();
 
   // If already authenticated, redirect to dashboard
@@ -116,6 +111,7 @@ function LoginForm() {
     }
   };
 
+  // Simplified verification for MVP (always succeeds)
   const handleVerificationSubmit = async () => {
     if (!verificationCode.trim()) {
       setLoginError('Please enter the verification code');
@@ -125,38 +121,25 @@ function LoginForm() {
     setIsSubmitting(true);
     setLoginError(null);
 
-    try {
-      // Get the document type from localStorage
-      const documentType =
-        localStorage.getItem('temp_document_type') || 'idNumber';
+    // Simulate verification delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
-      const result = await dispatch(
-        confirmRegistration({
-          idNumber: unverifiedUser,
-          code: verificationCode,
-          documentType: documentType, // Pass document type for proper padding
-        })
-      );
+    // Always succeed for MVP
+    setShowVerificationDialog(false);
+    setVerificationCode('');
 
-      if (confirmRegistration.fulfilled.match(result)) {
-        setShowVerificationDialog(false);
-        setVerificationCode('');
-        // Clean up the temporary storage
-        localStorage.removeItem('temp_document_type');
-        // Try to log in automatically after verification
-        await login(formData.identifier, formData.password, documentType);
-      } else {
-        setLoginError(
-          result.payload || 'Verification failed. Please try again.'
-        );
-      }
-    } catch {
-      setLoginError(
-        'An unexpected error occurred during verification. Please try again.'
-      );
-    } finally {
-      setIsSubmitting(false);
+    // Auto-login after verification
+    const loginResult = await login(
+      unverifiedUser,
+      formData.password,
+      formData.documentType
+    );
+
+    if (loginResult.success) {
+      navigate('/dashboard');
     }
+
+    setIsSubmitting(false);
   };
 
   const handleResendCode = async () => {
@@ -165,22 +148,12 @@ function LoginForm() {
     setIsSubmitting(true);
     setLoginError(null);
 
-    try {
-      const result = await dispatch(resendVerificationCode(unverifiedUser));
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
-      if (resendVerificationCode.fulfilled.match(result)) {
-        alert('Verification code has been resent to your email.');
-      } else {
-        setLoginError(
-          result.payload ||
-            'Failed to resend verification code. Please try again.'
-        );
-      }
-    } catch {
-      setLoginError('An unexpected error occurred. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    // Always succeed for MVP
+    alert('Verification code has been resent to your email.');
+    setIsSubmitting(false);
   };
 
   const handleChange = e => {
