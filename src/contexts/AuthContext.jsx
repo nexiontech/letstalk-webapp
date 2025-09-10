@@ -19,11 +19,11 @@ export const AuthProvider = ({ children }) => {
     console.log('🚀 MVP Mode - Using mock user:', mockUserData);
   }, []);
 
-  // Dummy login credentials for MVP
+  // Dummy login credentials for MVP - South African user
   const DUMMY_CREDENTIALS = {
     idNumber: '9001010001088',
-    password: 'demo123',
-    email: 'demo@example.com'
+    password: 'cloudyn123',
+    email: 'thabo.mthembu@cloudynconnect.co.za'
   };
 
   // Simplified login function for MVP with dummy credentials
@@ -42,9 +42,9 @@ export const AuthProvider = ({ children }) => {
       console.log('🚀 MVP Login successful with dummy credentials:', mockUserData);
       return { success: true };
     } else {
-      setError('Invalid credentials. Use ID: 9001010001088, Password: demo123');
+      setError('Invalid credentials. Use ID: 9001010001088, Password: cloudyn123');
       setLoading(false);
-      return { success: false, error: 'Invalid credentials. Use ID: 9001010001088, Password: demo123' };
+      return { success: false, error: 'Invalid credentials. Use ID: 9001010001088, Password: cloudyn123' };
     }
   };
 

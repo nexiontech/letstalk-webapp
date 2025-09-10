@@ -222,9 +222,10 @@ function LoginForm() {
 
       {/* MVP Demo Credentials Notice */}
       <Alert severity="info" className="auth-alert" style={{ marginBottom: '1rem' }}>
-        <strong>MVP Demo Credentials:</strong><br />
+        <strong>Cloudyn Connect Demo Credentials:</strong><br />
         ID Number: <code>9001010001088</code><br />
-        Password: <code>demo123</code>
+        Password: <code>cloudyn123</code><br />
+        <small>User: Thabo Mthembu (Johannesburg, SA)</small>
       </Alert>
 
       {/* Show error message if there is one */}

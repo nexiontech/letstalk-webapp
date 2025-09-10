@@ -73,10 +73,18 @@ export const isAuthBypassEnabled = () => {
 export const getMockUser = () => {
   return {
     idNumber: '9001010001088',
-    email: 'dev.user@example.com',
-    name: 'Development User',
+    email: 'thabo.mthembu@cloudynconnect.co.za',
+    name: 'Thabo Mthembu',
+    firstName: 'Thabo',
+    lastName: 'Mthembu',
     role: 'citizen',
     documentType: 'idNumber',
+    address: '123 Nelson Mandela Drive, Sandton, Johannesburg, 2196',
+    phone: '+27 82 456 7890',
+    city: 'Johannesburg',
+    province: 'Gauteng',
+    postalCode: '2196',
+    country: 'South Africa',
   };
 };
 

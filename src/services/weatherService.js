@@ -20,15 +20,15 @@ class WeatherService {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    // Return mock weather data
+    // Return mock weather data for Johannesburg, South Africa
     const mockData = {
       current: {
         time: new Date().toISOString(),
-        temperature_2m: Math.floor(Math.random() * 15) + 15, // 15-30°C
-        weather_code: Math.random() > 0.7 ? 3 : 0, // Mostly clear, sometimes cloudy
-        relative_humidity_2m: Math.floor(Math.random() * 30) + 40, // 40-70%
-        wind_speed_10m: Math.floor(Math.random() * 10) + 5, // 5-15 km/h
-        precipitation_probability: Math.floor(Math.random() * 30), // 0-30%
+        temperature_2m: Math.floor(Math.random() * 12) + 18, // 18-30°C (typical Johannesburg range)
+        weather_code: Math.random() > 0.8 ? 3 : 0, // Mostly clear (Johannesburg is sunny)
+        relative_humidity_2m: Math.floor(Math.random() * 25) + 35, // 35-60% (dry highveld climate)
+        wind_speed_10m: Math.floor(Math.random() * 8) + 7, // 7-15 km/h (typical for Johannesburg)
+        precipitation_probability: Math.floor(Math.random() * 20), // 0-20% (low rainfall probability)
       },
       hourly: {
         time: Array.from({ length: 24 }, (_, i) => {
@@ -36,9 +36,9 @@ class WeatherService {
           date.setHours(date.getHours() + i);
           return date.toISOString();
         }),
-        temperature_2m: Array.from({ length: 24 }, () => Math.floor(Math.random() * 15) + 15),
-        weather_code: Array.from({ length: 24 }, () => Math.random() > 0.7 ? 3 : 0),
-        precipitation_probability: Array.from({ length: 24 }, () => Math.floor(Math.random() * 30)),
+        temperature_2m: Array.from({ length: 24 }, () => Math.floor(Math.random() * 12) + 18),
+        weather_code: Array.from({ length: 24 }, () => Math.random() > 0.8 ? 3 : 0),
+        precipitation_probability: Array.from({ length: 24 }, () => Math.floor(Math.random() * 20)),
       }
     };
 
